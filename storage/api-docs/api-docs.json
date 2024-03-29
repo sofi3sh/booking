@@ -1,0 +1,930 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Swagger API",
+        "version": "1.0.0"
+    },
+    "paths": {
+        "/api/": {},
+        "/api/auth/login": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "User login",
+                "operationId": "7fbb2acb605c2adaebf7c7cfaa5e7f49",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "phone": {
+                                        "description": "User's phone number",
+                                        "type": "integer"
+                                    },
+                                    "password": {
+                                        "description": "User's password",
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Authorization successful",
+                        "headers": {
+                            "Set-Cookie": {
+                                "description": "Access token cookie",
+                                "schema": {
+                                    "type": "string",
+                                    "example": "access_token=abc123; Expires=Wed, 21 Oct 2020 07:28:00 GMT; Max-Age=2592000; Path=/"
+                                }
+                            }
+                        },
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Authorization successful"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unauthorized"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/auth/logout": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "User logout",
+                "operationId": "16a402dc4a790a2e0dad16fe340eca9d",
+                "responses": {
+                    "200": {
+                        "description": "Logged out successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Logged out successfully"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "passport": []
+                    }
+                ]
+            }
+        },
+        "/api/auth/register": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "User registration",
+                "operationId": "4cd55ed2516a9b023429e773b7b85064",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "name": {
+                                        "description": "User's first name",
+                                        "type": "string"
+                                    },
+                                    "last_name": {
+                                        "description": "User's last name",
+                                        "type": "string"
+                                    },
+                                    "phone": {
+                                        "description": "User's phone number",
+                                        "type": "integer",
+                                        "format": "phone",
+                                        "uniqueItems": true
+                                    },
+                                    "password": {
+                                        "description": "User's password",
+                                        "type": "string",
+                                        "format": "password",
+                                        "minLength": 8
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "User registered successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "User registered successfully"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/auth/verify": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Verify user's phone number",
+                "operationId": "caeb1e76a497d57e78bca2dca74ebe51",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "phone": {
+                                        "description": "User's phone number",
+                                        "type": "integer"
+                                    },
+                                    "code": {
+                                        "description": "Verification code",
+                                        "type": "integer"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Phone number verified successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Phone number verified successfully"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Invalid verification code",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {
+                                            "type": "string",
+                                            "example": "Invalid verification code"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "User not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {
+                                            "type": "string",
+                                            "example": "User not found"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "423": {
+                        "description": "Verification code has expired",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {
+                                            "type": "string",
+                                            "example": "Verification code has expired"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/objects": {
+            "get": {
+                "tags": [
+                    "Objects"
+                ],
+                "summary": "Get all booking objects",
+                "operationId": "2196cb81e8dc2947ce385a8e25bccb43",
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "properties": {
+                                            "id": {
+                                                "description": "Unique identifier for the booking object",
+                                                "type": "integer"
+                                            },
+                                            "name": {
+                                                "description": "Name of the booking object",
+                                                "type": "string"
+                                            },
+                                            "description": {
+                                                "description": "Description of the booking object",
+                                                "type": "string"
+                                            },
+                                            "price": {
+                                                "description": "Price of the booking object",
+                                                "type": "integer"
+                                            },
+                                            "photos": {
+                                                "description": "Photos for the booking object",
+                                                "type": "string"
+                                            },
+                                            "preview_photo": {
+                                                "description": "Preview photo of the booking object",
+                                                "type": "string"
+                                            }
+                                        },
+                                        "type": "object"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Objects"
+                ],
+                "summary": "Create a new object",
+                "operationId": "f6f7ca2320f4b9abc4afd95f20c91e80",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "name": {
+                                        "description": "Name of the booking object",
+                                        "type": "string"
+                                    },
+                                    "description": {
+                                        "description": "Description of the booking object",
+                                        "type": "string"
+                                    },
+                                    "price": {
+                                        "description": "Price of the booking object",
+                                        "type": "integer"
+                                    },
+                                    "photos": {
+                                        "description": "Photos for the booking object",
+                                        "type": "string"
+                                    },
+                                    "preview_photo": {
+                                        "description": "Preview photo of the object",
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Object created successfully"
+                    },
+                    "400": {
+                        "description": "Bad request"
+                    }
+                }
+            }
+        },
+        "/api/objects/{id}": {
+            "get": {
+                "tags": [
+                    "Objects"
+                ],
+                "summary": "Get a booking object by ID",
+                "operationId": "68da07598cb1f5457fe1e2525050923a",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the booking object",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "id": {
+                                            "description": "Unique identifier for the booking object",
+                                            "type": "integer"
+                                        },
+                                        "name": {
+                                            "description": "Name of the booking object",
+                                            "type": "string"
+                                        },
+                                        "description": {
+                                            "description": "Description of the booking object",
+                                            "type": "string"
+                                        },
+                                        "price": {
+                                            "description": "Price of the booking object",
+                                            "type": "integer"
+                                        },
+                                        "photos": {
+                                            "description": "Photos for the booking object",
+                                            "type": "string"
+                                        },
+                                        "preview_photo": {
+                                            "description": "Preview photo of the booking object",
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Object not found"
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "Objects"
+                ],
+                "summary": "Update a booking object by ID",
+                "operationId": "4dcccf9ee985db5067baae7959de8bdd",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the booking object",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "name": {
+                                        "description": "Name of the booking object",
+                                        "type": "string"
+                                    },
+                                    "description": {
+                                        "description": "Description of the booking object",
+                                        "type": "string"
+                                    },
+                                    "price": {
+                                        "description": "Price of the booking object",
+                                        "type": "integer"
+                                    },
+                                    "photos": {
+                                        "description": "Photos for the booking object",
+                                        "type": "string"
+                                    },
+                                    "preview_photo": {
+                                        "description": "Preview photo of the booking object",
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Object updated successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "description": "Success message",
+                                            "type": "string"
+                                        },
+                                        "object": {
+                                            "description": "Updated booking object details",
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Object not found"
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Objects"
+                ],
+                "summary": "Delete a booking object by ID",
+                "operationId": "1ebad6cbad824a3c8bd016fbfabb9960",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the booking object",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Object deleted successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "description": "Success message",
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Object not found"
+                    }
+                }
+            }
+        },
+        "/api/user/getProfile": {
+            "get": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Get user profile information",
+                "operationId": "a3bc488e84ddf0fb34121c5f369f3769",
+                "responses": {
+                    "200": {
+                        "description": "User profile information",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "name": {
+                                            "description": "User's name",
+                                            "type": "string"
+                                        },
+                                        "last_name": {
+                                            "description": "User's last name",
+                                            "type": "string"
+                                        },
+                                        "email": {
+                                            "description": "User's email",
+                                            "type": "string"
+                                        },
+                                        "date_of_birth": {
+                                            "description": "User's date of birth",
+                                            "type": "string"
+                                        },
+                                        "photo": {
+                                            "description": "User's photo URL",
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    }
+                }
+            }
+        },
+        "/api/user/updateProfile": {
+            "post": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Update user profile",
+                "operationId": "5439dd4edafa430afe934a0960ac0ed0",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "name": {
+                                        "description": "User's name",
+                                        "type": "string"
+                                    },
+                                    "phone": {
+                                        "description": "User's phone number",
+                                        "type": "string"
+                                    },
+                                    "last_name": {
+                                        "description": "User's last name",
+                                        "type": "string"
+                                    },
+                                    "email": {
+                                        "description": "User's email",
+                                        "type": "string"
+                                    },
+                                    "date_of_birth": {
+                                        "description": "User's date of birth",
+                                        "type": "string"
+                                    },
+                                    "photo": {
+                                        "description": "User's photo",
+                                        "type": "string",
+                                        "format": "binary"
+                                    },
+                                    "password": {
+                                        "description": "Current password",
+                                        "type": "string"
+                                    },
+                                    "new_password": {
+                                        "description": "New password",
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Profile updated successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "description": "Success message",
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Validation error"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    }
+                }
+            }
+        },
+        "/api/admin/editUser": {
+            "post": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Edit user profile (Admin)",
+                "operationId": "982e4d40aa9852ab64d886bf71af2130",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "user_id": {
+                                        "description": "User ID",
+                                        "type": "integer"
+                                    },
+                                    "name": {
+                                        "description": "User's name",
+                                        "type": "string"
+                                    },
+                                    "last_name": {
+                                        "description": "User's last name",
+                                        "type": "string"
+                                    },
+                                    "email": {
+                                        "description": "User's email",
+                                        "type": "string"
+                                    },
+                                    "date_of_birth": {
+                                        "description": "User's date of birth",
+                                        "type": "string"
+                                    },
+                                    "photo": {
+                                        "description": "User's photo",
+                                        "type": "string",
+                                        "format": "binary"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Profile updated successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "description": "Success message",
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Validation error"
+                    },
+                    "403": {
+                        "description": "Permission denied"
+                    }
+                }
+            }
+        },
+        "/api/admin/getBookingAgents": {
+            "get": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Get all booking agents (Admin)",
+                "operationId": "cf377371bc16b496c86ea99a3e0645ce",
+                "responses": {
+                    "200": {
+                        "description": "List of booking agents",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "users": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "id": {
+                                                        "description": "User ID",
+                                                        "type": "integer",
+                                                        "format": "int64"
+                                                    },
+                                                    "name": {
+                                                        "description": "User's first name",
+                                                        "type": "string"
+                                                    },
+                                                    "last_name": {
+                                                        "description": "User's last name",
+                                                        "type": "string"
+                                                    },
+                                                    "phone": {
+                                                        "description": "User's phone number",
+                                                        "type": "string"
+                                                    },
+                                                    "phone_verified_at": {
+                                                        "description": "Timestamp when the user's phone number was verified",
+                                                        "type": "string",
+                                                        "format": "date-time"
+                                                    },
+                                                    "password": {
+                                                        "description": "User's password",
+                                                        "type": "string"
+                                                    },
+                                                    "role_id": {
+                                                        "description": "User's role ID",
+                                                        "type": "integer",
+                                                        "format": "int32"
+                                                    },
+                                                    "email": {
+                                                        "description": "User's email address",
+                                                        "type": "string"
+                                                    },
+                                                    "date_of_birth": {
+                                                        "description": "User's date of birth",
+                                                        "type": "string"
+                                                    },
+                                                    "photo": {
+                                                        "description": "User's photo URL",
+                                                        "type": "string"
+                                                    },
+                                                    "remember_token": {
+                                                        "description": "User's remember token",
+                                                        "type": "string"
+                                                    },
+                                                    "created_at": {
+                                                        "description": "Timestamp when the user was created",
+                                                        "type": "string",
+                                                        "format": "date-time"
+                                                    },
+                                                    "updated_at": {
+                                                        "description": "Timestamp when the user was last updated",
+                                                        "type": "string",
+                                                        "format": "date-time"
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Permission denied"
+                    }
+                }
+            }
+        },
+        "/api/admin/getUsers": {
+            "get": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Get all registered users without booking agents (Admin)",
+                "operationId": "743db2907799ad0105bc10970327b802",
+                "responses": {
+                    "200": {
+                        "description": "List of users",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "users": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "id": {
+                                                        "description": "User ID",
+                                                        "type": "integer",
+                                                        "format": "int64"
+                                                    },
+                                                    "name": {
+                                                        "description": "User's first name",
+                                                        "type": "string"
+                                                    },
+                                                    "last_name": {
+                                                        "description": "User's last name",
+                                                        "type": "string"
+                                                    },
+                                                    "phone": {
+                                                        "description": "User's phone number",
+                                                        "type": "string"
+                                                    },
+                                                    "phone_verified_at": {
+                                                        "description": "Timestamp when the user's phone number was verified",
+                                                        "type": "string",
+                                                        "format": "date-time"
+                                                    },
+                                                    "password": {
+                                                        "description": "User's password",
+                                                        "type": "string"
+                                                    },
+                                                    "role_id": {
+                                                        "description": "User's role ID",
+                                                        "type": "integer",
+                                                        "format": "int32"
+                                                    },
+                                                    "email": {
+                                                        "description": "User's email address",
+                                                        "type": "string"
+                                                    },
+                                                    "date_of_birth": {
+                                                        "description": "User's date of birth",
+                                                        "type": "string"
+                                                    },
+                                                    "photo": {
+                                                        "description": "User's photo URL",
+                                                        "type": "string"
+                                                    },
+                                                    "remember_token": {
+                                                        "description": "User's remember token",
+                                                        "type": "string"
+                                                    },
+                                                    "created_at": {
+                                                        "description": "Timestamp when the user was created",
+                                                        "type": "string",
+                                                        "format": "date-time"
+                                                    },
+                                                    "updated_at": {
+                                                        "description": "Timestamp when the user was last updated",
+                                                        "type": "string",
+                                                        "format": "date-time"
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Permission denied"
+                    }
+                }
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "Auth",
+            "description": "API for authentication"
+        },
+        {
+            "name": "Objects",
+            "description": "API for managing objects"
+        },
+        {
+            "name": "Users",
+            "description": "API for managing users"
+        }
+    ]
+}
