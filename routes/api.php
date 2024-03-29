@@ -24,6 +24,7 @@ Route::prefix('user')
 ->group(function () {
     Route::get('/getProfile', 'getProfile');
     Route::post('/updateProfile', 'updateProfile');
+    Route::get('/getUserBookings', 'getUserBookings');
 });
 
 Route::resource('objects', BookingObjectController::class);
