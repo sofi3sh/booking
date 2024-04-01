@@ -11,4 +11,4 @@ Schedule::call(function () {
 
 Schedule::call(function () {
     BookingController::updateExpiredReservedNotPaidBookingObjectStatus();
-})->at('00:00');
+})->at('00:01');
