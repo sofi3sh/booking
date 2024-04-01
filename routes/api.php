@@ -27,7 +27,7 @@ Route::prefix('user')
     Route::get('/getUserBookings', 'getUserBookings');
 });
 
-Route::resource('objects', BookingObjectController::class);
+Route::resource('objects', BookingObjectController::class)->except(['store']);
 
 Route::prefix('admin')
 ->middleware('auth:api')
@@ -36,6 +36,13 @@ Route::prefix('admin')
     Route::get('/getUsers', 'adminGetUsers');
     Route::get('/getBookingAgents', 'adminGetBookingAgents');
     Route::post('/editUser', 'adminEditUser');
+});
+
+Route::prefix('admin')
+->middleware('auth:api')
+->controller(BookingObjectController::class)
+->group(function () {
+    Route::get('/objects', 'store');
 });
 
 Route::prefix('booking')

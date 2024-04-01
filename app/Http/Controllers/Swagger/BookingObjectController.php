@@ -67,7 +67,7 @@ class BookingObjectController extends Controller
 
     /**
      * @OA\Post(
-     *     path="/api/objects",
+     *     path="/api/admin/objects",
      *     summary="Create a new object",
      *     tags={"Objects"},
      *     @OA\RequestBody(
