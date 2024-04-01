@@ -312,13 +312,15 @@
                         }
                     }
                 }
-            },
+            }
+        },
+        "/api/admin/objects": {
             "post": {
                 "tags": [
                     "Objects"
                 ],
                 "summary": "Create a new object",
-                "operationId": "f6f7ca2320f4b9abc4afd95f20c91e80",
+                "operationId": "94e6f2648da81d8cd6e1bbec0bf4ccfc",
                 "requestBody": {
                     "required": true,
                     "content": {
