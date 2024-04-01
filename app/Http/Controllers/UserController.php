@@ -32,7 +32,7 @@ class UserController extends Controller
     {
         $request->validate([
             'name' => 'sometimes|required|string',
-            'phone' => 'sometimes|required|string|unique:users,phone,' . auth()->user()->id,
+            'phone' => 'sometimes|required|integer|unique:users,phone,' . auth()->user()->id,
             'last_name' => 'sometimes|required|string',
             'email' => 'sometimes|required|email|unique:users,email,' . auth()->user()->id,
             'date_of_birth' => 'sometimes|required|date',
