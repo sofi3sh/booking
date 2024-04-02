@@ -31,6 +31,7 @@ class UserController extends Controller
 
     public function updateProfile(Request $request)
     {
+
         $request->validate([
             'name' => 'sometimes|required|string',
             'phone' => 'sometimes|required|integer|unique:users,phone,' . auth()->user()->id,

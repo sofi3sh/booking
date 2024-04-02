@@ -264,6 +264,91 @@
                 }
             }
         },
+        "/api/objects/{id}/getBookingsByObjectId": {
+            "get": {
+                "tags": [
+                    "Bookings"
+                ],
+                "summary": "Get bookings by object id",
+                "operationId": "df78970ff550bf17b37a345f5b2aea9f",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Object id",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "properties": {
+                                            "id": {
+                                                "description": "Unique identifier for the booking",
+                                                "type": "integer"
+                                            },
+                                            "user_id": {
+                                                "description": "User id",
+                                                "type": "integer"
+                                            },
+                                            "object_id": {
+                                                "description": "Object id",
+                                                "type": "integer"
+                                            },
+                                            "reserved_from": {
+                                                "description": "Reserved from",
+                                                "type": "string"
+                                            },
+                                            "reserved_to": {
+                                                "description": "Reserved to",
+                                                "type": "string"
+                                            },
+                                            "booked_from": {
+                                                "description": "Booked from",
+                                                "type": "string"
+                                            },
+                                            "booked_to": {
+                                                "description": "Booked to",
+                                                "type": "string"
+                                            },
+                                            "payment_status": {
+                                                "description": "Payment status",
+                                                "type": "boolean"
+                                            }
+                                        },
+                                        "type": "object"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "No bookings found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "No bookings found"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/api/objects": {
             "get": {
                 "tags": [
@@ -423,12 +508,53 @@
                     }
                 }
             },
+            "delete": {
+                "tags": [
+                    "Objects"
+                ],
+                "summary": "Delete a booking object by ID",
+                "operationId": "1ebad6cbad824a3c8bd016fbfabb9960",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the booking object",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Object deleted successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "description": "Success message",
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Object not found"
+                    }
+                }
+            }
+        },
+        "/api/admin/objects/{id}": {
             "put": {
                 "tags": [
                     "Objects"
                 ],
                 "summary": "Update a booking object by ID",
-                "operationId": "4dcccf9ee985db5067baae7959de8bdd",
+                "operationId": "3ba0ca7cd0b581fbf6d7ae57c1aa9434",
                 "parameters": [
                     {
                         "name": "id",
@@ -462,9 +588,19 @@
                                         "description": "Photos for the booking object",
                                         "type": "string"
                                     },
+                                    "status": {
+                                        "description": "Status of the booking object",
+                                        "type": "string",
+                                        "enum": [
+                                            "free",
+                                            "reserved",
+                                            "booked"
+                                        ]
+                                    },
                                     "preview_photo": {
                                         "description": "Preview photo of the booking object",
-                                        "type": "string"
+                                        "type": "string",
+                                        "format": "binary"
                                     }
                                 },
                                 "type": "object"
@@ -486,45 +622,6 @@
                                         "object": {
                                             "description": "Updated booking object details",
                                             "type": "object"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    },
-                    "404": {
-                        "description": "Object not found"
-                    }
-                }
-            },
-            "delete": {
-                "tags": [
-                    "Objects"
-                ],
-                "summary": "Delete a booking object by ID",
-                "operationId": "1ebad6cbad824a3c8bd016fbfabb9960",
-                "parameters": [
-                    {
-                        "name": "id",
-                        "in": "path",
-                        "description": "ID of the booking object",
-                        "required": true,
-                        "schema": {
-                            "type": "integer"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Object deleted successfully",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "message": {
-                                            "description": "Success message",
-                                            "type": "string"
                                         }
                                     },
                                     "type": "object"
@@ -1007,6 +1104,10 @@
         {
             "name": "Auth",
             "description": "API for authentication"
+        },
+        {
+            "name": "Bookings",
+            "description": "API for managing bookings"
         },
         {
             "name": "Objects",
