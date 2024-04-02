@@ -88,10 +88,10 @@ class AuthController extends Controller
             $user = Auth::user();
             $accessToken = $user->createToken('authToken')->accessToken;
 
-            $minutes = 30 * 24 * 60 * 60; // 30 days in minutes
+            $minutes = 30 * 24 * 60; // 30 days in minutes
 
             return response()->json(['message' => 'Authorization successful'], 200)
-                ->cookie('access_token', $accessToken, $minutes);
+            ->cookie('access_token', $accessToken, $minutes);
         }
 
         return response()->json(['message' => 'Unauthorized'], 401);

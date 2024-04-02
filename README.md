@@ -16,15 +16,7 @@ To migrate the database and create necessary tables, run:
 php artisan migrate
 ```
 
-## 3. Seed the Database with Default Data
-
-To seed the roles in database with default data, run the following command:
-
-```bash
-php artisan db:seed --class=RoleSeeder
-```
-
-## 4. Set up Laravel Passport Client
+## 3. Set up Laravel Passport Client
 
 To set up Laravel Passport for API authentication, run:
 
@@ -32,7 +24,7 @@ To set up Laravel Passport for API authentication, run:
 php artisan passport:client --personal
 ```
 
-## 5. Set up Laravel Passport Keys
+## 4. Set up Laravel Passport Keys
 
 Generate encryption keys required for secure token generation and management, run:
 
@@ -40,11 +32,11 @@ Generate encryption keys required for secure token generation and management, ru
 php artisan passport:keys
 ```
 
-## 6. Run Redis Server
+## 5. Run Redis Server
 
 Ensure that Redis server is running to enable authorization. You can download and install Redis from [here](https://redis.io/download) if you haven't already installed it.
 
-## 7. Setup Task Scheduling
+## 6. Setup Task Scheduling
 
 To enable task scheduling, follow these steps:
 
@@ -73,7 +65,7 @@ To test your schedule configuration, run:
 php artisan schedule:test
 ```
 
-## 8 Generating Swagger Documentation
+## Generating Swagger Documentation
 
 To generate Swagger documentation for your API, you can use the following command:
 

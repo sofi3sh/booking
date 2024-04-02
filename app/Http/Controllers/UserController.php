@@ -32,7 +32,7 @@ class UserController extends Controller
     {
         $request->validate([
             'name' => 'sometimes|required|string',
-            'phone' => 'sometimes|required|integer|unique:users,phone,' . auth()->user()->id,
+            'phone' => 'sometimes|required|string|unique:users,phone,' . auth()->user()->id,
             'last_name' => 'sometimes|required|string',
             'email' => 'sometimes|required|email|unique:users,email,' . auth()->user()->id,
             'date_of_birth' => 'sometimes|required|date',
@@ -122,7 +122,7 @@ class UserController extends Controller
         if (!$this->userIsAdmin($user)) {
             return response()->json(['message' => 'permission denied'], 403);
         }
-
+        
         $targetUser = User::where('id', $request->user_id)->get()->first();
 
         if ($request->has('name')) {
@@ -154,18 +154,5 @@ class UserController extends Controller
         $targetUser->save();
 
         return response()->json(['message' => 'Profile updated successfully'], 200);
-    }
-
-    public function getUserBookings ()
-    {
-        $user = auth()->user();
-
-        $booking = Booking::where('user_id', $user->id)->get();
-
-        if (!$booking) {
-            return response()->json(['message' => 'No bookings found'], 404);
-        }
-
-        return response()->json(['bookings' => $booking], 200);
     }
 }
