@@ -235,4 +235,15 @@ class BookingController extends Controller
 
         return response()->json(['message' => 'Booking cancelled'], 200);
     }
+
+    public function getBookingsByObjectId ($objectId)
+    {
+        $bookings = Booking::where('object_id', $objectId)->get();
+
+        if ($bookings->isEmpty()) {
+            return response()->json(['message' => 'No bookings found'], 404);
+        }
+
+        return response()->json(['bookings' => $bookings], 200);
+    }
 }

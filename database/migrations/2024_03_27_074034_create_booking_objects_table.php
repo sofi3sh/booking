@@ -16,7 +16,7 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('description')->nullable();
-            $table->integer('price');
+            $table->float('price');
             $table->string('photos')->nullable();
             $table->enum('status', ['free', 'reserved', 'booked'])->default(ObjectStatus::FREE->value);
             $table->string('preview_photo')->nullable();
