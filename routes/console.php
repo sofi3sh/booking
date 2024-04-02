@@ -6,9 +6,13 @@ use Illuminate\Support\Facades\Schedule;
 use App\Http\Controllers\BookingController;
 
 Schedule::call(function () {
-    BookingController::updateExpiredReservedNotPaidBookingObjectStatus();
+    BookingController::updateExpiredReservedNotPaidObjectStatus();
 })->everyMinute();
 
 Schedule::call(function () {
-    BookingController::updateExpiredReservedNotPaidBookingObjectStatus();
-})->at('00:00');
+    BookingController::updateExpiresBookedObjectStatus();
+})->at('00:00:01');
+
+Schedule::call(function () {
+    BookingController::updateBookedObjectsStatus();
+})->at('00:01');
