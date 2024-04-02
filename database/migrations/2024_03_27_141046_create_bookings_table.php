@@ -20,6 +20,7 @@ return new class extends Migration
             $table->dateTime('booked_from')->nullable();
             $table->dateTime('booked_to')->nullable();
             $table->boolean('payment_status');
+            $table->boolean('canceled')->default(0);
             $table->timestamps();
         });
     }
