@@ -43,7 +43,7 @@ Route::prefix('admin')
 ->middleware('auth:api')
 ->group(function () {
     Route::resource('objects', BookingObjectController::class)->only(['store', 'destroy']);
-    Route::put('objects/{id}', [BookingObjectController::class, 'update']);
+    Route::post('objects/{id}', [BookingObjectController::class, 'update']);
 });
 
 Route::prefix('booking')
