@@ -51,4 +51,5 @@ Route::prefix('booking')
 ->group(function () {
     Route::post('/reserveObject', 'reserveObject');
     Route::post('/bookObject', 'bookObject');
+    Route::post('/cancelBooking', 'cancelBooking');
 });
