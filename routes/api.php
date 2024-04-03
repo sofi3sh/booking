@@ -44,6 +44,9 @@ Route::prefix('admin')
 ->group(function () {
     Route::resource('objects', BookingObjectController::class)->only(['store', 'destroy']);
     Route::post('objects/{id}', [BookingObjectController::class, 'update']);
+    Route::post('objects/{id}/deletePhotosByName', [BookingObjectController::class, 'deletePhotosByName']);
+    Route::post('objects/{id}/addObjectPhotos', [BookingObjectController::class, 'addObjectPhotos']);
+
 });
 
 Route::prefix('booking')

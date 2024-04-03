@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('name');
             $table->string('description')->nullable();
             $table->float('price');
-            $table->string('photos')->nullable();
+            $table->json('photos')->nullable(); 
             $table->enum('status', ['free', 'reserved', 'booked'])->default(ObjectStatus::FREE->value);
             $table->string('preview_photo')->nullable();
             $table->timestamps();
