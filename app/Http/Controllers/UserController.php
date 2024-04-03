@@ -31,7 +31,6 @@ class UserController extends Controller
 
     public function updateProfile(Request $request)
     {
-
         $request->validate([
             'name' => 'sometimes|required|string',
             'phone' => 'sometimes|required|integer|unique:users,phone,' . auth()->user()->id,
@@ -62,7 +61,7 @@ class UserController extends Controller
         }
 
         if ($request->hasFile('photo')) {
-            $photoPath = $request->file('photo')->store('photos', 'public');
+            $photoPath = $request->file('photo')->store('photos/users', 'public');
 
             if ($user->photo) {
                 Storage::disk('public')->delete($user->photo);

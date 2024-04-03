@@ -21,7 +21,8 @@ return Application::configure(basePath: dirname(__DIR__))
 
             if ($request->is('api/*')) {
                 return response()->json([
-                    'message' => $e->getMessage()
+                    'message' => $e->getMessage(),
+                    'error' => "Line " . $e->getLine() . " - " . $e->getFile()
                 ], 503);
             }
         });
