@@ -43,8 +43,6 @@ class BookingObjectController extends Controller
         $newObject->save();
 
         return response()->json(['message' => 'Object created successfully', 'object' => $newObject], 201);
-
-
     }
 
     /**
@@ -66,7 +64,6 @@ class BookingObjectController extends Controller
      */
     public function update(Request $request, $id)
     {
-
         $user = auth()->user();
 
         if (!$this->userIsAdmin($user)) {
