@@ -108,8 +108,6 @@ class BookingObjectController extends Controller
         if($request->hasFile('preview_photo')) {
             $previewPhotoPath = $request->file('preview_photo')->store('photos', 'public');
 
-            return response()->json(['previewPhotoPath' => $previewPhotoPath], 200);
-
             if ($bookingObject->preview_photo) {
                 Storage::disk('public')->delete($bookingObject->preview_photo);
             }

@@ -15,6 +15,8 @@ Route::prefix('auth')
     Route::post('/register', 'register');
     Route::post('/login', 'login')->name('login');
     Route::post('/verify', 'verify');
+    Route::post('/sendVerificationCode', 'sendVerificationCode');
+    Route::post('/resetPassword', 'resetPassword');
     Route::middleware('auth:api')->post('/logout', 'logout');
 });
 
@@ -43,7 +45,7 @@ Route::prefix('admin')
 ->middleware('auth:api')
 ->group(function () {
     Route::resource('objects', BookingObjectController::class)->only(['store', 'destroy']);
-    Route::put('objects/{id}', [BookingObjectController::class, 'update']);
+    Route::post('objects/{id}', [BookingObjectController::class, 'update']);
 });
 
 Route::prefix('booking')
