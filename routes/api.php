@@ -15,6 +15,8 @@ Route::prefix('auth')
     Route::post('/register', 'register');
     Route::post('/login', 'login')->name('login');
     Route::post('/verify', 'verify');
+    Route::post('/sendVerificationCode', 'sendVerificationCode');
+    Route::post('/resetPassword', 'resetPassword');
     Route::middleware('auth:api')->post('/logout', 'logout');
 });
 

@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Hash;
 use App\Models\User;
 use Illuminate\Support\Facades\Storage;
 use App\Models\Booking;
+use Carbon\Carbon;
 
 class UserController extends Controller
 {
@@ -74,6 +75,8 @@ class UserController extends Controller
         if ($request->has('password') && $request->has('new_password')) {
             if (Hash::make($request->password) == $user->password) {
                 $user->password = Hash::make($request->new_password);
+            } else {
+                return response()->json(['message' => 'Incorrect password'], 200);
             }
         }
 
@@ -108,7 +111,8 @@ class UserController extends Controller
         return response()->json(['users' => $allUsers], 200);
     }
 
-    public function adminEditUser (Request $request) {
+    public function adminEditUser (Request $request)
+    {
 
         $request->validate([
             'user_id' => 'required|integer',
@@ -169,5 +173,22 @@ class UserController extends Controller
         }
 
         return response()->json(['bookings' => $booking], 200);
+    }
+
+    public function resetPassword (Request $request)
+    {
+        $request->validate([
+            'new_password' => 'required|integer',
+        ]);
+
+        $user = auth()->user();
+
+        if ($user->phone_verified_at > Carbon::now()->subMinutes(5)) {
+            $user->password = Hash::make($request->new_password);
+        }
+
+        $user->save();
+
+        return response()->json(['message' => 'Password changed successfully'], 200);
     }
 }
