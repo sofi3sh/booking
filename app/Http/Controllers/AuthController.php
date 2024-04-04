@@ -31,9 +31,9 @@ class AuthController extends Controller
         $message = $response->current();
     }
 
-    private function sendVerificationCode($userPhone)
+    public function sendVerificationCode($userPhone)
     {
-        $verificationCode = mt_rand(100000, 999999);
+        $verificationCode = mt_rand(1000, 9999);
 
         $user = User::where('phone', $userPhone)->first();
 

@@ -7,6 +7,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BookingObjectController;
 use App\Http\Controllers\BookingController;
+use App\Http\Controllers\OneCController;
 
 Route::prefix('auth')
 ->controller(AuthController::class)
@@ -15,6 +16,8 @@ Route::prefix('auth')
     Route::post('/register', 'register');
     Route::post('/login', 'login')->name('login');
     Route::post('/verify', 'verify');
+    Route::post('/sendVerificationCode', 'sendVerificationCode');
+    Route::post('/resetPassword', 'resetPassword');
     Route::middleware('auth:api')->post('/logout', 'logout');
 });
 
@@ -26,7 +29,8 @@ Route::prefix('user')
     Route::post('/updateProfile', 'updateProfile');
 });
 
-Route::resource('objects', BookingObjectController::class);
+Route::resource('objects', BookingObjectController::class)->only(['index', 'show']);
+Route::get('objects/{id}/getBookingsByObjectId', [BookingController::class, 'getBookingsByObjectId']);
 
 Route::prefix('admin')
 ->middleware('auth:api')
@@ -37,10 +41,32 @@ Route::prefix('admin')
     Route::post('/editUser', 'adminEditUser');
 });
 
+Route::prefix('admin')
+->middleware('auth:api')
+->group(function () {
+    Route::resource('objects', BookingObjectController::class)->only(['store', 'destroy']);
+    Route::post('objects/{id}', [BookingObjectController::class, 'update']);
+    Route::post('objects/{id}/deletePhotosByName', [BookingObjectController::class, 'deletePhotosByName']);
+    Route::post('objects/{id}/addObjectPhotos', [BookingObjectController::class, 'addObjectPhotos']);
+
+});
+
 Route::prefix('booking')
 ->middleware('auth:api')
 ->controller(BookingController::class)
 ->group(function () {
     Route::post('/reserveObject', 'reserveObject');
     Route::post('/bookObject', 'bookObject');
+});
+
+// one C routes
+
+Route::prefix('onec')->group(function () {
+    Route::prefix('objects')->controller(OneCController::class)->group(function () {
+        Route::get('/', 'index');
+    });
+
+    // Route::prefix('booking')->controller(OneCController::class)->group(function () {
+        
+    // });
 });

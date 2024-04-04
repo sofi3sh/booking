@@ -67,7 +67,7 @@ class BookingObjectController extends Controller
 
     /**
      * @OA\Post(
-     *     path="/api/objects",
+     *     path="/api/admin/objects",
      *     summary="Create a new object",
      *     tags={"Objects"},
      *     @OA\RequestBody(
@@ -182,7 +182,7 @@ class BookingObjectController extends Controller
 
     /**
      * @OA\Put(
-     *     path="/api/objects/{id}",
+     *     path="/api/admin/objects/{id}",
      *     summary="Update a booking object by ID",
      *     tags={"Objects"},
      *     @OA\Parameter(
@@ -218,8 +218,15 @@ class BookingObjectController extends Controller
      *                 description="Photos for the booking object"
      *             ),
      *             @OA\Property(
+     *                 property="status",
+     *                 type="string",
+     *                 enum={"free", "reserved", "booked"},
+     *                 description="Status of the booking object"
+     *             ),
+     *             @OA\Property(
      *                 property="preview_photo",
      *                 type="string",
+     *                 format="binary",
      *                 description="Preview photo of the booking object"
      *             )
      *         )
