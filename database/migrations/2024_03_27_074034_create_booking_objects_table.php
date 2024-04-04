@@ -15,11 +15,16 @@ return new class extends Migration
         Schema::create('booking_objects', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('description')->nullable();
-            $table->float('price');
-            $table->json('photos')->nullable(); 
+            $table->text('description')->nullable();
+            $table->decimal('price', 10, 2)->default(0);
+            $table->decimal('weekend_price', 10, 2)->default(0);
+            $table->decimal('discount', 5, 2)->default(0);
+            $table->dateTime('discount_start_date')->nullable();
+            $table->dateTime('discount_end_date')->nullable();
+            $table->json('photos')->nullable();
             $table->enum('status', ['free', 'reserved', 'booked'])->default(ObjectStatus::FREE->value);
             $table->string('preview_photo')->nullable();
+            $table->integer('max_persons')->nullable();
             $table->timestamps();
         });
     }

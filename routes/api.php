@@ -7,6 +7,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BookingObjectController;
 use App\Http\Controllers\BookingController;
+use App\Http\Controllers\OneCController;
 
 Route::prefix('auth')
 ->controller(AuthController::class)
@@ -58,4 +59,16 @@ Route::prefix('booking')
     Route::post('/reserveObject', 'reserveObject');
     Route::post('/bookObject', 'bookObject');
     Route::post('/cancelBooking', 'cancelBooking');
+});
+
+// one C routes
+
+Route::prefix('onec')->group(function () {
+    Route::prefix('objects')->controller(OneCController::class)->group(function () {
+        Route::get('/', 'index');
+    });
+
+    // Route::prefix('booking')->controller(OneCController::class)->group(function () {
+        
+    // });
 });

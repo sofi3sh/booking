@@ -635,6 +635,89 @@
                 }
             }
         },
+        "/api/onec/objects": {
+            "get": {
+                "tags": [
+                    "1C"
+                ],
+                "summary": "Get all booking objects",
+                "operationId": "8b0ea73b0b7fdb605fa9b58ca11efe0e",
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "properties": {
+                                            "id": {
+                                                "description": "Unique identifier for the booking object",
+                                                "type": "integer"
+                                            },
+                                            "name": {
+                                                "description": "Name of the booking object",
+                                                "type": "string"
+                                            },
+                                            "price": {
+                                                "description": "Price of the booking object",
+                                                "type": "number",
+                                                "format": "float"
+                                            },
+                                            "weekend_price": {
+                                                "description": "Weekend price of the booking object",
+                                                "type": "number",
+                                                "format": "float"
+                                            },
+                                            "discount": {
+                                                "description": "Discount of the booking object",
+                                                "type": "number",
+                                                "format": "float"
+                                            },
+                                            "discount_start_date": {
+                                                "description": "Discount start date of the booking object",
+                                                "type": "string",
+                                                "format": "date-time"
+                                            },
+                                            "discount_end_date": {
+                                                "description": "Discount end date of the booking object",
+                                                "type": "string",
+                                                "format": "date-time"
+                                            },
+                                            "status": {
+                                                "description": "Status of the booking object",
+                                                "type": "string"
+                                            },
+                                            "max_persons": {
+                                                "description": "Maximum number of persons for the booking object",
+                                                "type": "integer"
+                                            }
+                                        },
+                                        "type": "object"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "No booking objects found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "description": "Error message",
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/api/user/getProfile": {
             "get": {
                 "tags": [
@@ -1112,6 +1195,10 @@
         {
             "name": "Objects",
             "description": "API for managing objects"
+        },
+        {
+            "name": "1C",
+            "description": "API for 1C"
         },
         {
             "name": "Users",
