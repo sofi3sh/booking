@@ -15,11 +15,10 @@ class BookingController extends Controller
      *
      * @return void
      */
-    public static function updateExpiredReservedNotPaidObjectStatus()
+    public static function updateExpiredReservedNotPaidBookingObjectStatus()
     {
         $expiredBookingObjectsIds = Booking::where('reserved_to', '<', Carbon::now())
             ->where('payment_status', 0)
-            ->whereNull('booked_to')
             ->pluck('object_id');
 
         BookingObject::whereIn('id', $expiredBookingObjectsIds)
@@ -31,14 +30,9 @@ class BookingController extends Controller
      *
      * @return void
      */
-    public static function updateExpiresBookedObjectStatus()
+    public static function updateExpiresBookedBookingObjectStatus()
     {
         $expiredBookingObjects = Booking::where('booked_to', '<', Carbon::now())
-            ->orWhere(function ($query) {
-                $query->where('booked_to', '>', Carbon::now())
-                    ->where('booked_from', '<', Carbon::now())
-                    ->where('canceled', 1);
-            })
             ->pluck('object_id');
 
         BookingObject::whereIn('id', $expiredBookingObjects)
@@ -115,6 +109,7 @@ class BookingController extends Controller
     public function reserveObject (Request $request)
     {
         $request->validate([
+            'user_id' => 'required|integer',
             'object_id' => 'required|integer',
         ]);
 
@@ -124,21 +119,21 @@ class BookingController extends Controller
             return response()->json(['message' => 'You need to be verified'], 403);
         }
 
-        $bookingObject = BookingObject::where('id', $request->object_id)->first();
-
-        if (!$bookingObject) {
+        if (!BookingObject::where('id', $request->object_id)->first()) {
             return response()->json(['message' => 'Object not found'], 404);
         }
 
-        if ($bookingObject->status !== ObjectStatus::FREE->value) {
-            return response()->json(['message' => 'Object is not available for booking'], 403);
-        }
-
-        $newBooking = $this->createObjectReservation($user->id, $request->object_id);
+        $newBooking = new Booking ([
+            'user_id' => $request->user_id,
+            'object_id' => $request->object_id,
+            'reserved_from' => Carbon::now(),
+            'reserved_to' => Carbon::now()->addMinutes(2), // 2 min for test, replace to 15 in prod
+            'payment_status' => 0,
+        ]);
 
         BookingObject::where('id', $request->object_id)
             ->update(['status' => ObjectStatus::RESERVED->value]);
-        
+
         $newBooking->save();
         
         return response()->json(['message' => 'Object has been reserved'], 200);
@@ -219,7 +214,8 @@ class BookingController extends Controller
         Booking::where('id', $request->booking_id)
             ->update(['canceled' => 1]);
 
-        return response()->json(['message' => 'Booking cancelled'], 200);
+
+        return response()->json(['message' => 'Object has been booked'], 200);
     }
 
     public function getBookingsByObjectId ($objectId)

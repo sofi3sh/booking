@@ -34,7 +34,7 @@ class UserController extends Controller
     {
         $request->validate([
             'name' => 'sometimes|required|string',
-            'phone' => 'sometimes|required|integer|unique:users,phone,' . auth()->user()->id,
+            'phone' => 'sometimes|required|string|unique:users,phone,' . auth()->user()->id,
             'last_name' => 'sometimes|required|string',
             'email' => 'sometimes|required|email|unique:users,email,' . auth()->user()->id,
             'date_of_birth' => 'sometimes|required|date',
@@ -127,7 +127,7 @@ class UserController extends Controller
         if (!$this->userIsAdmin($user)) {
             return response()->json(['message' => 'permission denied'], 403);
         }
-
+        
         $targetUser = User::where('id', $request->user_id)->get()->first();
 
         if ($request->has('name')) {
@@ -190,4 +190,5 @@ class UserController extends Controller
 
         return response()->json(['message' => 'Password changed successfully'], 200);
     }
+
 }
