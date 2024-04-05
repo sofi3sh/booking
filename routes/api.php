@@ -8,6 +8,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BookingObjectController;
 use App\Http\Controllers\BookingController;
 use App\Http\Controllers\OneCController;
+use App\Http\Controllers\ReviewController;
 
 Route::prefix('auth')
 ->controller(AuthController::class)
@@ -31,6 +32,14 @@ Route::prefix('user')
 
 Route::resource('objects', BookingObjectController::class)->only(['index', 'show']);
 Route::get('objects/{id}/getBookingsByObjectId', [BookingController::class, 'getBookingsByObjectId']);
+Route::get('objects/{id}/reviews', [ReviewController::class, 'index']);
+Route::get('objects/{id}/reviews/showAllByObjectId', [ReviewController::class, 'showAllByObjectId']);
+Route::prefix('objects')
+->middleware('auth:api')
+->controller(ReviewController::class)
+->group(function () {
+    Route::post('/{id}/reviews', 'store');
+});
 
 Route::prefix('admin')
 ->middleware('auth:api')

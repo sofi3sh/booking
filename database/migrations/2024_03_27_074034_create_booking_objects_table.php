@@ -4,6 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 use App\Enums\ObjectStatus;
+use App\Enums\ObjectZone;
 
 return new class extends Migration
 {
@@ -22,6 +23,7 @@ return new class extends Migration
             $table->dateTime('discount_start_date')->nullable();
             $table->dateTime('discount_end_date')->nullable();
             $table->json('photos')->nullable();
+            $table->enum('zone', ['bungalow', 'pool', 'cottages'])->default(ObjectZone::POOL->value);
             $table->enum('status', ['free', 'reserved', 'booked'])->default(ObjectStatus::FREE->value);
             $table->string('preview_photo')->nullable();
             $table->integer('max_persons')->nullable();
