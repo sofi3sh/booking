@@ -9,6 +9,8 @@ use App\Http\Controllers\BookingObjectController;
 use App\Http\Controllers\BookingController;
 use App\Http\Controllers\OneCController;
 use App\Http\Controllers\ReviewController;
+use App\Http\Controllers\PaymentController;
+
 
 Route::prefix('auth')
 ->controller(AuthController::class)
@@ -73,9 +75,15 @@ Route::prefix('booking')
 Route::prefix('onec')->group(function () {
     Route::prefix('objects')->controller(OneCController::class)->group(function () {
         Route::get('/', 'index');
+        Route::post('/object/{id}', 'update');
+        Route::post('/updateAllByType', 'updateAllByType');
     });
 
     // Route::prefix('booking')->controller(OneCController::class)->group(function () {
         
     // });
 });
+
+// payment test
+
+Route::post('/payment', [PaymentController::class, 'processPayment']);
