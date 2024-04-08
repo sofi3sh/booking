@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\BookingObject;
+use Carbon\Carbon;
 
 class OneCController extends Controller
 {
@@ -51,11 +52,12 @@ class OneCController extends Controller
         }
 
         if ($request->has('discount_start_date')) {
-            $bookingObject->discount_start_date = $request->input('discount_start_date');
+            
+            $bookingObject->discount_start_date = Carbon::parse($request->input('discount_start_date'))->startOfDay();
         }
 
         if ($request->has('discount_end_date')) {
-            $bookingObject->discount_end_date = $request->input('discount_end_date');
+            $bookingObject->discount_end_date = Carbon::parse($request->input('discount_end_date'))->endOfDay();
         }
 
         $bookingObject->save();
@@ -85,10 +87,10 @@ class OneCController extends Controller
             $updateData['discount'] = $request->input('discount');
         }
         if ($request->has('discount_start_date')) {
-            $updateData['discount_start_date'] = $request->input('discount_start_date');
+            $updateData['discount_start_date'] = Carbon::parse($request->input('discount_start_date'))->startOfDay();
         }
         if ($request->has('discount_end_date')) {
-            $updateData['discount_end_date'] = $request->input('discount_end_date');
+            $updateData['discount_end_date'] = Carbon::parse($request->input('discount_end_date'))->endOfDay();
         }
 
         BookingObject::where('type', $request->input('type'))->update($updateData);
@@ -97,4 +99,5 @@ class OneCController extends Controller
 
         return response()->json($bookingObjects, 200);
     }
+
 }

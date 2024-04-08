@@ -76,7 +76,7 @@ Route::prefix('booking')
 Route::prefix('onec')->group(function () {
     Route::prefix('objects')->controller(OneCController::class)->group(function () {
         Route::get('/', 'index');
-        Route::post('/object/{id}', 'update');
+        Route::post('/updateObject/{id}', 'update');
         Route::post('/updateAllByType', 'updateAllByType');
     });
 
