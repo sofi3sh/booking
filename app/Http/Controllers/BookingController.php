@@ -7,6 +7,8 @@ use App\Models\Booking;
 use App\Models\BookingObject;
 use App\Enums\ObjectStatus;
 use Carbon\Carbon;
+use App\Events\BookingObjectStatusUpdated;
+use Illuminate\Support\Facades\Event;
 
 class BookingController extends Controller
 {
@@ -24,6 +26,10 @@ class BookingController extends Controller
 
         BookingObject::whereIn('id', $expiredBookingObjectsIds)
             ->update(['status' => ObjectStatus::FREE->value]);
+
+        foreach ($expiredBookingObjectsIds as $objectId) {
+            event(new BookingObjectStatusUpdated($objectId, ObjectStatus::FREE->value));
+        }
     }
 
     /**
@@ -43,6 +49,10 @@ class BookingController extends Controller
 
         BookingObject::whereIn('id', $expiredBookingObjects)
             ->update(['status' => ObjectStatus::FREE->value]);
+        
+        foreach ($expiredBookingObjectsIds as $objectId) {
+            event(new BookingObjectStatusUpdated($objectId, ObjectStatus::FREE->value));
+        }
     }
 
     /**
@@ -59,6 +69,10 @@ class BookingController extends Controller
 
         BookingObject::whereIn('id', $bookedObjects)
             ->update(['status' => ObjectStatus::BOOKED->value]);
+
+        foreach ($bookedObjects as $objectId) {
+            event(new BookingObjectStatusUpdated($objectId, ObjectStatus::BOOKED->value));
+        }
     }
 
     private function userIsAdmin ($user)
@@ -144,7 +158,7 @@ class BookingController extends Controller
         return response()->json(['message' => 'Object has been reserved'], 200);
     }
 
-    public function bookObject (Request $request)
+    public function bookObjects (Request $request)
     {
         $request->validate([
             '*.object_id' => 'required|integer',
