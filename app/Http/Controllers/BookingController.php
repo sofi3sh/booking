@@ -71,7 +71,7 @@ class BookingController extends Controller
         ]);
     }
 
-    private function createBooking ($userId, $objectId, $dateFrom, $dateTo, $paymentStatus = 0)
+    private function createBooking ($userId, $objectId, $dateFrom, $dateTo, $paymentStatus, $description)
     {
         return new Booking ([
             'user_id' => $userId,
@@ -81,6 +81,7 @@ class BookingController extends Controller
             'booked_from' => Carbon::parse($dateFrom)->startOfDay(),
             'booked_to' => Carbon::parse($dateTo)->endOfDay(),
             'payment_status' => $paymentStatus,
+            'description' => $description,
         ]);
     }
 
@@ -139,7 +140,7 @@ class BookingController extends Controller
         return response()->json(['message' => 'Object has been reserved'], 200);
     }
 
-    public function bookObject (Request $request)
+    public function bookObjects (Request $request)
     {
         $request->validate([
             '*.object_id' => 'required|integer',
@@ -147,17 +148,21 @@ class BookingController extends Controller
             '*.booked_to' => 'required|date',
             '*.user_id' => 'nullable|integer',
             '*.payment_status' => 'nullable|boolean',
+            '*.description' => 'nullable|string',
         ]);
     
         $user = auth()->user();
     
         $bookings = [];
+
+        $orderId = strtoupper(uniqid());
     
         foreach ($request->all() as $bookingData) {
             $objectId = $bookingData['object_id'];
             $bookedFrom = $bookingData['booked_from'];
             $bookedTo = $bookingData['booked_to'];
             $userId = $bookingData['user_id'] ?? $user->id;
+            $description = $bookingData['description'] ?? "";
     
             if ($userId && !$this->userIsAdmin($user)) {
                 return response()->json(['message' => 'Permission denied'], 403);
@@ -182,11 +187,13 @@ class BookingController extends Controller
             $dateToInEndDay = Carbon::parse($bookedTo)->endOfDay();
     
             if (!$existingBooking) {
-                $booking = $this->createBooking($userId, $objectId, $dateFromInStartDay, $dateToInEndDay, $bookingData['payment_status'] ?? 1);
+                $booking = $this->createBooking($userId, $objectId, $dateFromInStartDay, $dateToInEndDay, $bookingData['payment_status'] ?? 1, $description, $orderId);
             } else {
                 $existingBooking->booked_from = $dateFromInStartDay;
                 $existingBooking->booked_to = $dateToInEndDay;
                 $existingBooking->payment_status = $bookingData['payment_status'] ?? 1;
+                $existingBooking->description = $description;
+                $existingBooking->order_id = $orderId;
                 $existingBooking->save();
                 $booking = $existingBooking;
             }

@@ -67,7 +67,8 @@ Route::prefix('booking')
 ->controller(BookingController::class)
 ->group(function () {
     Route::post('/reserveObject', 'reserveObject');
-    Route::post('/bookObject', 'bookObject');
+    Route::post('/bookObjects', 'bookObjects');
+    Route::post('/cancelBooking', 'cancelBooking');
 });
 
 // one C routes
