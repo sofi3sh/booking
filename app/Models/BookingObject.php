@@ -9,7 +9,7 @@ class BookingObject extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['name', 'description', 'price', 'photos', 'preview_photo'];
+    protected $fillable = ['name', 'description', 'price', 'photos', 'preview_photo', 'type'];
 
     protected $casts = [
         'photos' => 'array'
