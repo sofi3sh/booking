@@ -688,6 +688,10 @@
                                                 "description": "Status of the booking object",
                                                 "type": "string"
                                             },
+                                            "type": {
+                                                "description": "Type of the booking object",
+                                                "type": "string"
+                                            },
                                             "max_persons": {
                                                 "description": "Maximum number of persons for the booking object",
                                                 "type": "integer"
@@ -711,6 +715,265 @@
                                         }
                                     },
                                     "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/onec/objects/updateObject/{id}": {
+            "post": {
+                "tags": [
+                    "1C"
+                ],
+                "summary": "Update booking object",
+                "operationId": "bc0b4b28cdf68b9a8db464016e477c55",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the booking object to update",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "price": {
+                                        "description": "Price of the booking object",
+                                        "type": "number",
+                                        "format": "float"
+                                    },
+                                    "weekend_price": {
+                                        "description": "Weekend price of the booking object",
+                                        "type": "number",
+                                        "format": "float"
+                                    },
+                                    "discount": {
+                                        "description": "Discount of the booking object",
+                                        "type": "number",
+                                        "format": "float"
+                                    },
+                                    "discount_start_date": {
+                                        "description": "Discount start date of the booking object",
+                                        "type": "string",
+                                        "format": "date-time",
+                                        "example": "2024-04-08"
+                                    },
+                                    "discount_end_date": {
+                                        "description": "Discount end date of the booking object",
+                                        "type": "string",
+                                        "format": "date-time",
+                                        "example": "2024-04-08"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "id": {
+                                            "description": "Unique identifier for the booking object",
+                                            "type": "integer"
+                                        },
+                                        "name": {
+                                            "description": "Name of the booking object",
+                                            "type": "string"
+                                        },
+                                        "price": {
+                                            "description": "Price of the booking object",
+                                            "type": "number",
+                                            "format": "float"
+                                        },
+                                        "weekend_price": {
+                                            "description": "Weekend price of the booking object",
+                                            "type": "number",
+                                            "format": "float"
+                                        },
+                                        "discount": {
+                                            "description": "Discount of the booking object",
+                                            "type": "number",
+                                            "format": "float"
+                                        },
+                                        "discount_start_date": {
+                                            "description": "Discount start date of the booking object",
+                                            "type": "string",
+                                            "format": "date-time"
+                                        },
+                                        "discount_end_date": {
+                                            "description": "Discount end date of the booking object",
+                                            "type": "string",
+                                            "format": "date-time"
+                                        },
+                                        "status": {
+                                            "description": "Status of the booking object",
+                                            "type": "string"
+                                        },
+                                        "type": {
+                                            "description": "Type of the booking object",
+                                            "type": "string"
+                                        },
+                                        "max_persons": {
+                                            "description": "Maximum number of persons for the booking object",
+                                            "type": "integer"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "No booking object found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "description": "Error message",
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/onec/objects/updateAllByType": {
+            "post": {
+                "tags": [
+                    "1C"
+                ],
+                "summary": "Update all booking objects by type",
+                "operationId": "e348c8fc1bebdf521a78d1b88bd13d7e",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "type"
+                                ],
+                                "properties": {
+                                    "type": {
+                                        "description": "Type of the booking object",
+                                        "type": "string",
+                                        "example": "sunbed"
+                                    },
+                                    "price": {
+                                        "description": "Price of the booking object",
+                                        "type": "number",
+                                        "format": "float",
+                                        "example": 100
+                                    },
+                                    "weekend_price": {
+                                        "description": "Weekend price of the booking object",
+                                        "type": "number",
+                                        "format": "float",
+                                        "example": 120
+                                    },
+                                    "discount": {
+                                        "description": "Discount of the booking object",
+                                        "type": "number",
+                                        "format": "float",
+                                        "example": 10
+                                    },
+                                    "discount_start_date": {
+                                        "description": "Discount start date of the booking object",
+                                        "type": "string",
+                                        "format": "date-time",
+                                        "example": "2024-04-08"
+                                    },
+                                    "discount_end_date": {
+                                        "description": "Discount end date of the booking object",
+                                        "type": "string",
+                                        "format": "date-time",
+                                        "example": "2024-05-08"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "properties": {
+                                            "id": {
+                                                "description": "Booking object ID",
+                                                "type": "integer"
+                                            },
+                                            "name": {
+                                                "description": "Booking object name",
+                                                "type": "string"
+                                            },
+                                            "price": {
+                                                "description": "Booking object price",
+                                                "type": "number",
+                                                "format": "float"
+                                            },
+                                            "weekend_price": {
+                                                "description": "Booking object weekend price",
+                                                "type": "number",
+                                                "format": "float"
+                                            },
+                                            "discount": {
+                                                "description": "Booking object discount",
+                                                "type": "number",
+                                                "format": "float"
+                                            },
+                                            "discount_start_date": {
+                                                "description": "Booking object discount start date",
+                                                "type": "string",
+                                                "format": "date-time"
+                                            },
+                                            "discount_end_date": {
+                                                "description": "Booking object discount end date",
+                                                "type": "string",
+                                                "format": "date-time"
+                                            },
+                                            "zone": {
+                                                "description": "Booking object zone",
+                                                "type": "string"
+                                            },
+                                            "status": {
+                                                "description": "Booking object status",
+                                                "type": "string"
+                                            },
+                                            "type": {
+                                                "description": "Booking object type",
+                                                "type": "string"
+                                            },
+                                            "max_persons": {
+                                                "description": "Maximum persons allowed in the booking object",
+                                                "type": "integer"
+                                            }
+                                        },
+                                        "type": "object"
+                                    }
                                 }
                             }
                         }
