@@ -104,7 +104,7 @@ class OneCController extends Controller
 
     /**
      * @OA\Post(
-     *     path="/api/onec/objects/object/{id}",
+     *     path="/api/onec/objects/updateObject/{id}",
      *     summary="Update booking object",
      *     tags={"1C"},
      *     @OA\Parameter(
@@ -140,13 +140,15 @@ class OneCController extends Controller
      *                 property="discount_start_date",
      *                 type="string",
      *                 format="date-time",
-     *                 description="Discount start date of the booking object"
+     *                 description="Discount start date of the booking object",
+     *                 example="2024-04-08"
      *             ),
      *             @OA\Property(
      *                 property="discount_end_date",
      *                 type="string",
      *                 format="date-time",
-     *                 description="Discount end date of the booking object"
+     *                 description="Discount end date of the booking object",
+     *                 example="2024-04-08"
      *             )
      *         )
      *     ),
