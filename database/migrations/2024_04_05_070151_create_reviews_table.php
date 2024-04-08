@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->integer('user_id');
             $table->integer('object_id');
-            $table->string('object_zone');
+            $table->string('object_type');
             $table->text('text');
             $table->timestamps();
         });
