@@ -11,11 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('verification_codes', function (Blueprint $table) {
+        Schema::create('reviews', function (Blueprint $table) {
             $table->id();
-            $table->integer('phone');
-            $table->integer('code');
-            $table->timestamp('expires_at');
+            $table->integer('user_id');
+            $table->integer('object_id');
+            $table->string('object_zone');
+            $table->text('text');
             $table->timestamps();
         });
     }
@@ -25,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('verification_codes');
+        Schema::dropIfExists('reviews');
     }
 };

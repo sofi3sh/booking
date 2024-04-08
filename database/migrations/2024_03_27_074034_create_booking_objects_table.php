@@ -4,6 +4,8 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 use App\Enums\ObjectStatus;
+use App\Enums\ObjectZone;
+use App\Enums\ObjectType;
 
 return new class extends Migration
 {
@@ -15,11 +17,18 @@ return new class extends Migration
         Schema::create('booking_objects', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('description')->nullable();
-            $table->float('price');
-            $table->string('photos')->nullable();
+            $table->text('description')->nullable();
+            $table->decimal('price', 10, 2)->default(0);
+            $table->decimal('weekend_price', 10, 2)->default(0);
+            $table->decimal('discount', 5, 2)->default(0);
+            $table->dateTime('discount_start_date')->nullable();
+            $table->dateTime('discount_end_date')->nullable();
+            $table->json('photos')->nullable();
+            $table->enum('zone', ['bungalow', 'pool', 'cottages'])->default(ObjectZone::POOL->value);
             $table->enum('status', ['free', 'reserved', 'booked'])->default(ObjectStatus::FREE->value);
+            $table->enum('type', ['sunbed', 'bed', 'bungalow', 'second bungalow', 'little cottage', 'big cottage'])->default(ObjectType::SUNBED->value);
             $table->string('preview_photo')->nullable();
+            $table->integer('max_persons')->nullable();
             $table->timestamps();
         });
     }
