@@ -981,6 +981,219 @@
                 }
             }
         },
+        "/api/reviews": {
+            "get": {
+                "tags": [
+                    "Reviews"
+                ],
+                "summary": "Get all reviews",
+                "operationId": "438856901f1931ca1e60aed5774eee9d",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "properties": {
+                                            "id": {
+                                                "description": "Unique identifier for the review",
+                                                "type": "integer"
+                                            },
+                                            "user_id": {
+                                                "description": "User id",
+                                                "type": "integer"
+                                            },
+                                            "object_id": {
+                                                "description": "Object id",
+                                                "type": "integer"
+                                            },
+                                            "object_type": {
+                                                "description": "Object type",
+                                                "type": "string"
+                                            },
+                                            "text": {
+                                                "description": "Text of the review",
+                                                "type": "string"
+                                            },
+                                            "created_at": {
+                                                "description": "Created at",
+                                                "type": "string",
+                                                "format": "date-time"
+                                            },
+                                            "updated_at": {
+                                                "description": "Updated at",
+                                                "type": "string",
+                                                "format": "date-time"
+                                            }
+                                        },
+                                        "type": "object"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "No reviews found"
+                    }
+                }
+            }
+        },
+        "/api/objects/{id}/reviews": {
+            "post": {
+                "tags": [
+                    "Reviews"
+                ],
+                "summary": "Create a review",
+                "operationId": "780fe78b29c993d8efbebb46f562a7ec",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "text": {
+                                        "description": "Text of the review",
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "user_id": {
+                                            "description": "User id",
+                                            "type": "integer"
+                                        },
+                                        "object_id": {
+                                            "description": "Object id",
+                                            "type": "integer"
+                                        },
+                                        "object_type": {
+                                            "description": "Object type",
+                                            "type": "string"
+                                        },
+                                        "text": {
+                                            "description": "Text of the review",
+                                            "type": "string"
+                                        },
+                                        "created_at": {
+                                            "description": "Created at",
+                                            "type": "string",
+                                            "format": "date-time"
+                                        },
+                                        "updated_at": {
+                                            "description": "Updated at",
+                                            "type": "string",
+                                            "format": "date-time"
+                                        },
+                                        "id": {
+                                            "description": "Unique identifier for the review",
+                                            "type": "integer"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Object not found"
+                    }
+                }
+            }
+        },
+        "/api/objects/{id}/reviews/showAllByObjectId": {
+            "get": {
+                "tags": [
+                    "Reviews"
+                ],
+                "summary": "Get all reviews for a specific object",
+                "description": "Get all reviews by object id or by type of object(bed or sunbed)",
+                "operationId": "9af037840d0054d34e21e1a95f8abdf3",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the object",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "properties": {
+                                            "id": {
+                                                "description": "Unique identifier for the review",
+                                                "type": "integer"
+                                            },
+                                            "user_id": {
+                                                "description": "User id",
+                                                "type": "integer"
+                                            },
+                                            "object_id": {
+                                                "description": "Object id",
+                                                "type": "integer"
+                                            },
+                                            "object_type": {
+                                                "description": "Object type",
+                                                "type": "string"
+                                            },
+                                            "text": {
+                                                "description": "Text of the review",
+                                                "type": "string"
+                                            },
+                                            "created_at": {
+                                                "description": "Created at",
+                                                "type": "string",
+                                                "format": "date-time"
+                                            },
+                                            "updated_at": {
+                                                "description": "Updated at",
+                                                "type": "string",
+                                                "format": "date-time"
+                                            },
+                                            "user_name": {
+                                                "description": "Name of the user who wrote the review",
+                                                "type": "string"
+                                            },
+                                            "user_last_name": {
+                                                "description": "Last name of the user who wrote the review",
+                                                "type": "string"
+                                            },
+                                            "user_photo": {
+                                                "description": "URL to the photo of the user who wrote the review",
+                                                "type": "string"
+                                            }
+                                        },
+                                        "type": "object"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Object not found"
+                    }
+                }
+            }
+        },
         "/api/user/getProfile": {
             "get": {
                 "tags": [
@@ -1374,6 +1587,10 @@
         {
             "name": "1C",
             "description": "API for 1C"
+        },
+        {
+            "name": "Reviews",
+            "description": "API for reviews"
         },
         {
             "name": "Users",
