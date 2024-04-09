@@ -75,6 +75,9 @@ Route::prefix('booking')
         Route::post('/reserveObject', 'reserveObject');
         Route::post('/bookObjects', 'bookObjects');
         Route::post('/cancelBooking', 'cancelBooking');
+        Route::post('/getOrderAmount', 'getOrderAmount');
+        Route::post('/getPriceForBooking', 'getPriceForBooking');
+        Route::post('/getOrder', 'getOrder');
     });
 
 // one C routes
