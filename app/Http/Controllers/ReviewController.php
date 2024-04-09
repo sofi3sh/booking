@@ -9,10 +9,9 @@ use Illuminate\Http\Request;
 
 class ReviewController extends Controller
 {
-    public function index($id) 
+    public function index() 
     {
-        
-        $reviews = Review::all()->where('object_id', $id);
+        $reviews = Review::all();
 
         if ($reviews->isEmpty()) {
             return response()->json(['message' => 'No reviews found'], 404);
