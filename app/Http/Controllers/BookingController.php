@@ -164,7 +164,7 @@ class BookingController extends Controller
             $userId = $bookingData['user_id'] ?? $user->id;
             $description = $bookingData['description'] ?? "";
     
-            if ($userId && !$this->userIsAdmin($user)) {
+            if (!empty($bookingData['user_id']) && !$this->userIsAdmin($user)) {
                 return response()->json(['message' => 'Permission denied'], 403);
             }
 
@@ -175,7 +175,7 @@ class BookingController extends Controller
             }
 
             if (!$this->isObjectAvailableToBook($objectId, $bookedFrom, $bookedTo)) {
-                return response()->json(['message' => 'Object "' . $bookingObject->name . '" is not available for booking during the specified dates'], 403);
+                return response()->json(['message' => 'Object ' . $bookingObject->name . ' is not available for booking during the specified dates'], 403);
             }
 
             $existingBooking = Booking::where('user_id', $userId)
@@ -186,9 +186,12 @@ class BookingController extends Controller
             $dateFromInStartDay = Carbon::parse($bookedFrom)->startOfDay();
             $dateToInEndDay = Carbon::parse($bookedTo)->endOfDay();
     
-            if (!$existingBooking) {
+            if (empty($existingBooking) && !empty($bookingData['user_id'])) {
                 $booking = $this->createBooking($userId, $objectId, $dateFromInStartDay, $dateToInEndDay, $bookingData['payment_status'] ?? 1, $description, $orderId);
-            } else {
+                $booking->save();
+            }
+            
+            if (!empty($existingBooking)){
                 $existingBooking->booked_from = $dateFromInStartDay;
                 $existingBooking->booked_to = $dateToInEndDay;
                 $existingBooking->payment_status = $bookingData['payment_status'] ?? 1;
@@ -196,10 +199,10 @@ class BookingController extends Controller
                 $existingBooking->order_id = $orderId;
                 $existingBooking->save();
                 $booking = $existingBooking;
+            } else {
+                return response()->json(['message' => 'Booking must be reserved', 'bookings' => $bookings], 200);
             }
-    
-            $booking->save();
-    
+        
             if ($bookedFrom < Carbon::now()) {
                 $bookingObject->update(['status' => ObjectStatus::BOOKED->value]);
             } else {
@@ -220,7 +223,6 @@ class BookingController extends Controller
 
         Booking::where('id', $request->booking_id)
             ->update(['canceled' => 1]);
-
 
         return response()->json(['message' => 'Object has been booked'], 200);
     }

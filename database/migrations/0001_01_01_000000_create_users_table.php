@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('last_name');
-            $table->integer('phone')->unique();
+            $table->biginteger('phone')->unique();
             $table->timestamp('phone_verified_at')->nullable();
             $table->string('password');
             $table->integer('role_id');
