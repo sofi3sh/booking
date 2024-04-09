@@ -5,14 +5,24 @@ namespace App\Http\Controllers;
 use App\Models\BookingObject;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use App\Models\Booking;
+use Carbon\Carbon;
 
 class BookingObjectController extends Controller
 {
-
     private function userIsAdmin ($user)
     {
         return $user->role_id == 1;
     }
+
+    private function getAwailableObjectIdsByDate ($date)
+    {
+        return Booking::whereDate('booked_to', '>=', $date)
+                    ->whereDate('booked_from', '<=', $date)
+                    ->pluck('object_id')
+                    ->unique();
+    }
+
     /**
      * Display a listing of the resource.
      */
@@ -27,10 +37,21 @@ class BookingObjectController extends Controller
         return response()->json($bookingObjects, 200);
     }
 
+    public function getAvailableObjectsByDate (Request $request)
+    {
+        $request->validate([
+            'date' => 'required|date',
+        ]);
+
+        $date = Carbon::parse($request->date)->toDateString();
+        $availableObjects = BookingObject::whereNotIn('id', $this->getAwailableObjectIdsByDate($date))->get();
+
+        return response()->json($availableObjects, 200);
+    }
+
     /**
      * Store a newly created resource in storage.
      */
-
     public function store(Request $request)
     {
         $user = auth()->user();
@@ -64,7 +85,6 @@ class BookingObjectController extends Controller
             $newObject->status = $request->input('status');
         }
         
-
         if ($request->hasFile('photos')) {
             $photos = $request->file('photos');
             $photoPaths = [];
@@ -206,7 +226,8 @@ class BookingObjectController extends Controller
         return response()->json(['message' => 'Object deleted successfully'], 200);
     }
 
-    public function deletePhotosByName(Request $request, $id) {
+    public function deletePhotosByName(Request $request, $id)
+    {
         $user = auth()->user();
 
         if (!$this->userIsAdmin($user)) {
@@ -232,7 +253,6 @@ class BookingObjectController extends Controller
                     if ($photo === $photoName) {
                         Storage::disk('public')->delete($photo);
                     }
-                    
                 }
             }
 
