@@ -71,17 +71,55 @@ class BookingController extends Controller
         ]);
     }
 
+    private function calculatePriceForBooking ($objectId, $dateFrom, $dateTo)
+    {
+        $totalPrice = 0.0;
+
+        $bookingObject = BookingObject::select('price', 'weekend_price', 'discount', 'discount_start_date', 'discount_end_date')->where('id', $objectId)->get();
+
+        $bookingFrom = Carbon::parse($dateFrom);
+        $bookingTo = Carbon::parse($dateTo);
+        $discountStartDate = Carbon::parse($bookingObject->discount_start_date);
+        $discountEndDate = Carbon::parse($bookingObject->discount_end_date);
+
+        $weekends = $bookingFrom->diffInDaysFiltered(function ($date) {
+            return $date->isWeekend();
+        }, $bookingTo);
+
+        $weekdays = $bookingFrom->diffInDaysFiltered(function ($date) {
+            return $date->isWeekday();
+        }, $bookingTo);
+
+        $totalPrice += $weekends * $bookingObject->price;
+        $totalPrice += $weekends * $bookingObject->weekend_price;
+
+        // Check if the booking period falls within the discount period
+        if ($bookingFrom->between($discountStartDate, $discountEndDate) || 
+            $bookingTo->between($discountStartDate, $discountEndDate) ||
+            ($bookingFrom <= $discountStartDate && $bookingTo >= $discountEndDate)) {
+            $discountPercentage = $bookingObject->discount / 100;
+
+            $totalPrice -= $totalPrice * $discountPercentage;
+        }
+
+        return $totalPrice;
+    }
+
     private function createBooking ($userId, $objectId, $dateFrom, $dateTo, $paymentStatus, $description)
     {
+        $dateFromInStartDay = Carbon::parse($dateFrom)->startOfDay();
+        $dateToInEndDay = Carbon::parse($dateTo)->endOfDay();
+
         return new Booking ([
             'user_id' => $userId,
             'object_id' => $objectId,
             'reserved_from' => Carbon::now(),
             'reserved_to' => Carbon::now(),
-            'booked_from' => Carbon::parse($dateFrom)->startOfDay(),
-            'booked_to' => Carbon::parse($dateTo)->endOfDay(),
+            'booked_from' => $dateFromInStartDay,
+            'booked_to' => $dateToInEndDay,
             'payment_status' => $paymentStatus,
             'description' => $description,
+            'price' => $this->calculatePriceForBooking($objectId, $dateFromInStartDay, $dateToInEndDay),
         ]);
     }
 
@@ -197,6 +235,7 @@ class BookingController extends Controller
                 $existingBooking->payment_status = $bookingData['payment_status'] ?? 1;
                 $existingBooking->description = $description;
                 $existingBooking->order_id = $orderId;
+                $existingBooking->price = $this->calculatePriceForBooking($existingBooking->object_id, $dateFromInStartDay, $dateToInEndDay);
                 $existingBooking->save();
                 $booking = $existingBooking;
             } else {
@@ -236,5 +275,37 @@ class BookingController extends Controller
         }
 
         return response()->json(['bookings' => $bookings], 200);
+    }
+
+    public function getOrder (Request $request)
+    {
+        $request->validate([
+            'order_id' => 'required|integer',
+        ]);
+
+        $totalPrice = 0.0;
+
+        $bookingsInOrder = Booking::where('order_id', $request->order_id)->get();
+
+        if ($bookingsInOrder->isEmpty()) {
+            return response()->json(['message' => 'Order not found'], 404);
+        }
+
+        foreach ($bookingsInOrder as $booking) {
+            $totalPrice += $booking->price;
+        }
+
+        return response()->json(['bookings' => $$bookingsInOrder, 'total_price' => $totalPrice], 200);
+    }
+
+    public function getPriceForBooking(Request $request)
+    {
+        $request->validate([
+            'object_id' => 'required|integer',
+            'booked_from' => 'required|date',
+            'booked_to' => 'required|date',
+        ]);
+
+        return $this->calculatePriceForBooking($request->object_id, $request->booked_from, $request->booked_to);
     }
 }
