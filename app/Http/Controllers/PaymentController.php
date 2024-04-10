@@ -73,11 +73,11 @@ class PaymentController extends Controller
             'buyer_ip_address' => $request->ip(),
             'buyer_timezone' => 0000000, // Може бути порожнім, якщо не відомий
             'buyer_referrer' => 'test', // Може бути порожнім
-            'card_number' => '5168752004451681',
-            'card_exp_year' => '2026', // Термін дії карти (рік)
-            'card_exp_month' => '06', // Термін дії карти (місяць)
-            'card_holder' => 'Maxym Humennui', // Власник карти
-            'card_cvv' => '425', // CVV-код
+            'card_number' => '',
+            'card_exp_year' => '', // Термін дії карти (рік)
+            'card_exp_month' => '', // Термін дії карти (місяць)
+            'card_holder' => '', // Власник карти
+            'card_cvv' => '', // CVV-код
             'transactionType' => 'PURCHASE', // Тип транзакції
             'version' => 1, // Версія API
         ];
