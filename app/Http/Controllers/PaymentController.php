@@ -7,43 +7,45 @@ use Illuminate\Support\Facades\Http;
 
 class PaymentController extends Controller
 {
-    public function processPayment()
+    public function preparePaymentData(Request $request)
     {
-        // Визначаємо параметри оплати
-        $params = [
-            'merchantAccount' => 'test_merch_n1',
-            'merchantAuthType' => 'SimpleSignature',
-            'merchantDomainName' => 'www.market.ua',
-            'orderReference' => 'DH1712655743',
-            'orderDate' => '1415379863',
-            'amount' => 1547.36,
-            'currency' => 'UAH',
-            'orderTimeout' => 49000,
-            'productName' => ['Процессор Intel Core i5-4670 3.4GHz', 'Память Kingston DDR3-1600 4096MB PC3-12800'],
-            'productPrice' => [1000, 547.36],
-            'productCount' => [1, 1],
-            'clientFirstName' => 'Вася',
-            'clientLastName' => 'Пупкин',
-            'clientAddress' => 'пр. Гагарина, 12',
-            'clientCity' => 'Днепропетровск',
-            'clientEmail' => 'some@mail.com',
-            'defaultPaymentSystem' => 'card',
-            'merchantSignature' => 'f75c4726aab0d31b7155772e517d2079',
-        ];
+        $request->validate([
+            'amount' => 'required|numeric',
+            'productName' => 'required|string',
+            'productCount' => 'required|string',
+            'productPrice' => 'required|string',
+        ]);
 
-        // Виконуємо POST-запит до WayForPay API
-        $response = Http::post('https://secure.wayforpay.com/pay', $params);
 
-        // Перевіряємо статус відповіді
-        if ($response->successful()) {
-            $paymentUrl = $response->body();
+        $currentDate = date('U');
 
-            // Перенаправляємо користувача на сторінку оплати
-            return redirect()->away($paymentUrl);
-        } else {
-            // Логіка для обробки помилки платежу
+        $merchantAccount = env('MERCHANT_ACCOUNT');
+        $merchantDomainName = env('MERCHANT_DOMAIN_NAME');
+        $orderReference = strtoupper(uniqid());
+        $orderDate = $currentDate;
+        $amount = $request->amount;
+        $currency = 'UAH';
+        $productName = $request->productName;
+        $productCount = $request->productCount;
+        $productPrice = $request->productPrice;
 
-            return response()->json(['error' => 'Payment processing failed'], 500);
-        }
+        $data = implode(';', [
+            $merchantAccount,
+            $merchantDomainName,
+            $orderReference,
+            $orderDate,
+            $amount,
+            $currency,
+            $productName,
+            $productCount,
+            $productPrice
+        ]);
+        
+        $key = env('MERCHANT_kEY');
+
+        $merchantSignature = hash_hmac('md5', $data, $key);
+
+        return response()->json(['merchantSignature' => $merchantSignature], 200);
     }
+        
 }
