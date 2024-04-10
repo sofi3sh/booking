@@ -93,6 +93,5 @@ Route::prefix('onec')->group(function () {
 
 // payment test
 
-Route::get('/payment', [PaymentController::class, 'processPayment']);
-Route::post('/makepayment', [PaymentController::class, 'makePayment']);
+Route::post('/preparePaymentData', [PaymentController::class, 'preparePaymentData']);
 

@@ -7,85 +7,45 @@ use Illuminate\Support\Facades\Http;
 
 class PaymentController extends Controller
 {
-    public function processPayment()
+    public function preparePaymentData(Request $request)
     {
-        // Визначаємо параметри оплати
-        $params = [
-            'merchantAccount' => 'freelance_user_6615038fd77a0',
-            'merchantAuthType' => 'SimpleSignature',
-            'merchantDomainName' => 'bookingTest',
-            'orderReference' => 'DH1712733325',
-            'orderDate' => '1415379863',
-            'amount' => 1,
-            'currency' => 'UAH',
-            'orderTimeout' => 49000,
-            'productName' => ['Процессор Intel Core i5-4670 3.4GHz', 'Память Kingston DDR3-1600 4096MB PC3-12800'],
-            'productPrice' => [1, 1],
-            'productCount' => [1, 1],
-            'clientFirstName' => 'Вася',
-            'clientLastName' => 'Пупкин',
-            'clientAddress' => 'пр. Гагарина, 12',
-            'clientCity' => 'Днепропетровск',
-            'clientEmail' => 'some@mail.com',
-            'defaultPaymentSystem' => 'card',
-            'merchantSignature' => 'df395ac7d6a99e89e120ea24c8e5daf4',
-        ];
+        $request->validate([
+            'amount' => 'required|numeric',
+            'productName' => 'required|string',
+            'productCount' => 'required|string',
+            'productPrice' => 'required|string',
+        ]);
 
-        // Виконуємо POST-запит до WayForPay API
-        $response = Http::post('https://secure.wayforpay.com/pay', $params);
 
-        // Перевіряємо статус відповіді
-        if ($response->successful()) {
-            $paymentUrl = $response->body();
+        $currentDate = date('U');
 
-            // Перенаправляємо користувача на сторінку оплати
-            return redirect()->away($paymentUrl);
-        } else {
-            // Логіка для обробки помилки платежу
+        $merchantAccount = env('MERCHANT_ACCOUNT');
+        $merchantDomainName = env('MERCHANT_DOMAIN_NAME');
+        $orderReference = strtoupper(uniqid());
+        $orderDate = $currentDate;
+        $amount = $request->amount;
+        $currency = 'UAH';
+        $productName = $request->productName;
+        $productCount = $request->productCount;
+        $productPrice = $request->productPrice;
 
-            return response()->json(['error' => 'Payment processing failed'], 500);
-        }
+        $data = implode(';', [
+            $merchantAccount,
+            $merchantDomainName,
+            $orderReference,
+            $orderDate,
+            $amount,
+            $currency,
+            $productName,
+            $productCount,
+            $productPrice
+        ]);
+        
+        $key = env('MERCHANT_kEY');
+
+        $merchantSignature = hash_hmac('md5', $data, $key);
+
+        return response()->json(['merchantSignature' => $merchantSignature], 200);
     }
-
-    public function makePayment(Request $request)
-    {
-        // Параметри запиту
-        $params = [
-            'merchantAccount' => 'freelance_user_6615038fd77a0',
-            'merchantAuthType' => 'SimpleSignature',
-            'merchantDomainName' => 'bookingTest',
-            'orderReference' => 'DH1712733325',
-            'orderDate' => 1415379863,
-            'amount' => 2,
-            'currency' => 'UAH',
-            'orderTimeout' => 49000,
-            'productName' => ['Процессор Intel Core i5-4670 3.4GHz', 'Память Kingston DDR3-1600 4096MB PC3-12800'],
-            'productPrice' => [1, 1],
-            'productCount' => [1, 1],
-            'clientFirstName' => 'Вася',
-            'clientLastName' => 'Пупкин',
-            'clientAddress' => 'пр. Гагарина, 12',
-            'clientCity' => 'Днепропетровск',
-            'clientEmail' => 'some@mail.com',
-            'defaultPaymentSystem' => 'card',
-            'merchantSignature' => 'df395ac7d6a99e89e120ea24c8e5daf4',
-            // Обов'язкові параметри
-            'buyer_ip_address' => $request->ip(),
-            'buyer_timezone' => 0000000, // Може бути порожнім, якщо не відомий
-            'buyer_referrer' => 'test', // Може бути порожнім
-            'card_number' => '',
-            'card_exp_year' => '', // Термін дії карти (рік)
-            'card_exp_month' => '', // Термін дії карти (місяць)
-            'card_holder' => '', // Власник карти
-            'card_cvv' => '', // CVV-код
-            'transactionType' => 'PURCHASE', // Тип транзакції
-            'version' => 1, // Версія API
-        ];
-
-        // Виконати запит до API Wayforpay
-        $response = Http::post('https://api.wayforpay.com/api', $params);
-
-        // Повернути відповідь API Wayforpay
-        return $response->json();
-    }
+        
 }
