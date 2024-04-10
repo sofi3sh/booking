@@ -13,29 +13,36 @@ use App\Http\Controllers\PaymentController;
 
 
 Route::prefix('auth')
-->controller(AuthController::class)
-->middleware('throttle:password_access')
-->group(function () {
-    Route::post('/register', 'register');
-    Route::post('/login', 'login')->name('login');
-    Route::post('/verify', 'verify');
-    Route::post('/sendVerificationCode', 'sendVerificationCode');
-    Route::post('/resetPassword', 'resetPassword');
-    Route::middleware('auth:api')->post('/logout', 'logout');
-});
+    ->controller(AuthController::class)
+    ->middleware('throttle:password_access')
+    ->group(function () {
+        Route::post('/register', 'register');
+        Route::post('/login', 'login')->name('login');
+        Route::post('/verify', 'verify');
+        Route::post('/sendVerificationCode', 'sendVerificationCode');
+        Route::post('/resetPassword', 'resetPassword');
+        Route::middleware('auth:api')->post('/logout', 'logout');
+    });
 
 Route::prefix('user')
-->middleware('auth:api')
-->controller(UserController::class)
-->group(function () {
-    Route::get('/getProfile', 'getProfile');
-    Route::post('/updateProfile', 'updateProfile');
-});
+    ->middleware('auth:api')
+    ->controller(UserController::class)
+    ->group(function () {
+        Route::get('/getProfile', 'getProfile');
+        Route::post('/updateProfile', 'updateProfile');
+    });
 
 Route::resource('objects', BookingObjectController::class)->only(['index', 'show']);
 Route::get('objects/{id}/getBookingsByObjectId', [BookingController::class, 'getBookingsByObjectId']);
-Route::get('objects/{id}/reviews', [ReviewController::class, 'index']);
+Route::get('reviews', [ReviewController::class, 'index']);
 Route::get('objects/{id}/reviews/showAllByObjectId', [ReviewController::class, 'showAllByObjectId']);
+
+Route::prefix('objects')
+    ->controller(BookingObjectController::class)
+    ->group(function () {
+        Route::post('/getAvailableObjectsByDate', 'getAvailableObjectsByDate');
+    });
+
 Route::prefix('objects')
 ->middleware('auth:api')
 ->controller(ReviewController::class)
@@ -44,32 +51,34 @@ Route::prefix('objects')
 });
 
 Route::prefix('admin')
-->middleware('auth:api')
-->controller(UserController::class)
-->group(function () {
-    Route::get('/getUsers', 'adminGetUsers');
-    Route::get('/getBookingAgents', 'adminGetBookingAgents');
-    Route::post('/editUser', 'adminEditUser');
-});
+    ->middleware('auth:api')
+    ->controller(UserController::class)
+    ->group(function () {
+        Route::get('/getUsers', 'adminGetUsers');
+        Route::get('/getBookingAgents', 'adminGetBookingAgents');
+        Route::post('/editUser', 'adminEditUser');
+    });
 
 Route::prefix('admin')
-->middleware('auth:api')
-->group(function () {
-    Route::resource('objects', BookingObjectController::class)->only(['store', 'destroy']);
-    Route::post('objects/{id}', [BookingObjectController::class, 'update']);
-    Route::post('objects/{id}/deletePhotosByName', [BookingObjectController::class, 'deletePhotosByName']);
-    Route::post('objects/{id}/addObjectPhotos', [BookingObjectController::class, 'addObjectPhotos']);
-
-});
+    ->middleware('auth:api')
+    ->group(function () {
+        Route::resource('objects', BookingObjectController::class)->only(['store', 'destroy']);
+        Route::post('objects/{id}', [BookingObjectController::class, 'update']);
+        Route::post('objects/{id}/deletePhotosByName', [BookingObjectController::class, 'deletePhotosByName']);
+        Route::post('objects/{id}/addObjectPhotos', [BookingObjectController::class, 'addObjectPhotos']);
+    });
 
 Route::prefix('booking')
-->middleware('auth:api')
-->controller(BookingController::class)
-->group(function () {
-    Route::post('/reserveObject', 'reserveObject');
-    Route::post('/bookObjects', 'bookObjects');
-    Route::post('/cancelBooking', 'cancelBooking');
-});
+    ->middleware('auth:api')
+    ->controller(BookingController::class)
+    ->group(function () {
+        Route::post('/reserveObject', 'reserveObject');
+        Route::post('/bookObjects', 'bookObjects');
+        Route::post('/cancelBooking', 'cancelBooking');
+        Route::post('/getOrderAmount', 'getOrderAmount');
+        Route::post('/getPriceForBooking', 'getPriceForBooking');
+        Route::post('/getOrder', 'getOrder');
+    });
 
 // one C routes
 
@@ -87,4 +96,4 @@ Route::prefix('onec')->group(function () {
 
 // payment test
 
-Route::post('/payment', [PaymentController::class, 'processPayment']);
+Route::get('/payment', [PaymentController::class, 'processPayment']);

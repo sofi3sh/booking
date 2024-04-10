@@ -11,13 +11,12 @@ class ReviewController extends Controller
 {
     public function index() 
     {
-        
         $reviews = Review::all();
 
         if ($reviews->isEmpty()) {
             return response()->json(['message' => 'No reviews found'], 404);
         }
-        return response()->json($bookingObjects, 200);;
+        return response()->json($reviews, 200);;
     }
 
     public function store(Request $request, $id) 
@@ -38,7 +37,7 @@ class ReviewController extends Controller
         $review->user_id = $user->id;
         $review->object_id = $id;
 
-        $review->object_zone = $object->zone;
+        $review->object_type = $object->type;
 
         $review->text = $request->input('text');
         $review->save();
@@ -56,29 +55,15 @@ class ReviewController extends Controller
             return response()->json(['error' => 'Object not found'], 404);
         }
 
-        if ($object->zone === 'pool') {
+        if ($object->type === 'sunbed' || $object->type === 'bed') {
 
-            $reviews = Review::all()->where('object_zone', $object->zone);
+            $reviews = Review::all()->where('object_type', $object->type);
 
             if ($reviews->isEmpty()) {
                 return response()->json(['message' => 'No reviews found'], 404);
             }
 
-            $reviewsWithUser = $reviews->map(function ($review) {
-                $reviewData = $review->toArray();
-                $user = User::find($review->user_id);
-                if (!$user) {
-                    $reviewData['user_name'] = 'Anonymous';
-                    $reviewData['user_last_name'] = null;
-                    $reviewData['user_photo'] = null;
-                } else {
-                    $reviewData['user_name'] = $user->name;
-                    $reviewData['user_last_name'] = $user->last_name;
-                    $reviewData['user_photo'] = $user->photo;
-                }
-                
-                return $reviewData;
-            });
+            $reviewsWithUser = $this->reviewWithUser($reviews);
 
 
             return response()->json($reviewsWithUser, 200);
@@ -90,26 +75,34 @@ class ReviewController extends Controller
                 return response()->json(['message' => 'No reviews found'], 404);
             }
 
-            $reviewsWithUser = $reviews->map(function ($review) {
-                $reviewData = $review->toArray();
-                $user = User::find($review->user_id);
-                if (!$user) {
-                    $reviewData['user_name'] = 'Anonymous';
-                    $reviewData['user_last_name'] = null;
-                    $reviewData['user_photo'] = null;
-                } else {
-                    $reviewData['user_name'] = $user->name;
-                    $reviewData['user_last_name'] = $user->last_name;
-                    $reviewData['user_photo'] = $user->photo;
-                }
-                
-                return $reviewData;
-            });
+            $reviewsWithUser = $this->reviewWithUser($reviews);
         
             return response()->json($reviewsWithUser, 200);
         
         }
 
+    }
+
+    private function reviewWithUser($reviews) {
+
+        $reviewsWithUser = $reviews->map(function ($review) {
+            $reviewData = $review->toArray();
+            $user = User::find($review->user_id);
+            if (!$user) {
+                $reviewData['user_name'] = 'Anonymous';
+                $reviewData['user_last_name'] = null;
+                $reviewData['user_photo'] = null;
+            } else {
+                $reviewData['user_name'] = $user->name;
+                $reviewData['user_last_name'] = $user->last_name;
+                $reviewData['user_photo'] = $user->photo;
+            }
+            
+            return $reviewData;
+        });
+
+
+        return $reviewsWithUser;
     }
 
 

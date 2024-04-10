@@ -12,7 +12,7 @@ class Review extends Model
     protected $fillable = [
         'user_id',
         'object_id',
-        'object_zone',
+        'object_type',
         'text',
     ];
 }
