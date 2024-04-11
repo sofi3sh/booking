@@ -104,32 +104,33 @@ class AuthController extends Controller
      *     summary="User registration",
      *     tags={"Auth"},
      *     @OA\RequestBody(
-     *         required=true,
-     *         @OA\JsonContent(
-     *             type="object",
-     *             @OA\Property(
-     *                 property="name",
-     *                 type="string",
-     *                 description="User's first name"
-     *             ),
-     *             @OA\Property(
-     *                 property="last_name",
-     *                 type="string",
-     *                 description="User's last name"
-     *             ),
-     *             @OA\Property(
-     *                 property="phone",
-     *                 type="integer",
-     *                 description="User's phone number",
-     *                 format="phone",
-     *                 uniqueItems=true
-     *             ),
-     *             @OA\Property(
-     *                 property="password",
-     *                 type="string",
-     *                 description="User's password",
-     *                 format="password",
-     *                 minLength=8
+     *         @OA\MediaType(
+     *             mediaType="application/json",
+     *             @OA\Schema(
+     *                 @OA\Property(
+     *                     property="name",
+     *                     type="string",
+     *                     description="User's first name"
+     *                 ),
+     *                 @OA\Property(
+     *                     property="last_name",
+     *                     type="string",
+     *                     description="User's last name"
+     *                 ),
+     *                 @OA\Property(
+     *                     property="phone",
+     *                     type="integer",
+     *                     description="User's phone number",
+     *                     format="phone",
+     *                     uniqueItems=true
+     *                 ),
+     *                 @OA\Property(
+     *                     property="password",
+     *                     type="string",
+     *                     description="User's password",
+     *                     format="password",
+     *                     minLength=8
+     *                 )
      *             )
      *         )
      *     ),
