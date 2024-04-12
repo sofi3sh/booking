@@ -9,6 +9,13 @@ use App\Enums\ObjectStatus;
 
 class PaymentController extends Controller
 {
+    protected $bookingService;
+
+    public function __construct(BookingService $bookingService)
+    {
+        $this->bookingService = $bookingService;
+    }
+
     public function preparePaymentData(Request $request)
     {
         $request->validate([
@@ -75,6 +82,6 @@ class PaymentController extends Controller
 
         $bookings = $this->bookingService->bookExistingReserve($request, auth()->user());
 
-        return response()->json(['message' => 'Objects have been booked successfully', 'bookings' => $bookings], 200);
+        return response()->json(['bookings' => $bookings], 200);
     }
 }
