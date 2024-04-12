@@ -17,6 +17,7 @@ return new class extends Migration
             $table->integer('object_id');
             $table->string('object_type');
             $table->text('text');
+            $table->integer('rating');
             $table->timestamps();
         });
     }

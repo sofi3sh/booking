@@ -51,6 +51,11 @@ class ReviewController extends Controller
      *                     description="Text of the review"
      *                 ),
      *                 @OA\Property(
+     *                     property="rating",
+     *                     type="integer",
+     *                     description="Rating of the review from 1 to 5"
+     *                 ),
+     *                 @OA\Property(
      *                     property="created_at",
      *                     type="string",
      *                     format="date-time",
@@ -115,6 +120,11 @@ class ReviewController extends Controller
      *                 property="text",
      *                 type="string",
      *                 description="Text of the review"
+     *             ),
+     *             @OA\Property(
+     *                 property="rating",
+     *                 type="integer",
+     *                 description="Rating of the review from 1 to 5"
      *             ),
      *             @OA\Property(
      *                 property="created_at",
@@ -193,6 +203,11 @@ class ReviewController extends Controller
      *                     property="text",
      *                     type="string",
      *                     description="Text of the review"
+     *                 ),
+     *                 @OA\Property(
+     *                     property="rating",
+     *                     type="integer",
+     *                     description="Rating of the review from 1 to 5"
      *                 ),
      *                 @OA\Property(
      *                     property="created_at",

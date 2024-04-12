@@ -378,19 +378,98 @@
                                             },
                                             "price": {
                                                 "description": "Price of the booking object",
-                                                "type": "integer"
+                                                "type": "number"
+                                            },
+                                            "weekend_price": {
+                                                "description": "Weekend price of the booking object",
+                                                "type": "number"
+                                            },
+                                            "discount": {
+                                                "description": "Discount of the booking object",
+                                                "type": "number"
+                                            },
+                                            "discount_start_date": {
+                                                "description": "Discount start date of the booking object",
+                                                "type": "string",
+                                                "format": "date"
+                                            },
+                                            "discount_end_date": {
+                                                "description": "Discount end date of the booking object",
+                                                "type": "string",
+                                                "format": "date"
                                             },
                                             "photos": {
                                                 "description": "Photos for the booking object",
                                                 "type": "string"
                                             },
+                                            "zone": {
+                                                "description": "Zone of the booking object",
+                                                "type": "string",
+                                                "enum": [
+                                                    "bungalow",
+                                                    "pool",
+                                                    "cottages"
+                                                ]
+                                            },
+                                            "status": {
+                                                "description": "Status of the booking object",
+                                                "type": "string",
+                                                "enum": [
+                                                    "free",
+                                                    "reserved",
+                                                    "booked"
+                                                ]
+                                            },
+                                            "type": {
+                                                "description": "Type of the booking object",
+                                                "type": "string",
+                                                "enum": [
+                                                    "sunbed",
+                                                    "bed",
+                                                    "bungalow",
+                                                    "second bungalow",
+                                                    "little cottage",
+                                                    "big cottage"
+                                                ]
+                                            },
                                             "preview_photo": {
                                                 "description": "Preview photo of the booking object",
                                                 "type": "string"
+                                            },
+                                            "max_persons": {
+                                                "description": "Max persons of the booking object",
+                                                "type": "integer"
+                                            },
+                                            "created_at": {
+                                                "description": "Creation date of the booking object",
+                                                "type": "string",
+                                                "format": "date-time"
+                                            },
+                                            "updated_at": {
+                                                "description": "Update date of the booking object",
+                                                "type": "string",
+                                                "format": "date-time"
                                             }
                                         },
                                         "type": "object"
                                     }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Object not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "description": "No booking objects found",
+                                            "type": "string",
+                                            "example": "No booking objects found"
+                                        }
+                                    },
+                                    "type": "object"
                                 }
                             }
                         }
@@ -486,15 +565,77 @@
                                         },
                                         "price": {
                                             "description": "Price of the booking object",
-                                            "type": "integer"
+                                            "type": "number"
+                                        },
+                                        "weekend_price": {
+                                            "description": "Weekend price of the booking object",
+                                            "type": "number"
+                                        },
+                                        "discount": {
+                                            "description": "Discount of the booking object",
+                                            "type": "number"
+                                        },
+                                        "discount_start_date": {
+                                            "description": "Discount start date of the booking object",
+                                            "type": "string",
+                                            "format": "date"
+                                        },
+                                        "discount_end_date": {
+                                            "description": "Discount end date of the booking object",
+                                            "type": "string",
+                                            "format": "date"
                                         },
                                         "photos": {
                                             "description": "Photos for the booking object",
                                             "type": "string"
                                         },
+                                        "zone": {
+                                            "description": "Zone of the booking object",
+                                            "type": "string",
+                                            "enum": [
+                                                "bungalow",
+                                                "pool",
+                                                "cottages"
+                                            ]
+                                        },
+                                        "status": {
+                                            "description": "Status of the booking object",
+                                            "type": "string",
+                                            "enum": [
+                                                "free",
+                                                "reserved",
+                                                "booked"
+                                            ]
+                                        },
+                                        "type": {
+                                            "description": "Type of the booking object",
+                                            "type": "string",
+                                            "enum": [
+                                                "sunbed",
+                                                "bed",
+                                                "bungalow",
+                                                "second bungalow",
+                                                "little cottage",
+                                                "big cottage"
+                                            ]
+                                        },
                                         "preview_photo": {
                                             "description": "Preview photo of the booking object",
                                             "type": "string"
+                                        },
+                                        "max_persons": {
+                                            "description": "Maximum person of the booking object",
+                                            "type": "integer"
+                                        },
+                                        "created_at": {
+                                            "description": "Creation date of the booking object",
+                                            "type": "string",
+                                            "format": "date-time"
+                                        },
+                                        "updated_at": {
+                                            "description": "Update date of the booking object",
+                                            "type": "string",
+                                            "format": "date-time"
                                         }
                                     },
                                     "type": "object"
@@ -630,6 +771,137 @@
                     },
                     "404": {
                         "description": "Object not found"
+                    }
+                }
+            }
+        },
+        "/api/objects/getAvailableObjectsByDate": {
+            "post": {
+                "tags": [
+                    "Objects"
+                ],
+                "summary": "Get all available objects",
+                "description": "Get all available objects",
+                "operationId": "a93769cc16ae69344053621e46d7e38d",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "date": {
+                                        "description": "Date of the booking",
+                                        "type": "string",
+                                        "format": "date"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "properties": {
+                                            "id": {
+                                                "description": "Unique identifier for the booking object",
+                                                "type": "integer"
+                                            },
+                                            "name": {
+                                                "description": "Name of the booking object",
+                                                "type": "string"
+                                            },
+                                            "description": {
+                                                "description": "Description of the booking object",
+                                                "type": "string"
+                                            },
+                                            "price": {
+                                                "description": "Price of the booking object",
+                                                "type": "number"
+                                            },
+                                            "weekend_price": {
+                                                "description": "Weekend price of the booking object",
+                                                "type": "number"
+                                            },
+                                            "discount": {
+                                                "description": "Discount of the booking object",
+                                                "type": "number"
+                                            },
+                                            "discount_start_date": {
+                                                "description": "Discount start date of the booking object",
+                                                "type": "string",
+                                                "format": "date"
+                                            },
+                                            "discount_end_date": {
+                                                "description": "Discount end date of the booking object",
+                                                "type": "string",
+                                                "format": "date"
+                                            },
+                                            "photos": {
+                                                "description": "Photos for the booking object",
+                                                "type": "string"
+                                            },
+                                            "zone": {
+                                                "description": "Zone of the booking object",
+                                                "type": "string",
+                                                "enum": [
+                                                    "bungalow",
+                                                    "pool",
+                                                    "cottages"
+                                                ]
+                                            },
+                                            "status": {
+                                                "description": "Status of the booking object",
+                                                "type": "string",
+                                                "enum": [
+                                                    "free",
+                                                    "reserved",
+                                                    "booked"
+                                                ]
+                                            },
+                                            "type": {
+                                                "description": "Type of the booking object",
+                                                "type": "string",
+                                                "enum": [
+                                                    "sunbed",
+                                                    "bed",
+                                                    "bungalow",
+                                                    "second bungalow",
+                                                    "little cottage",
+                                                    "big cottage"
+                                                ]
+                                            },
+                                            "preview_photo": {
+                                                "description": "Preview photo of the booking object",
+                                                "type": "string",
+                                                "format": "binary"
+                                            },
+                                            "max_persons": {
+                                                "description": "Max persons of the booking object",
+                                                "type": "integer"
+                                            },
+                                            "created_at": {
+                                                "description": "Creation date of the booking object",
+                                                "type": "string",
+                                                "format": "date-time"
+                                            },
+                                            "updated_at": {
+                                                "description": "Update date of the booking object",
+                                                "type": "string",
+                                                "format": "date-time"
+                                            }
+                                        },
+                                        "type": "object"
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -1099,6 +1371,10 @@
                                                 "description": "Text of the review",
                                                 "type": "string"
                                             },
+                                            "rating": {
+                                                "description": "Rating of the review from 1 to 5",
+                                                "type": "integer"
+                                            },
                                             "created_at": {
                                                 "description": "Created at",
                                                 "type": "string",
@@ -1166,6 +1442,10 @@
                                         "text": {
                                             "description": "Text of the review",
                                             "type": "string"
+                                        },
+                                        "rating": {
+                                            "description": "Rating of the review from 1 to 5",
+                                            "type": "integer"
                                         },
                                         "created_at": {
                                             "description": "Created at",
@@ -1240,6 +1520,10 @@
                                             "text": {
                                                 "description": "Text of the review",
                                                 "type": "string"
+                                            },
+                                            "rating": {
+                                                "description": "Rating of the review from 1 to 5",
+                                                "type": "integer"
                                             },
                                             "created_at": {
                                                 "description": "Created at",

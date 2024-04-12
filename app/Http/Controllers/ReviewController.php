@@ -31,6 +31,7 @@ class ReviewController extends Controller
 
         $request->validate([
             'text' => 'required|string',
+            'rating' => 'required|integer|between:1,5',
         ]);
 
         $review = new Review();
@@ -40,6 +41,7 @@ class ReviewController extends Controller
         $review->object_type = $object->type;
 
         $review->text = $request->input('text');
+        $review->rating = $request->input('rating');
         $review->save();
 
         return response()->json($review, 200);
