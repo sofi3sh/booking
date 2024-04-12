@@ -8,6 +8,9 @@ use App\Models\BookingObject;
 use App\Enums\ObjectStatus;
 use Carbon\Carbon;
 use App\Services\BookingService;
+use Vonage\Client;
+use Vonage\SMS\Message\SMS;
+use Vonage\Client\Credentials\Basic;
 
 class BookingController extends Controller
 {
@@ -63,6 +66,44 @@ class BookingController extends Controller
             ->update(['status' => ObjectStatus::BOOKED->value]);
     }
 
+    /**
+     * Automatically send notification for admin when 90% objects are booked.
+     *
+     * @return void
+     */
+    public static function sendNotificationWhenManyBookings ()
+    {
+        if (!$this->isBookingNotificationRequired()) {
+            return;
+        }
+
+        $to = env('ADMIN_PHONE_NUMBER');
+        $basic  = new Basic(env('VONAGE_API_KEY'), env('VONAGE_API_SECRET_KEY'));
+        $client = new Client($basic);
+
+        $message = "!ALERT!\n\n" . 
+           "90% of objects are booked today!";
+        
+        $client->sms()->send(
+            new SMS($to, 'brand', $message)
+        );
+    }
+
+    private function isBookingNotificationRequired ()
+    {
+        $currentDate = Carbon::now()->toDateString();
+    
+        $totalObjects = BookingObject::count();
+    
+        $bookedObjectsCount = Booking::whereDate('booked_from', '<=', $currentDate)
+            ->whereDate('booked_to', '>=', $currentDate)
+            ->count();
+    
+        $percentageBooked = ($bookedObjectsCount / $totalObjects) * 100;
+    
+        return $percentageBooked >= 90;
+    }
+    
     private function userIsAdmin ($user)
     {
         return $user->role_id == 1;
