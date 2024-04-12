@@ -186,4 +186,25 @@ class BookingController extends Controller
 
         return $totalPrice;
     }
+
+    public function getOrder (Request $request)
+    {
+        $request->validate([
+            'order_id' => 'required|integer',
+        ]);
+
+        $totalPrice = 0.0;
+
+        $bookingsInOrder = Booking::where('order_id', $request->order_id)->get();
+
+        if ($bookingsInOrder->isEmpty()) {
+            return response()->json(['message' => 'Order not found'], 404);
+        }
+
+        foreach ($bookingsInOrder as $booking) {
+            $totalPrice += $booking->price;
+        }
+
+        return response()->json(['bookings' => $$bookingsInOrder, 'total_price' => $totalPrice], 200);
+    }
 }

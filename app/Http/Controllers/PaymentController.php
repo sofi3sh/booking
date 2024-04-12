@@ -2,17 +2,64 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use App\Http\Controllers\BookingController;
-use App\Services\BookingService;
+use Carbon\Carbon;
+use App\Models\Booking;
+use App\Models\BookingObject;
+use App\Enums\ObjectStatus;
 
 class PaymentController extends Controller
 {
-    public function processPayment(Request $request)
+    public function preparePaymentData(Request $request)
     {
-        // Логіка обробки платежу тут
+        $request->validate([
+            'amount' => 'required|numeric',
+            'products' => 'required|array',
+            'products.*.name' => 'required|string',
+            'products.*.count' => 'required|numeric',
+            'products.*.price' => 'required|numeric',
+        ]);
 
-        return response()->json(['message' => 'Payment processed successfully'], 200);
+
+        $currentDate = Carbon::now()->timestamp;
+
+        $merchantAccount = env('MERCHANT_ACCOUNT');
+        $merchantDomainName = env('MERCHANT_DOMAIN_NAME');
+        $orderReference = strtoupper(uniqid());
+        $orderDate = $currentDate;
+        $amount = $request->amount;
+        $currency = 'UAH';
+        $products = $request->products;
+
+        $data = $merchantAccount . ';' . $merchantDomainName . ';' . $orderReference . ';' . $orderDate . ';' . $amount . ';' . $currency;
+
+        $productNames = [];
+        $productCounts = [];
+        $productPrices = [];
+
+        foreach ($products as $product) {
+            $productNames[] = $product['name'];
+            $productCounts[] = $product['count'];
+            $productPrices[] = $product['price'];
+        }
+
+        $data .= ';' . implode(';', $productNames);
+        $data .= ';' . implode(';', $productCounts);
+        $data .= ';' . implode(';', $productPrices);
+
+        //
+        
+        $key = env('MERCHANT_kEY');
+
+        $merchantSignature = hash_hmac('md5', $data, $key);
+
+        return response()->json([
+            'merchantSignature' => $merchantSignature,
+            'merchantAccount' => $merchantAccount,
+            'merchantDomainName' => $merchantDomainName,
+            'orderReference' => $orderReference,
+            'orderDate' => $orderDate,
+            'currency' => $currency,
+        ], 200);
     }
 
     public function createOrder (Request $request)

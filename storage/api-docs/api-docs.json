@@ -118,7 +118,6 @@
                 "summary": "User registration",
                 "operationId": "4cd55ed2516a9b023429e773b7b85064",
                 "requestBody": {
-                    "required": true,
                     "content": {
                         "application/json": {
                             "schema": {
@@ -981,6 +980,89 @@
                 }
             }
         },
+        "/api/preparePaymentData": {
+            "post": {
+                "tags": [
+                    "Payment"
+                ],
+                "summary": "Prepare payment data",
+                "description": "Prepare payment data",
+                "operationId": "preparePaymentData",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "amount": {
+                                        "description": "Amount of payment",
+                                        "type": "number"
+                                    },
+                                    "products": {
+                                        "type": "array",
+                                        "items": {
+                                            "properties": {
+                                                "name": {
+                                                    "description": "Name of product",
+                                                    "type": "string"
+                                                },
+                                                "count": {
+                                                    "description": "Count of product",
+                                                    "type": "number"
+                                                },
+                                                "price": {
+                                                    "description": "Price of product",
+                                                    "type": "number"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "merchantSignature": {
+                                            "description": "Merchant signature",
+                                            "type": "string"
+                                        },
+                                        "merchantAccount": {
+                                            "description": "Merchant account",
+                                            "type": "string"
+                                        },
+                                        "merchantDomainName": {
+                                            "description": "Merchant domain name",
+                                            "type": "string"
+                                        },
+                                        "orderReference": {
+                                            "description": "Order reference",
+                                            "type": "string"
+                                        },
+                                        "orderDate": {
+                                            "description": "Order date",
+                                            "type": "number"
+                                        },
+                                        "currency": {
+                                            "description": "Currency",
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/api/reviews": {
             "get": {
                 "tags": [
@@ -1587,6 +1669,10 @@
         {
             "name": "1C",
             "description": "API for 1C"
+        },
+        {
+            "name": "Payment",
+            "description": "API for payment"
         },
         {
             "name": "Reviews",

@@ -75,6 +75,9 @@ Route::prefix('booking')
         Route::post('/reserveObject', 'reserveObject');
         // Route::post('/bookObjects', 'bookObjects');
         Route::post('/cancelBooking', 'cancelBooking');
+        Route::post('/getOrderAmount', 'getOrderAmount');
+        Route::post('/getPriceForBooking', 'getPriceForBooking');
+        Route::post('/getOrder', 'getOrder');
     });
 
 Route::prefix('booking')
@@ -103,4 +106,5 @@ Route::prefix('onec')->group(function () {
 
 // payment test
 
-Route::post('/payment', [PaymentController::class, 'processPayment']);
+Route::post('/preparePaymentData', [PaymentController::class, 'preparePaymentData']);
+
