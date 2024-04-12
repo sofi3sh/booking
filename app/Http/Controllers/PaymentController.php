@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Http;
 use Carbon\Carbon;
+use App\Models\Booking;
+use App\Models\BookingObject;
+use App\Enums\ObjectStatus;
 
 class PaymentController extends Controller
 {
@@ -60,5 +61,20 @@ class PaymentController extends Controller
             'currency' => $currency,
         ], 200);
     }
-        
+
+    public function createOrder (Request $request)
+    {
+        $request->validate([
+            'order_id' => 'required|integer',
+            'amount' => 'required|decimal',
+            'fee' => 'required|decimal',
+            'issuer_bank_name' => 'required|string',
+            'card' => 'required|string',
+            'transaction_status' => 'required|string',
+        ]);
+
+        $bookings = $this->bookingService->bookExistingReserve($request, auth()->user());
+
+        return response()->json(['message' => 'Objects have been booked successfully', 'bookings' => $bookings], 200);
+    }
 }

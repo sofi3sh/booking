@@ -73,11 +73,21 @@ Route::prefix('booking')
     ->controller(BookingController::class)
     ->group(function () {
         Route::post('/reserveObject', 'reserveObject');
-        Route::post('/bookObjects', 'bookObjects');
+        // Route::post('/bookObjects', 'bookObjects');
         Route::post('/cancelBooking', 'cancelBooking');
         Route::post('/getOrderAmount', 'getOrderAmount');
         Route::post('/getPriceForBooking', 'getPriceForBooking');
         Route::post('/getOrder', 'getOrder');
+    });
+
+Route::prefix('booking')
+    ->middleware('auth:api')
+    ->controller(BookingController::class)
+    ->group(function () {
+        Route::prefix('admin')
+            ->group(function () {
+                Route::post('/bookObjects', 'adminBookObjects');
+            });
     });
 
 // one C routes
