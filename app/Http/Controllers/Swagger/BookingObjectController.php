@@ -6,12 +6,94 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use OpenApi\Annotations as OA;
 
+
 /**
  * @OA\Tag(
  *     name="Objects",
  *     description="API for managing objects"
+ * ),
+ * @OA\Schema(
+ *     schema="BookingObject",
+ *     required={"name", "price"},
+ *     @OA\Property(
+ *         property="name",
+ *         type="string",
+ *         description="Name of the booking object"
+ *     ),
+ *     @OA\Property(
+ *         property="description",
+ *         type="string",
+ *         description="Description of the booking object"
+ *     ),
+ *     @OA\Property(
+ *         property="price",
+ *         type="number",
+ *         format="float",
+ *         description="Price of the booking object"
+ *     ),
+ *     @OA\Property(
+ *         property="weekend_price",
+ *         type="number",
+ *         format="float",
+ *         description="Price of the booking object on weekends"
+ *     ),
+ *     @OA\Property(
+ *         property="discount",
+ *         type="number",
+ *         format="float",
+ *         description="Discount percentage for the booking object"
+ *     ),
+ *     @OA\Property(
+ *         property="discount_start_date",
+ *         type="string",
+ *         format="date",
+ *         description="Start date of the discount period"
+ *     ),
+ *     @OA\Property(
+ *         property="discount_end_date",
+ *         type="string",
+ *         format="date",
+ *         description="End date of the discount period"
+ *     ),
+ *     @OA\Property(
+ *         property="zone",
+ *         type="string",
+ *         description="Zone of the booking object (bungalow, pool, cottages)"
+ *     ),
+ *     @OA\Property(
+ *         property="status",
+ *         type="string",
+ *         description="Status of the booking object (free, reserved, booked)"
+ *     ),
+ *     @OA\Property(
+ *         property="type",
+ *         type="string",
+ *         description="Type of the booking object (sunbed, bed, bungalow, second bungalow, little cottage, big cottage)"
+ *     ),
+ *     @OA\Property(
+ *         property="preview_photo",
+ *         type="string",
+ *         format="binary",
+ *         description="Preview photo of the object (base64 encoded image)"
+ *     ),
+ *     @OA\Property(
+ *         property="photos",
+ *         type="array",
+ *         @OA\Items(
+ *             type="string",
+ *             format="binary",
+ *             description="Photos for the booking object (base64 encoded image)"
+ *         ),
+ *         description="Array of photos for the booking object"
+ *     ),
+ *     @OA\Property(
+ *         property="max_persons",
+ *         type="integer",
+ *         description="Maximum number of persons allowed for the booking object"
+ *     ),
  * )
  */
+
 class BookingObjectController extends Controller
 {
     /**
@@ -140,8 +222,10 @@ class BookingObjectController extends Controller
      *     path="/api/admin/objects",
      *     summary="Create a new object",
      *     tags={"Objects"},
+     *     security={{"bearerAuth":{}}},
      *     @OA\RequestBody(
      *         required=true,
+     *         description="Object details",
      *         @OA\MediaType(
      *             mediaType="application/json",
      *             @OA\Schema(
@@ -157,29 +241,95 @@ class BookingObjectController extends Controller
      *                 ),
      *                 @OA\Property(
      *                     property="price",
-     *                     type="integer",
+     *                     type="number",
+     *                     format="float",
      *                     description="Price of the booking object"
      *                 ),
      *                 @OA\Property(
-     *                     property="photos",
+     *                     property="weekend_price",
+     *                     type="number",
+     *                     format="float",
+     *                     description="Price of the booking object on weekends"
+     *                 ),
+     *                 @OA\Property(
+     *                     property="discount",
+     *                     type="number",
+     *                     format="float",
+     *                     description="Discount percentage for the booking object"
+     *                 ),
+     *                 @OA\Property(
+     *                     property="discount_start_date",
      *                     type="string",
-     *                     description="Photos for the booking object"
+     *                     format="date",
+     *                     description="Start date of the discount period"
+     *                 ),
+     *                 @OA\Property(
+     *                     property="discount_end_date",
+     *                     type="string",
+     *                     format="date",
+     *                     description="End date of the discount period"
+     *                 ),
+     *                 @OA\Property(
+     *                     property="zone",
+     *                     type="string",
+     *                     description="Zone of the booking object (bungalow, pool, cottages)"
+     *                 ),
+     *                 @OA\Property(
+     *                     property="status",
+     *                     type="string",
+     *                     description="Status of the booking object (free, reserved, booked)"
+     *                 ),
+     *                 @OA\Property(
+     *                     property="type",
+     *                     type="string",
+     *                     description="Type of the booking object (sunbed, bed, bungalow, second bungalow, little cottage, big cottage)"
      *                 ),
      *                 @OA\Property(
      *                     property="preview_photo",
      *                     type="string",
-     *                     description="Preview photo of the object"
+     *                     format="binary",
+     *                     description="Preview photo of the object (base64 encoded image)"
+     *                 ),
+     *                 @OA\Property(
+     *                     property="photos",
+     *                     type="array",
+     *                     @OA\Items(
+     *                         type="string",
+     *                         format="binary",
+     *                         description="Photos for the booking object (base64 encoded image)"
+     *                     ),
+     *                     description="Array of photos for the booking object"
+     *                 ),
+     *                 @OA\Property(
+     *                     property="max_persons",
+     *                     type="integer",
+     *                     description="Maximum number of persons allowed for the booking object"
      *                 ),
      *             )
      *         )
      *     ),
      *     @OA\Response(
      *         response="201",
-     *         description="Object created successfully"
+     *         description="Object created successfully",
+     *         @OA\JsonContent(
+     *             @OA\Property(
+     *                 property="message",
+     *                 type="string",
+     *                 example="Object created successfully"
+     *             ),
+     *             @OA\Property(
+     *                 property="object",
+     *                 ref="#/components/schemas/BookingObject"
+     *             )
+     *         )
      *     ),
      *     @OA\Response(
      *         response="400",
      *         description="Bad request"
+     *     ),
+     *     @OA\Response(
+     *         response="403",
+     *         description="Permission denied"
      *     )
      * )
      */
@@ -308,10 +458,11 @@ class BookingObjectController extends Controller
     }
 
     /**
-     * @OA\Put(
+     * @OA\Post(
      *     path="/api/admin/objects/{id}",
      *     summary="Update a booking object by ID",
      *     tags={"Objects"},
+     *     security={{"bearerAuth":{}}},
      *     @OA\Parameter(
      *         name="id",
      *         in="path",
@@ -323,6 +474,7 @@ class BookingObjectController extends Controller
      *     ),
      *     @OA\RequestBody(
      *         required=true,
+     *         description="Object details",
      *         @OA\JsonContent(
      *             @OA\Property(
      *                 property="name",
@@ -336,13 +488,38 @@ class BookingObjectController extends Controller
      *             ),
      *             @OA\Property(
      *                 property="price",
-     *                 type="integer",
+     *                 type="number",
+     *                 format="float",
      *                 description="Price of the booking object"
      *             ),
      *             @OA\Property(
-     *                 property="photos",
+     *                 property="weekend_price",
+     *                 type="number",
+     *                 format="float",
+     *                 description="Weekend price of the booking object"
+     *             ),
+     *             @OA\Property(
+     *                 property="discount",
+     *                 type="number",
+     *                 format="float",
+     *                 description="Discount percentage for the booking object"
+     *             ),
+     *             @OA\Property(
+     *                 property="discount_start_date",
      *                 type="string",
-     *                 description="Photos for the booking object"
+     *                 format="date",
+     *                 description="Start date of the discount period"
+     *             ),
+     *             @OA\Property(
+     *                 property="discount_end_date",
+     *                 type="string",
+     *                 format="date",
+     *                 description="End date of the discount period"
+     *             ),
+     *             @OA\Property(
+     *                 property="zone",
+     *                 type="string",
+     *                 description="Zone of the booking object (bungalow, pool, cottages)"
      *             ),
      *             @OA\Property(
      *                 property="status",
@@ -351,11 +528,21 @@ class BookingObjectController extends Controller
      *                 description="Status of the booking object"
      *             ),
      *             @OA\Property(
+     *                 property="type",
+     *                 type="string",
+     *                 description="Type of the booking object (sunbed, bed, bungalow, second bungalow, little cottage, big cottage)"
+     *             ),
+     *             @OA\Property(
      *                 property="preview_photo",
      *                 type="string",
      *                 format="binary",
-     *                 description="Preview photo of the booking object"
-     *             )
+     *                 description="Preview photo of the object (base64 encoded image)"
+     *             ),
+     *             @OA\Property(
+     *                 property="max_persons",
+     *                 type="integer",
+     *                 description="Maximum number of persons allowed for the booking object"
+     *             ),
      *         )
      *     ),
      *     @OA\Response(
@@ -370,10 +557,17 @@ class BookingObjectController extends Controller
      *             ),
      *             @OA\Property(
      *                 property="object",
-     *                 type="object",
-     *                 description="Updated booking object details"
+     *                 ref="#/components/schemas/BookingObject"
      *             )
      *         )
+     *     ),
+     *     @OA\Response(
+     *         response="400",
+     *         description="Bad request"
+     *     ),
+     *     @OA\Response(
+     *         response="403",
+     *         description="Permission denied"
      *     ),
      *     @OA\Response(
      *         response="404",
@@ -542,6 +736,132 @@ class BookingObjectController extends Controller
      * )
      */
     public function getAvailableObjectsByDate (Request $request)
+    {
+        //
+    }
+
+    /**
+     * @OA\Post(
+     *     path="/api/admin/objects/{id}/addObjectPhotos",
+     *     summary="Add photos to a booking object",
+     *     tags={"Objects"},
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         description="ID of the booking object",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="integer"
+     *         )
+     *     ),
+     *     @OA\RequestBody(
+     *         required=true,
+     *         description="Photos to be added",
+     *         @OA\MediaType(
+     *             mediaType="multipart/form-data",
+     *             @OA\Schema(
+     *                 type="object",
+     *                 @OA\Property(
+     *                     property="photos",
+     *                     type="array",
+     *                     @OA\Items(
+     *                         type="string",
+     *                         format="binary",
+     *                         description="Photo file (max size: 2MB)"
+     *                     ),
+     *                     description="Array of photos to be added"
+     *                 ),
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response="200",
+     *         description="Photos added successfully",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(
+     *                 property="object",
+     *                 ref="#/components/schemas/BookingObject"
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response="400",
+     *         description="Bad request"
+     *     ),
+     *     @OA\Response(
+     *         response="403",
+     *         description="Permission denied"
+     *     ),
+     *     @OA\Response(
+     *         response="404",
+     *         description="Object not found"
+     *     )
+     * )
+     */
+    public function addObjectPhotos (Request $request, $id)
+    {
+        //
+    }
+
+    /**
+     * @OA\Post(
+     *     path="/api/admin/objects/{id}/deletePhotosByName",
+     *     summary="Delete photos from a booking object by name",
+     *     tags={"Objects"},
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         description="ID of the booking object",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="integer"
+     *         )
+     *     ),
+     *     @OA\RequestBody(
+     *         required=true,
+     *         description="Photos to be deleted",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(
+     *                 property="photos",
+     *                 type="array",
+     *                 @OA\Items(
+     *                     type="string",
+     *                     description="Name of the photo to be deleted"
+     *                 ),
+     *                 description="Array of photo names to be deleted"
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response="200",
+     *         description="Photos deleted successfully",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(
+     *                 property="object",
+     *                 ref="#/components/schemas/BookingObject"
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response="400",
+     *         description="Bad request"
+     *     ),
+     *     @OA\Response(
+     *         response="403",
+     *         description="Permission denied"
+     *     ),
+     *     @OA\Response(
+     *         response="404",
+     *         description="Object not found"
+     *     )
+     * )
+     */
+    public function deletePhotosByName (Request $request, $id)
     {
         //
     }

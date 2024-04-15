@@ -64,11 +64,20 @@ class BookingObjectController extends Controller
             'name' => 'required|string',
             'description' => 'sometimes|required|string',
             'price' => 'required|numeric',
+            'weekend_price' => 'sometimes|required|numeric',
+            'discount' => 'sometimes|required|numeric|between:0,100',
+            'discount_start_date' => 'sometimes|required|date',
+            'discount_end_date' => 'sometimes|required|date',
+            'zone' => 'sometimes|required|in:bungalow,pool,cottages',
             'status' => 'sometimes|required|in:free,reserved,booked',
+            'type' => 'sometimes|required|in:sunbed,bed,bungalow,second bungalow,little cottage,big cottage',
             'preview_photo' => 'sometimes|required|image|max:2048', // Max size: 2MB
+            'photos' => 'sometimes|required|array',
+            'photos.*' => 'image|max:2048',
+            'max_persons' => 'sometimes|required|integer',
         ];
 
-        $rules['photos.*'] = 'image|max:2048';
+        // $rules['photos.*'] = 'image|max:2048';
 
         $request->validate($rules);
 
@@ -81,8 +90,20 @@ class BookingObjectController extends Controller
 
         $newObject->price = $request->input('price');
 
-        if($request->has('status')) {
-            $newObject->status = $request->input('status');
+        if($request->has('weekend_price')) {
+            $newObject->weekend_price = $request->input('weekend_price');
+        }
+
+        if($request->has('discount')) {
+            $newObject->discount = $request->input('discount');
+        }
+
+        if($request->has('discount_start_date')) {
+            $newObject->discount_start_date = $request->input('discount_start_date');
+        }
+
+        if($request->has('discount_end_date')) {
+            $newObject->discount_end_date = $request->input('discount_end_date');
         }
         
         if ($request->hasFile('photos')) {
@@ -97,9 +118,25 @@ class BookingObjectController extends Controller
             $newObject->photos = $photoPaths;
         }
 
+        if($request->has('zone')) {
+            $newObject->zone = $request->input('zone');
+        }
+
+        if($request->has('status')) {
+            $newObject->status = $request->input('status');
+        }
+
+        if($request->has('type')) {
+            $newObject->type = $request->input('type');
+        }
+
         if ($request->hasFile('preview_photo')) {
             $previewPhotoPath = $request->file('preview_photo')->store('photos', 'public');
             $newObject->preview_photo = $previewPhotoPath;
+        }
+
+        if($request->has('max_persons')) {
+            $newObject->max_persons = $request->input('max_persons');
         }
 
         $newObject->save();
@@ -136,11 +173,16 @@ class BookingObjectController extends Controller
             'name' => 'sometimes|required|string',
             'description' => 'sometimes|required|string',
             'price' => 'sometimes|required|numeric',
+            'weekend_price' => 'sometimes|required|numeric',
+            'discount' => 'sometimes|required|numeric|between:0,100',
+            'discount_start_date' => 'sometimes|required|date',
+            'discount_end_date' => 'sometimes|required|date',
+            'zone' => 'sometimes|required|in:bungalow,pool,cottages',
             'status' => 'sometimes|required|in:free,reserved,booked',
+            'type' => 'sometimes|required|in:sunbed,bed,bungalow,second bungalow,little cottage,big cottage',
             'preview_photo' => 'sometimes|required|image|max:2048', // Max size: 2MB
+            'max_persons' => 'sometimes|required|integer',
         ];
-        
-        $rules['photos.*'] = 'image|max:2048';
         
         $request->validate($rules);
 
@@ -162,20 +204,32 @@ class BookingObjectController extends Controller
             $bookingObject->price = $request->input('price');
         }
 
-        if ($request->hasFile('photos')) {
-            $photos = $request->file('photos');
-            $photoPaths = $bookingObject->photos ?? [];
-        
-            foreach ($photos as $photo) {
-                $photoPath = $photo->store('photos', 'public');
-                $photoPaths[] = $photoPath;
-            }
-        
-            $bookingObject->photos = $photoPaths;
+        if($request->has('weekend_price')) {
+            $bookingObject->weekend_price = $request->input('weekend_price');
+        }
+
+        if($request->has('discount')) {
+            $bookingObject->discount = $request->input('discount');
+        }
+
+        if($request->has('discount_start_date')) {
+            $bookingObject->discount_start_date = $request->input('discount_start_date');
+        }
+
+        if($request->has('discount_end_date')) {
+            $bookingObject->discount_end_date = $request->input('discount_end_date');
+        }
+
+        if($request->has('zone')) {
+            $bookingObject->zone = $request->input('zone');
         }
 
         if($request->has('status')) {
             $bookingObject->status = $request->input('status');
+        }
+
+        if($request->has('type')) {
+            $bookingObject->type = $request->input('type');
         }
 
         if($request->hasFile('preview_photo')) {
@@ -186,6 +240,10 @@ class BookingObjectController extends Controller
             }
 
             $bookingObject->preview_photo = $previewPhotoPath;
+        }
+
+        if($request->has('max_persons')) {
+            $bookingObject->max_persons = $request->input('max_persons');
         }
 
         $bookingObject->save();

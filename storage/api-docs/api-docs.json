@@ -485,6 +485,7 @@
                 "summary": "Create a new object",
                 "operationId": "94e6f2648da81d8cd6e1bbec0bf4ccfc",
                 "requestBody": {
+                    "description": "Object details",
                     "required": true,
                     "content": {
                         "application/json": {
@@ -500,15 +501,58 @@
                                     },
                                     "price": {
                                         "description": "Price of the booking object",
-                                        "type": "integer"
+                                        "type": "number",
+                                        "format": "float"
                                     },
-                                    "photos": {
-                                        "description": "Photos for the booking object",
+                                    "weekend_price": {
+                                        "description": "Price of the booking object on weekends",
+                                        "type": "number",
+                                        "format": "float"
+                                    },
+                                    "discount": {
+                                        "description": "Discount percentage for the booking object",
+                                        "type": "number",
+                                        "format": "float"
+                                    },
+                                    "discount_start_date": {
+                                        "description": "Start date of the discount period",
+                                        "type": "string",
+                                        "format": "date"
+                                    },
+                                    "discount_end_date": {
+                                        "description": "End date of the discount period",
+                                        "type": "string",
+                                        "format": "date"
+                                    },
+                                    "zone": {
+                                        "description": "Zone of the booking object (bungalow, pool, cottages)",
+                                        "type": "string"
+                                    },
+                                    "status": {
+                                        "description": "Status of the booking object (free, reserved, booked)",
+                                        "type": "string"
+                                    },
+                                    "type": {
+                                        "description": "Type of the booking object (sunbed, bed, bungalow, second bungalow, little cottage, big cottage)",
                                         "type": "string"
                                     },
                                     "preview_photo": {
-                                        "description": "Preview photo of the object",
-                                        "type": "string"
+                                        "description": "Preview photo of the object (base64 encoded image)",
+                                        "type": "string",
+                                        "format": "binary"
+                                    },
+                                    "photos": {
+                                        "description": "Array of photos for the booking object",
+                                        "type": "array",
+                                        "items": {
+                                            "description": "Photos for the booking object (base64 encoded image)",
+                                            "type": "string",
+                                            "format": "binary"
+                                        }
+                                    },
+                                    "max_persons": {
+                                        "description": "Maximum number of persons allowed for the booking object",
+                                        "type": "integer"
                                     }
                                 },
                                 "type": "object"
@@ -518,12 +562,36 @@
                 },
                 "responses": {
                     "201": {
-                        "description": "Object created successfully"
+                        "description": "Object created successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Object created successfully"
+                                        },
+                                        "object": {
+                                            "$ref": "#/components/schemas/BookingObject"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     },
                     "400": {
                         "description": "Bad request"
+                    },
+                    "403": {
+                        "description": "Permission denied"
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             }
         },
         "/api/objects/{id}": {
@@ -689,12 +757,12 @@
             }
         },
         "/api/admin/objects/{id}": {
-            "put": {
+            "post": {
                 "tags": [
                     "Objects"
                 ],
                 "summary": "Update a booking object by ID",
-                "operationId": "3ba0ca7cd0b581fbf6d7ae57c1aa9434",
+                "operationId": "cabc416eccaaee79544ee751bd8d1c81",
                 "parameters": [
                     {
                         "name": "id",
@@ -707,6 +775,7 @@
                     }
                 ],
                 "requestBody": {
+                    "description": "Object details",
                     "required": true,
                     "content": {
                         "application/json": {
@@ -722,10 +791,31 @@
                                     },
                                     "price": {
                                         "description": "Price of the booking object",
-                                        "type": "integer"
+                                        "type": "number",
+                                        "format": "float"
                                     },
-                                    "photos": {
-                                        "description": "Photos for the booking object",
+                                    "weekend_price": {
+                                        "description": "Weekend price of the booking object",
+                                        "type": "number",
+                                        "format": "float"
+                                    },
+                                    "discount": {
+                                        "description": "Discount percentage for the booking object",
+                                        "type": "number",
+                                        "format": "float"
+                                    },
+                                    "discount_start_date": {
+                                        "description": "Start date of the discount period",
+                                        "type": "string",
+                                        "format": "date"
+                                    },
+                                    "discount_end_date": {
+                                        "description": "End date of the discount period",
+                                        "type": "string",
+                                        "format": "date"
+                                    },
+                                    "zone": {
+                                        "description": "Zone of the booking object (bungalow, pool, cottages)",
                                         "type": "string"
                                     },
                                     "status": {
@@ -737,10 +827,18 @@
                                             "booked"
                                         ]
                                     },
+                                    "type": {
+                                        "description": "Type of the booking object (sunbed, bed, bungalow, second bungalow, little cottage, big cottage)",
+                                        "type": "string"
+                                    },
                                     "preview_photo": {
-                                        "description": "Preview photo of the booking object",
+                                        "description": "Preview photo of the object (base64 encoded image)",
                                         "type": "string",
                                         "format": "binary"
+                                    },
+                                    "max_persons": {
+                                        "description": "Maximum number of persons allowed for the booking object",
+                                        "type": "integer"
                                     }
                                 },
                                 "type": "object"
@@ -760,8 +858,7 @@
                                             "type": "string"
                                         },
                                         "object": {
-                                            "description": "Updated booking object details",
-                                            "type": "object"
+                                            "$ref": "#/components/schemas/BookingObject"
                                         }
                                     },
                                     "type": "object"
@@ -769,10 +866,21 @@
                             }
                         }
                     },
+                    "400": {
+                        "description": "Bad request"
+                    },
+                    "403": {
+                        "description": "Permission denied"
+                    },
                     "404": {
                         "description": "Object not found"
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             }
         },
         "/api/objects/getAvailableObjectsByDate": {
@@ -904,6 +1012,151 @@
                         }
                     }
                 }
+            }
+        },
+        "/api/admin/objects/{id}/addObjectPhotos": {
+            "post": {
+                "tags": [
+                    "Objects"
+                ],
+                "summary": "Add photos to a booking object",
+                "operationId": "e1ddae7d253501aea64859a6132278d6",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the booking object",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "description": "Photos to be added",
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "properties": {
+                                    "photos": {
+                                        "description": "Array of photos to be added",
+                                        "type": "array",
+                                        "items": {
+                                            "description": "Photo file (max size: 2MB)",
+                                            "type": "string",
+                                            "format": "binary"
+                                        }
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Photos added successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "object": {
+                                            "$ref": "#/components/schemas/BookingObject"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request"
+                    },
+                    "403": {
+                        "description": "Permission denied"
+                    },
+                    "404": {
+                        "description": "Object not found"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/admin/objects/{id}/deletePhotosByName": {
+            "post": {
+                "tags": [
+                    "Objects"
+                ],
+                "summary": "Delete photos from a booking object by name",
+                "operationId": "e202633c6c8fb53c8a739b80ed0ae944",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the booking object",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "description": "Photos to be deleted",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "photos": {
+                                        "description": "Array of photo names to be deleted",
+                                        "type": "array",
+                                        "items": {
+                                            "description": "Name of the photo to be deleted",
+                                            "type": "string"
+                                        }
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Photos deleted successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "object": {
+                                            "$ref": "#/components/schemas/BookingObject"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request"
+                    },
+                    "403": {
+                        "description": "Permission denied"
+                    },
+                    "404": {
+                        "description": "Object not found"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             }
         },
         "/api/onec/objects": {
@@ -1934,6 +2187,82 @@
                         "description": "Permission denied"
                     }
                 }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "BookingObject": {
+                "required": [
+                    "name",
+                    "price"
+                ],
+                "properties": {
+                    "name": {
+                        "description": "Name of the booking object",
+                        "type": "string"
+                    },
+                    "description": {
+                        "description": "Description of the booking object",
+                        "type": "string"
+                    },
+                    "price": {
+                        "description": "Price of the booking object",
+                        "type": "number",
+                        "format": "float"
+                    },
+                    "weekend_price": {
+                        "description": "Price of the booking object on weekends",
+                        "type": "number",
+                        "format": "float"
+                    },
+                    "discount": {
+                        "description": "Discount percentage for the booking object",
+                        "type": "number",
+                        "format": "float"
+                    },
+                    "discount_start_date": {
+                        "description": "Start date of the discount period",
+                        "type": "string",
+                        "format": "date"
+                    },
+                    "discount_end_date": {
+                        "description": "End date of the discount period",
+                        "type": "string",
+                        "format": "date"
+                    },
+                    "zone": {
+                        "description": "Zone of the booking object (bungalow, pool, cottages)",
+                        "type": "string"
+                    },
+                    "status": {
+                        "description": "Status of the booking object (free, reserved, booked)",
+                        "type": "string"
+                    },
+                    "type": {
+                        "description": "Type of the booking object (sunbed, bed, bungalow, second bungalow, little cottage, big cottage)",
+                        "type": "string"
+                    },
+                    "preview_photo": {
+                        "description": "Preview photo of the object (base64 encoded image)",
+                        "type": "string",
+                        "format": "binary"
+                    },
+                    "photos": {
+                        "description": "Array of photos for the booking object",
+                        "type": "array",
+                        "items": {
+                            "description": "Photos for the booking object (base64 encoded image)",
+                            "type": "string",
+                            "format": "binary"
+                        }
+                    },
+                    "max_persons": {
+                        "description": "Maximum number of persons allowed for the booking object",
+                        "type": "integer"
+                    }
+                },
+                "type": "object"
             }
         }
     },
