@@ -82,7 +82,6 @@ class BookingController extends Controller
     public function reserveObject (Request $request)
     {
         $request->validate([
-            'user_id' => 'required|integer',
             'object_id' => 'required|integer',
         ]);
 
@@ -97,7 +96,7 @@ class BookingController extends Controller
         }
 
         $newBooking = new Booking ([
-            'user_id' => $request->user_id,
+            'user_id' => $user->id,
             'object_id' => $request->object_id,
             'reserved_from' => Carbon::now(),
             'reserved_to' => Carbon::now()->addMinutes(2), // 2 min for test, replace to 15 in prod
@@ -130,16 +129,16 @@ class BookingController extends Controller
         return response()->json(['message' => 'Objects have been booked successfully', 'bookings' => $bookings], 200);
     }
 
-    public function cancelBooking (Request $request)
+    public function cancelOrder (Request $request)
     {
         $request->validate([
-            'booking_id' => 'required|integer',
+            'order_id' => 'required|string',
         ]);
 
-        Booking::where('id', $request->booking_id)
+        Booking::where('order_id', $request->order_id)
             ->update(['canceled' => 1]);
 
-        return response()->json(['message' => 'Object has been booked'], 200);
+        return response()->json(['message' => 'Order has been canceled'], 200);
     }
 
     public function getBookingsByObjectId ($objectId)
@@ -153,14 +152,20 @@ class BookingController extends Controller
         return response()->json(['bookings' => $bookings], 200);
     }
 
-    public function calculatePriceForBooking ($objectId, $dateFrom, $dateTo)
+    public function calculateBookingPrice (Request $request)
     {
+        $request->validate([
+            'object_id' => 'required|integer',
+            'booked_from' => 'required|date',
+            'booked_to' => 'required|date',
+        ]);
+
         $totalPrice = 0.0;
 
-        $bookingObject = BookingObject::select('price', 'weekend_price', 'discount', 'discount_start_date', 'discount_end_date')->where('id', $objectId)->get();
+        $bookingObject = BookingObject::select('price', 'weekend_price', 'discount', 'discount_start_date', 'discount_end_date')->where('id', $request->object_id)->get();
 
-        $bookingFrom = Carbon::parse($dateFrom);
-        $bookingTo = Carbon::parse($dateTo);
+        $bookingFrom = Carbon::parse($request->booked_from);
+        $bookingTo = Carbon::parse($request->booked_to);
         $discountStartDate = Carbon::parse($bookingObject->discount_start_date);
         $discountEndDate = Carbon::parse($bookingObject->discount_end_date);
 
@@ -184,13 +189,13 @@ class BookingController extends Controller
             $totalPrice -= $totalPrice * $discountPercentage;
         }
 
-        return $totalPrice;
+        return response()->json(['price' => $totalPrice], 200);
     }
 
     public function getOrder (Request $request)
     {
         $request->validate([
-            'order_id' => 'required|integer',
+            'order_id' => 'required|string',
         ]);
 
         $totalPrice = 0.0;

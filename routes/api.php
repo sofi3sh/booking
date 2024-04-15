@@ -20,7 +20,6 @@ Route::prefix('auth')
         Route::post('/login', 'login')->name('login');
         Route::post('/verify', 'verify');
         Route::post('/sendVerificationCode', 'sendVerificationCode');
-        Route::post('/resetPassword', 'resetPassword');
         Route::middleware('auth:api')->post('/logout', 'logout');
     });
 
@@ -30,6 +29,7 @@ Route::prefix('user')
     ->group(function () {
         Route::get('/getProfile', 'getProfile');
         Route::post('/updateProfile', 'updateProfile');
+        Route::post('/resetPassword', 'resetPassword');
     });
 
 Route::resource('objects', BookingObjectController::class)->only(['index', 'show']);
@@ -73,10 +73,8 @@ Route::prefix('booking')
     ->controller(BookingController::class)
     ->group(function () {
         Route::post('/reserveObject', 'reserveObject');
-        // Route::post('/bookObjects', 'bookObjects');
-        Route::post('/cancelBooking', 'cancelBooking');
-        Route::post('/getOrderAmount', 'getOrderAmount');
-        Route::post('/getPriceForBooking', 'getPriceForBooking');
+        Route::post('/calculateBookingPrice', 'calculateBookingPrice');
+        Route::post('/cancelOrder', 'cancelOrder');
         Route::post('/getOrder', 'getOrder');
     });
 
