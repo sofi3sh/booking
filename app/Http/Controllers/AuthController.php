@@ -31,7 +31,7 @@ class AuthController extends Controller
         $message = $response->current();
     }
 
-    public function sendVerificationCode($userPhone)
+    private function createAndSendVerificationCode($userPhone)
     {
         $verificationCode = mt_rand(1000, 9999);
 
@@ -44,6 +44,15 @@ class AuthController extends Controller
         ]);
 
         // $this->sendSms($userPhone, $verificationCode); // Uncomment after setup Vonage service
+    }
+
+    public function sendVerificationCode (Request $request)
+    {
+        $request->validate([
+            'phone' => 'required|integer',
+        ]);
+
+        $this->createAndSendVerificationCode($request->phone);
 
         return response()->json(['message' => 'Verification code sent successfully'], 200);
     }
@@ -67,7 +76,7 @@ class AuthController extends Controller
 
         $user->save();
 
-        $this->sendVerificationCode($user->phone);
+        $this->createAndSendVerificationCode($user->phone);
 
         return response()->json(['message' => 'User registered successfully'], 201);
     }
