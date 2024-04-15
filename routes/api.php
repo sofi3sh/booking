@@ -33,6 +33,7 @@ Route::prefix('user')
     });
 
 Route::resource('objects', BookingObjectController::class)->only(['index', 'show']);
+
 Route::get('objects/{id}/getBookingsByObjectId', [BookingController::class, 'getBookingsByObjectId']);
 Route::get('reviews', [ReviewController::class, 'index']);
 Route::get('objects/{id}/reviews/showAllByObjectId', [ReviewController::class, 'showAllByObjectId']);

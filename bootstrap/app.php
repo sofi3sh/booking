@@ -5,6 +5,8 @@ use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
 use Illuminate\Routing\Middleware\ThrottleRequests;
 use App\Http\Middleware\Auth;
+use App\Http\Middleware\Localization;
+
 use Illuminate\Http\Request;
 
 return Application::configure(basePath: dirname(__DIR__))
@@ -15,6 +17,9 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(function (Middleware $middleware) {
         $middleware->append(Auth::class);
+    })
+    ->withMiddleware(function (Middleware $middleware) {
+        $middleware->append(Localization::class);
     })
     ->withExceptions(function (Exceptions $exceptions) {
         $exceptions->render(function (Exception $e, Request $request) {

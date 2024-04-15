@@ -28,10 +28,10 @@ class BookingObjectController extends Controller
      */
     public function index()
     {
-        $bookingObjects = BookingObject::all();
+        $bookingObjects = BookingObject::select('id', 'name_'.app()->getLocale(). ' as name', 'description', 'price', 'weekend_price', 'discount', 'discount_start_date', 'discount_end_date', 'photos', 'zone', 'status', 'type', 'max_persons', 'preview_photo')->get();
 
         if ($bookingObjects->isEmpty()) {
-            return response()->json(['message' => 'No booking objects found'], 404);
+            return response()->json(['message' => __('no_objects_found')], 404);
         }
 
         return response()->json($bookingObjects, 200);
