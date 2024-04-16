@@ -37,7 +37,7 @@ class BookingObjectController extends Controller
 
         if ($bookingObjects->isEmpty()) {
             // return response()->json(['message' => __('no_objects_found')], 404);
-            return response()->json(['message' => __('booking_objects.messages.no_objects_found.no_objects_found')], 404);
+            return response()->json(['message' => __('no_objects_found')], 404);
 
             // return response()->json(['message' => Lang::get('booking_objects.messages.no_objects_found', [], $locale)], 404);
         }
@@ -65,7 +65,7 @@ class BookingObjectController extends Controller
         $user = auth()->user();
 
         if (!$this->userIsAdmin($user)) {
-            return response()->json(['message' => __('booking_objects.messages.permission_denied')], 403);
+            return response()->json(['message' => __('permission_denied')], 403);
         }
 
         $rules = [
@@ -157,7 +157,7 @@ class BookingObjectController extends Controller
 
         $newObject->save();
 
-        return response()->json(['message' => 'Object created successfully', 'object' => $newObject], 201);
+        return response()->json(['message' => __('object_created_successfully'), 'object' => $newObject], 201);
     }
 
     /**
@@ -168,7 +168,7 @@ class BookingObjectController extends Controller
         $bookingObject = BookingObject::find($id);
 
         if (!$bookingObject) {
-            return response()->json(['error' => 'Object not found'], 404);
+            return response()->json(['error' => __('object_not_found')], 404);
         }
 
         return response()->json($bookingObject, 200);
@@ -182,7 +182,7 @@ class BookingObjectController extends Controller
         $user = auth()->user();
 
         if (!$this->userIsAdmin($user)) {
-            return response()->json(['message' => 'permission denied'], 403);
+            return response()->json(['message' => __('permission_denied')], 403);
         }
 
         $rules = [
@@ -207,7 +207,7 @@ class BookingObjectController extends Controller
         $bookingObject = BookingObject::find($id);
 
         if (!$bookingObject) {
-            return response()->json(['error' => 'Object not found'], 404);
+            return response()->json(['error' => __('object_not_found')], 404);
         }
 
         if($request->has('name_ua')) {
@@ -274,7 +274,7 @@ class BookingObjectController extends Controller
 
         $bookingObject->save();
 
-        return response()->json(['message' => 'Object updated successfully', 'object' => $bookingObject], 200);
+        return response()->json(['message' => __('object_updated_successfully'), 'object' => $bookingObject], 200);
     }
 
     /**
@@ -286,13 +286,13 @@ class BookingObjectController extends Controller
         $user = auth()->user();
 
         if (!$this->userIsAdmin($user)) {
-            return response()->json(['message' => 'permission denied'], 403);
+            return response()->json(['message' => __('permission_denied')], 403);
         }
         
         $bookingObject = BookingObject::find($id);
 
         if (!$bookingObject) {
-            return response()->json(['error' => 'Object not found'], 404);
+            return response()->json(['error' => __('object_not_found')], 404);
         }
         
         if (!empty($bookingObject->photos)) {
@@ -307,7 +307,7 @@ class BookingObjectController extends Controller
 
         $bookingObject->delete();
 
-        return response()->json(['message' => 'Object deleted successfully'], 200);
+        return response()->json(['message' => __('object_deleted_successfully')], 200);
     }
 
     public function deletePhotosByName(Request $request, $id)
@@ -315,13 +315,13 @@ class BookingObjectController extends Controller
         $user = auth()->user();
 
         if (!$this->userIsAdmin($user)) {
-            return response()->json(['message' => 'permission denied'], 403);
+            return response()->json(['message' => __('permission_denied')], 403);
         }
 
         $bookingObject = BookingObject::find($id);
 
         if (!$bookingObject) {
-            return response()->json(['error' => 'Object not found'], 404);
+            return response()->json(['error' => __('object_not_found')], 404);
         }
 
         $photosToDelete = $request->input('photos');
@@ -351,13 +351,13 @@ class BookingObjectController extends Controller
         $user = auth()->user();
 
         if (!$this->userIsAdmin($user)) {
-            return response()->json(['message' => 'permission denied'], 403);
+            return response()->json(['message' => __('permission_denied')], 403);
         }
 
         $bookingObject = BookingObject::find($id);
 
         if (!$bookingObject) {
-            return response()->json(['error' => 'Object not found'], 404);
+            return response()->json(['error' => __('object_not_found')], 404);
         }
 
         $request->validate([

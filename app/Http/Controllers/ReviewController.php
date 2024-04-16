@@ -14,9 +14,9 @@ class ReviewController extends Controller
         $reviews = Review::all();
 
         if ($reviews->isEmpty()) {
-            return response()->json(['message' => 'No reviews found'], 404);
+            return response()->json(['message' => __('no_reviews_found')], 404);
         }
-        return response()->json($reviews, 200);;
+        return response()->json($reviews, 200);
     }
 
     public function store(Request $request, $id) 
@@ -26,7 +26,7 @@ class ReviewController extends Controller
         $object = BookingObject::find($id);
 
         if (!$object) {
-            return response()->json(['error' => 'Object not found'], 404);
+            return response()->json(['error' => __('object_not_found')], 404);
         }
 
         $request->validate([
@@ -54,7 +54,7 @@ class ReviewController extends Controller
         $object = BookingObject::find($id);
 
         if (!$object) {
-            return response()->json(['error' => 'Object not found'], 404);
+            return response()->json(['error' => __('object_not_found')], 404);
         }
 
         if ($object->type === 'sunbed' || $object->type === 'bed') {
@@ -62,7 +62,7 @@ class ReviewController extends Controller
             $reviews = Review::all()->where('object_type', $object->type);
 
             if ($reviews->isEmpty()) {
-                return response()->json(['message' => 'No reviews found'], 404);
+                return response()->json(['message' => __('no_reviews_found')], 404);
             }
 
             $reviewsWithUser = $this->reviewWithUser($reviews);
@@ -74,7 +74,7 @@ class ReviewController extends Controller
             $reviews = Review::all()->where('object_id', $id);
 
             if ($reviews->isEmpty()) {
-                return response()->json(['message' => 'No reviews found'], 404);
+                return response()->json(['message' => __('no_reviews_found')], 404);
             }
 
             $reviewsWithUser = $this->reviewWithUser($reviews);

@@ -13,7 +13,7 @@ class OneCController extends Controller
         $bookingObjects = BookingObject::all();
 
         if ($bookingObjects->isEmpty()) {
-            return response()->json(['message' => 'No booking objects found'], 404);
+            return response()->json(['message' => __('no_objects_found')], 404);
         }
 
         $filteredBookingObjects = $bookingObjects->map(function ($bookingObject) {
@@ -28,7 +28,7 @@ class OneCController extends Controller
         $bookingObject = BookingObject::find($id);
 
         if (!$bookingObject) {
-            return response()->json(['error' => 'Object not found'], 404);
+            return response()->json(['error' => __('object_not_found')], 404);
         }
 
         $request->validate([
