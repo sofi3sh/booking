@@ -30,6 +30,7 @@ Route::prefix('user')
         Route::get('/getProfile', 'getProfile');
         Route::post('/updateProfile', 'updateProfile');
         Route::post('/resetPassword', 'resetPassword');
+        Route::get('/getUserBookings', 'getUserBookings');
     });
 
 Route::resource('objects', BookingObjectController::class)->only(['index', 'show']);

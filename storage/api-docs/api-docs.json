@@ -2393,6 +2393,168 @@
                 }
             }
         },
+        "/api/user/getUserBookings": {
+            "get": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Get user bookings",
+                "operationId": "91d19b8af127a6f131d334d67a0d911e",
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "properties": {
+                                            "id": {
+                                                "description": "Unique identifier for the booking",
+                                                "type": "integer"
+                                            },
+                                            "user_id": {
+                                                "description": "User id",
+                                                "type": "integer"
+                                            },
+                                            "object_id": {
+                                                "description": "Object id",
+                                                "type": "integer"
+                                            },
+                                            "reserved_from": {
+                                                "description": "Reserved from",
+                                                "type": "string"
+                                            },
+                                            "reserved_to": {
+                                                "description": "Reserved to",
+                                                "type": "string"
+                                            },
+                                            "booked_from": {
+                                                "description": "Booked from",
+                                                "type": "string"
+                                            },
+                                            "booked_to": {
+                                                "description": "Booked to",
+                                                "type": "string"
+                                            },
+                                            "payment_status": {
+                                                "description": "Payment status",
+                                                "type": "boolean"
+                                            },
+                                            "canceled": {
+                                                "description": "Is booking canceled",
+                                                "type": "boolean"
+                                            },
+                                            "order_id": {
+                                                "description": "Order ID",
+                                                "type": "string"
+                                            },
+                                            "description": {
+                                                "description": "Description",
+                                                "type": "string"
+                                            }
+                                        },
+                                        "type": "object"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "No bookings found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "No bookings found"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/user/resetPassword": {
+            "post": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "To set a new password, users must undergo re-verification. This process should be completed within 5 minutes",
+                "operationId": "1c49f19a50b0d6fbd7172111dc9bcd66",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "new_password": {
+                                        "description": "New password",
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Password changed successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "description": "Password changed successfully",
+                                            "type": "string",
+                                            "example": "Password changed successfully"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unauthorized"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "You need to confirm your phone number",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "You need to confirm your phone number"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/api/admin/editUser": {
             "post": {
                 "tags": [
