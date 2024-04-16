@@ -33,7 +33,7 @@ class BookingObjectController extends Controller
         $locale = app()->getLocale();
 
         // return response()->json($locale);
-        $bookingObjects = BookingObject::select('id', 'name_'.app()->getLocale(). ' as name', 'description_'.app()->getLocale(). ' as description', 'price', 'weekend_price', 'discount', 'discount_start_date', 'discount_end_date', 'photos', 'zone', 'status', 'type', 'max_persons', 'preview_photo')->get();
+        $bookingObjects = BookingObject::select('id', 'name_' . app()->getLocale() . ' as name', 'description_' . app()->getLocale() . ' as description', 'price', 'weekend_price', 'discount', 'discount_start_date', 'discount_end_date', 'photos', 'zone', 'status', 'type', 'max_persons', 'preview_photo')->get();
 
         if ($bookingObjects->isEmpty()) {
             // return response()->json(['message' => __('no_objects_found')], 404);
@@ -69,8 +69,8 @@ class BookingObjectController extends Controller
         }
 
         $rules = [
-            'name_ua' => 'sometimes|required|string',
-            'name_en' => 'sometimes|required|string',
+            'name_ua' => 'required|string',
+            'name_en' => 'required|string',
             'description_ua' => 'sometimes|required|string',
             'description_en' => 'sometimes|required|string',
             'price' => 'required|numeric',
@@ -92,6 +92,7 @@ class BookingObjectController extends Controller
         $request->validate($rules);
 
         $newObject = new BookingObject();
+
         $newObject->name_ua = $request->input('name_ua');
         $newObject->name_en = $request->input('name_en');
 
@@ -185,8 +186,10 @@ class BookingObjectController extends Controller
         }
 
         $rules = [
-            'name' => 'sometimes|required|string',
-            'description' => 'sometimes|required|string',
+            'name_ua' => 'sometimes|required|string',
+            'name_en' => 'sometimes|required|string',
+            'description_ua' => 'sometimes|required|string',
+            'description_en' => 'sometimes|required|string',
             'price' => 'sometimes|required|numeric',
             'weekend_price' => 'sometimes|required|numeric',
             'discount' => 'sometimes|required|numeric|between:0,100',
@@ -207,11 +210,19 @@ class BookingObjectController extends Controller
             return response()->json(['error' => __('object_not_found')], 404);
         }
 
-        if($request->has('name')) {
+        if($request->has('name_ua')) {
             $bookingObject->name = $request->input('name');
         }
 
-        if($request->has('description')) {
+        if($request->has('name_en')) {
+            $bookingObject->name = $request->input('name');
+        }
+
+        if($request->has('description_ua')) {
+            $bookingObject->description = $request->input('description');
+        }
+
+        if($request->has('description_en')) {
             $bookingObject->description = $request->input('description');
         }
 

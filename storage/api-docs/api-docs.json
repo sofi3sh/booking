@@ -37,6 +37,11 @@
                                         "type": "string",
                                         "format": "password",
                                         "minLength": 8
+                                    },
+                                    "lang": {
+                                        "description": "Specify language",
+                                        "type": "string",
+                                        "format": "lang"
                                     }
                                 },
                                 "type": "object"
@@ -84,6 +89,11 @@
                                     "code": {
                                         "description": "Verification code",
                                         "type": "integer"
+                                    },
+                                    "lang": {
+                                        "description": "Specify language",
+                                        "type": "string",
+                                        "format": "lang"
                                     }
                                 },
                                 "type": "object"
@@ -179,6 +189,11 @@
                                     "password": {
                                         "description": "User's password",
                                         "type": "string"
+                                    },
+                                    "lang": {
+                                        "description": "Specify language",
+                                        "type": "string",
+                                        "format": "lang"
                                     }
                                 },
                                 "type": "object"
@@ -238,6 +253,23 @@
                 ],
                 "summary": "User logout",
                 "operationId": "16a402dc4a790a2e0dad16fe340eca9d",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "lang": {
+                                        "description": "Specify language",
+                                        "type": "string",
+                                        "format": "lang"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
                 "responses": {
                     "200": {
                         "description": "Logged out successfully",
@@ -279,6 +311,11 @@
                                     "phone": {
                                         "description": "User's phone number",
                                         "type": "integer"
+                                    },
+                                    "lang": {
+                                        "description": "Specify language",
+                                        "type": "string",
+                                        "format": "lang"
                                     }
                                 },
                                 "type": "object"
