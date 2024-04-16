@@ -16,8 +16,10 @@ return new class extends Migration
     {
         Schema::create('booking_objects', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->text('description')->nullable();
+            $table->string('name_ua');
+            $table->string('name_en');
+            $table->text('description_ua')->nullable();
+            $table->text('description_en')->nullable();
             $table->decimal('price', 10, 2)->default(0);
             $table->decimal('weekend_price', 10, 2)->default(0);
             $table->decimal('discount', 5, 2)->default(0);

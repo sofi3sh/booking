@@ -34,6 +34,7 @@ Route::prefix('user')
     });
 
 Route::resource('objects', BookingObjectController::class)->only(['index', 'show']);
+
 Route::get('objects/{id}/getBookingsByObjectId', [BookingController::class, 'getBookingsByObjectId']);
 Route::get('reviews', [ReviewController::class, 'index']);
 Route::get('objects/{id}/reviews/showAllByObjectId', [ReviewController::class, 'showAllByObjectId']);
@@ -74,10 +75,8 @@ Route::prefix('booking')
     ->controller(BookingController::class)
     ->group(function () {
         Route::post('/reserveObject', 'reserveObject');
-        // Route::post('/bookObjects', 'bookObjects');
-        Route::post('/cancelBooking', 'cancelBooking');
-        Route::post('/getOrderAmount', 'getOrderAmount');
-        Route::post('/getPriceForBooking', 'getPriceForBooking');
+        Route::post('/calculateBookingPrice', 'calculateBookingPrice');
+        Route::post('/cancelOrder', 'cancelOrder');
         Route::post('/getOrder', 'getOrder');
     });
 

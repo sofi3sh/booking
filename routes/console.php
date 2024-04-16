@@ -10,5 +10,13 @@ Schedule::call(function () {
 })->everyMinute();
 
 Schedule::call(function () {
-    BookingController::updateExpiredReservedNotPaidBookingObjectStatus();
+    BookingController::updateExpiresBookedBookingObjectStatus();
 })->at('00:00');
+
+Schedule::call(function () {
+    BookingController::updateBookedObjectsStatus();
+})->at('00:01');
+
+Schedule::call(function () {
+    BookingController::sendNotificationWhenManyBookings();
+})->at('09:00');
