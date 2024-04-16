@@ -45,6 +45,12 @@ class AuthController extends Controller
      *                     description="User's password",
      *                     format="password",
      *                     minLength=8
+     *                 ),
+     *                 @OA\Property(
+     *                     property="lang",
+     *                     type="string",
+     *                     description="Specify language",
+     *                     format="lang"
      *                 )
      *             )
      *         )
@@ -86,6 +92,12 @@ class AuthController extends Controller
      *                 property="code",
      *                 type="integer",
      *                 description="Verification code"
+     *             ),
+     *             @OA\Property(
+     *                 property="lang",
+     *                 type="string",
+     *                 description="Specify language",
+     *                 format="lang"
      *             )
      *         )
      *     ),
@@ -162,6 +174,12 @@ class AuthController extends Controller
      *                 property="password",
      *                 type="string",
      *                 description="User's password"
+     *             ),
+     *             @OA\Property(
+     *                 property="lang",
+     *                 type="string",
+     *                 description="Specify language",
+     *                 format="lang"
      *             )
      *         )
      *     ),
@@ -210,6 +228,18 @@ class AuthController extends Controller
      *     summary="User logout",
      *     tags={"Auth"},
      *     security={{"passport": {}}},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(
+     *                 property="lang",
+     *                 type="string",
+     *                 description="Specify language",
+     *                 format="lang"
+     *             )
+     *         )
+     *     ),
      *     @OA\Response(
      *         response="200",
      *         description="Logged out successfully",
@@ -243,6 +273,12 @@ class AuthController extends Controller
      *                 type="integer",
      *                 description="User's phone number"
      *             ),
+     *             @OA\Property(
+     *                 property="lang",
+     *                 type="string",
+     *                 description="Specify language",
+     *                 format="lang"
+     *             )
      *         )
      *     ),
      *     @OA\Response(
