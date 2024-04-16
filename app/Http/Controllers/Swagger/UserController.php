@@ -140,6 +140,166 @@ class UserController extends Controller
         //
      }
 
+   /**
+     * @OA\Get(
+     *     path="/api/user/getUserBookings",
+     *     summary="Get user bookings",
+     *     tags={"Users"},
+     *     @OA\Response(
+     *         response="200",
+     *         description="Successful response",
+     *         @OA\JsonContent(
+     *             type="array",
+     *             @OA\Items(
+     *                 @OA\Property(
+     *                     property="id",
+     *                     type="integer",
+     *                     description="Unique identifier for the booking"
+     *                 ),
+     *                 @OA\Property(
+     *                     property="user_id",
+     *                     type="integer",
+     *                     description="User id"
+     *                 ),
+     *                 @OA\Property(
+     *                     property="object_id",
+     *                     type="integer",
+     *                     description="Object id"
+     *                 ),
+     *                 @OA\Property(
+     *                     property="reserved_from",
+     *                     type="string",
+     *                     description="Reserved from"
+     *                 ),
+     *                 @OA\Property(
+     *                     property="reserved_to",
+     *                     type="string",
+     *                     description="Reserved to"
+     *                 ),
+     *                 @OA\Property(
+     *                     property="booked_from",
+     *                     type="string",
+     *                     description="Booked from"
+     *                 ),
+     *                 @OA\Property(
+     *                     property="booked_to",
+     *                     type="string",
+     *                     description="Booked to"
+     *                 ),
+     *                 @OA\Property(
+     *                     property="payment_status",
+     *                     type="boolean",
+     *                     description="Payment status"
+     *                 ),
+     *                 @OA\Property(
+     *                     property="canceled",
+     *                     type="boolean",
+     *                     description="Is booking canceled"
+     *                 ),
+     *                 @OA\Property(
+     *                     property="order_id",
+     *                     type="string",
+     *                     description="Order ID"
+     *                 ),
+     *                 @OA\Property(
+     *                     property="description",
+     *                     type="string",
+     *                     description="Description"
+     *                 )
+     *             )
+     *         ),
+     *     ),
+     *     @OA\Response(
+     *         response="401",
+     *         description="No bookings found",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(
+     *                 property="message",
+     *                 type="string",
+     *                 example="No bookings found"
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response="404",
+     *         description="No bookings found",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(
+     *                 property="message",
+     *                 type="string",
+     *                 example="No bookings found"
+     *             )
+     *         )
+     *     )
+     * )
+     */
+     public function getUserBookings ()
+     {
+         //
+     }
+
+   /**
+     * @OA\Post(
+     *     path="/api/user/resetPassword",
+     *     summary="To set a new password, users must undergo re-verification. This process should be completed within 5 minutes",
+     *     tags={"Users"},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(
+     *                 property="new_password",
+     *                 type="string",
+     *                 description="New password"
+     *             ),
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response="200",
+     *         description="Password changed successfully",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(
+     *                 property="message",
+     *                 type="string",
+     *                 description="Password changed successfully",
+     *                 example="Password changed successfully"
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response="401",
+     *         description="Unauthorized",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(
+     *                 property="message",
+     *                 type="string",
+     *                 example="Unauthorized"
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response="404",
+     *         description="You need to confirm your phone number",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(
+     *                 property="message",
+     *                 type="string",
+     *                 example="You need to confirm your phone number"
+     *             )
+     *         )
+     *     )
+     * )
+     */
+    public function resetPassword ()
+    {
+      //
+    }
+
      /**
      * @OA\Post(
      *     path="/api/admin/editUser",

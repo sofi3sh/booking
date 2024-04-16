@@ -112,7 +112,6 @@ class UserController extends Controller
 
     public function adminEditUser (Request $request)
     {
-
         $request->validate([
             'user_id' => 'required|integer',
             'name' => 'sometimes|required|string',
@@ -182,10 +181,11 @@ class UserController extends Controller
 
         $user = auth()->user();
 
-        if ($user->phone_verified_at > Carbon::now()->subMinutes(5)) {
-            $user->password = Hash::make($request->new_password);
+        if (!($user->phone_verified_at > Carbon::now()->subMinutes(5))) {
+            return response()->json(['message' => 'You need to confirm your phone number'], 403);
         }
 
+        $user->password = Hash::make($request->new_password);
         $user->save();
 
         return response()->json(['message' => 'Password changed successfully'], 200);
