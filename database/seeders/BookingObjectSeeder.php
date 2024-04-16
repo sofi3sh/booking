@@ -13,188 +13,234 @@ class BookingObjectSeeder extends Seeder
      */
     public function run(): void
     {
-        $bungaloName = 'Бунгало ';
-        $littleCottageName = 'Маленький котедж ';
-        $bigCottageName = 'Великий котедж з мангальною зоною ';
+        $bungaloNameUa = json_decode(file_get_contents(base_path('lang/ua.json')), true)['booking_objects']['seeders']['bungalo_name'];
+        $bungaloNameEn = json_decode(file_get_contents(base_path('lang/en.json')), true)['booking_objects']['seeders']['bungalo_name'];
 
-        $secondBungaloDescription = 'Невеликий скляний будиночок з просторою терасою , розташований на узбережі Дніпра. Всередині бунгало оснащене кондиціонером, невеликим диваном для відпочинку та санвузлом (рукомийник,душ та туалет) В бунгало є 2 рушники, та засоби особистої гігієни (гелі для душу (2шт), шампуні (2шт), рідке мило для рук, туалетний папір та одноразові капці (2 пари)). Тераса облаштована вуличними меблями.';
-        $bungaloDescription = 'Невеликий скляний будиночок з просторою терасою , розташований на узбережі Дніпра. Всередині бунгало оснащене кондиціонером, невеликим диваном для відпочинку та санвузлом (рукомийник,душ та туалет) В бунгало є 2 рушники, та засоби особистої гігієни (гелі для душу (2шт), шампуні (2шт), рідке мило для рук, туалетний папір та одноразові капці (2 пари)). Тераса облаштована вуличними меблями.';
-        $littleCottageDescription = 'Окремо стоячий дворівневий котедж - це комфортабельний будинок, розташований на березі Дніпра. Ідеальне місце для сімейного відпочинку та невеликої компанії. 1-й рівень - кухонна панель з необхідним посудом (тарілки,склянки  та столові прибори), мікрохвильова піч, електрочайник, невеликий холодильник, раковина, шафа купе, санвузол (рукомийник, душ та туалет), бойлер, кондиціонер, розкладний двоспальний диван. В котеджі є рушники (4шт), 2 комплекти постільної білизни, ковдри, капці, засоби особистої гігієни (гелі для душу,шампуні, рідке мило, туалетний папір) 2-й рівень - ліжко. Біля котеджу є невелика тераса з вуличними меблями, для відпочинку з видом на Дніпро. У вартість оренди входить 4 людини за додаткових гостей доплата';
-        $bigCottageDescription = 'Котедж на березі Дніпра - чудове місце для відпочинку великою компанією. Оточено природою з власною великою терасою та особистим мангалом. Апартаменти оснащені: Простора кухонна панель з необхідним посудом  (тарілки,склянки, столові прибори),мікрохвильова піч, електрочайник, невеликий холодильник, раковина,  санвузол (рукомийник, душ та туалет), бойлер, кондиціонер, шафа, стіл, стільці, двоспальне ліжко та розкладний  двоспальний диван. В котеджі є рушники (4шт), 2 комплекти постільної білизни, ковдри, капці, засоби особистої гігієни (гелі для душу,шампуні, рідке мило, туалетний папір) Біля котеджу є простора тераса з вуличними меблями, для відпочинку з видом на Дніпро, та мангальна зона ( вугілля та дрова входять у вартість, приблизно для одного розпалення мангалу). У вартість оренди входить 4 людини за додаткових гостей доплата';
+        $littleCottageNameUa = json_decode(file_get_contents(base_path('lang/ua.json')), true)['booking_objects']['seeders']['little_cottage_name'];
+        $littleCottageNameEn = json_decode(file_get_contents(base_path('lang/en.json')), true)['booking_objects']['seeders']['little_cottage_name'];
+
+        $bigCottageNameUa = json_decode(file_get_contents(base_path('lang/ua.json')), true)['booking_objects']['seeders']['big_cottage_name'];
+        $bigCottageNameEn = json_decode(file_get_contents(base_path('lang/en.json')), true)['booking_objects']['seeders']['big_cottage_name'];
+
+        $bedNameUa = json_decode(file_get_contents(base_path('lang/ua.json')), true)['booking_objects']['seeders']['bed_name'];
+        $bedNameEn = json_decode(file_get_contents(base_path('lang/en.json')), true)['booking_objects']['seeders']['bed_name'];
+
+        $sunbedNameUa = json_decode(file_get_contents(base_path('lang/ua.json')), true)['booking_objects']['seeders']['sunbed_name'];
+        $sunbedNameEn = json_decode(file_get_contents(base_path('lang/en.json')), true)['booking_objects']['seeders']['sunbed_name'];
+
+        $secondBungaloDescriptionUa = json_decode(file_get_contents(base_path('lang/ua.json')), true)['booking_objects']['seeders']['second_bungalo_description'];
+        $secondBungaloDescriptionEn = json_decode(file_get_contents(base_path('lang/en.json')), true)['booking_objects']['seeders']['second_bungalo_description'];
+
+        $bungaloDescriptionUa = json_decode(file_get_contents(base_path('lang/ua.json')), true)['booking_objects']['seeders']['bungalo_description'];
+        $bungaloDescriptionEn = json_decode(file_get_contents(base_path('lang/en.json')), true)['booking_objects']['seeders']['bungalo_description'];
+
+        $littleCottageDescriptionUa = json_decode(file_get_contents(base_path('lang/ua.json')), true)['booking_objects']['seeders']['little_cottage_description'];
+        $littleCottageDescriptionEn = json_decode(file_get_contents(base_path('lang/en.json')), true)['booking_objects']['seeders']['little_cottage_description'];
+        
+        $bigCottageDescriptionUa = json_decode(file_get_contents(base_path('lang/ua.json')), true)['booking_objects']['seeders']['big_cottage_description'];
+        $bigCottageDescriptionEn = json_decode(file_get_contents(base_path('lang/en.json')), true)['booking_objects']['seeders']['big_cottage_description'];
+
+        $bedDescriptionUa = json_decode(file_get_contents(base_path('lang/ua.json')), true)['booking_objects']['seeders']['bed_description'];
+        $bedDescriptionEn = json_decode(file_get_contents(base_path('lang/en.json')), true)['booking_objects']['seeders']['bed_description'];
+
+        $sunbedDescriptionUa = json_decode(file_get_contents(base_path('lang/ua.json')), true)['booking_objects']['seeders']['sunbed_description'];
+        $sunbedDescriptionEn = json_decode(file_get_contents(base_path('lang/en.json')), true)['booking_objects']['seeders']['sunbed_description'];
 
         $objects = [
             [
-                'name_ua' => $bungaloName . '№2 ua',
-                'name_en' => $bungaloName . '№2 en',
-                'description' => $secondBungaloDescription,
+                'name_ua' => $bungaloNameUa . '№2',
+                'name_en' => $bungaloNameEn . '№2',
+                'description_ua' => $secondBungaloDescriptionUa,
+                'description_en' => $secondBungaloDescriptionEn,
                 'zone' => 'bungalow',
                 'type' => 'second bungalow',
                 'max_persons' => null,
             ],
             [
-                'name_ua' => $bungaloName . '№3 ua',
-                'name_en' => $bungaloName . '№3 en',
-                'description' => $bungaloDescription,
+                'name_ua' => $bungaloNameUa . '№3',
+                'name_en' => $bungaloNameEn . '№3',
+                'description_ua' => $bungaloDescriptionUa,
+                'description_en' => $bungaloDescriptionEn,
                 'zone' => 'bungalow',
                 'type' => 'bungalow',
                 'max_persons' => null,
             ],
             [
-                'name_ua' => $bungaloName . '№4 ua',
-                'name_en' => $bungaloName . '№4 en',
-                'description' => $bungaloDescription,
+                'name_ua' => $bungaloNameUa . '№4',
+                'name_en' => $bungaloNameEn . '№4',
+                'description_ua' => $bungaloDescriptionUa,
+                'description_en' => $bungaloDescriptionEn,
                 'zone' => 'bungalow',
                 'type' => 'bungalow',
                 'max_persons' => null,
             ],
             [
-                'name_ua' => $bungaloName . '№5 ua',
-                'name_en' => $bungaloName . '№5 en',
-                'description' => $bungaloDescription,
+                'name_ua' => $bungaloNameUa . '№5',
+                'name_en' => $bungaloNameEn . '№5',
+                'description_ua' => $bungaloDescriptionUa,
+                'description_en' => $bungaloDescriptionEn,
                 'zone' => 'bungalow',
                 'type' => 'bungalow',
                 'max_persons' => null,
             ],
             [
-                'name_ua' => $bungaloName . '№6 ua',
-                'name_en' => $bungaloName . '№6 en',
-                'description' => $bungaloDescription,
+                'name_ua' => $bungaloNameUa . '№6',
+                'name_en' => $bungaloNameEn . '№6',
+                'description_ua' => $bungaloDescriptionUa,
+                'description_en' => $bungaloDescriptionEn,
                 'zone' => 'bungalow',
                 'type' => 'bungalow',
                 'max_persons' => null,
             ],
             [
-                'name_ua' => $littleCottageName . '№7 ua',
-                'name_en' => $littleCottageName . '№7 en',
-                'description' => $littleCottageDescription,
+                'name_ua' => $littleCottageNameUa . '№7',
+                'name_en' => $littleCottageNameEn . '№7',
+                'description_ua' => $littleCottageDescriptionUa,
+                'description_en' => $littleCottageDescriptionEn,
                 'zone' => 'cottages',
                 'type' => 'little cottage',
                 'max_persons' => 4,
             ],
             [
-                'name_ua' => $littleCottageName . '№8 ua',
-                'name_en' => $littleCottageName . '№8 en',
-                'description' => $littleCottageDescription,
+                'name_ua' => $littleCottageNameUa . '№8',
+                'name_en' => $littleCottageNameEn . '№8',
+                'description_ua' => $littleCottageDescriptionUa,
+                'description_en' => $littleCottageDescriptionEn,
                 'zone' => 'cottages',
                 'type' => 'little cottage',
                 'max_persons' => 4,
             ],
             [
-                'name_ua' => $littleCottageName . '№9 ua',
-                'name_en' => $littleCottageName . '№9 en',
-                'description' => $littleCottageDescription,
+                'name_ua' => $littleCottageNameUa . '№9',
+                'name_en' => $littleCottageNameEn . '№9',
+                'description_ua' => $littleCottageDescriptionUa,
+                'description_en' => $littleCottageDescriptionEn,
                 'zone' => 'cottages',
                 'type' => 'little cottage',
                 'max_persons' => 4,
             ],
             [
-                'name_ua' => $littleCottageName . '№10 ua',
-                'name_en' => $littleCottageName . '№10 en',
-                'description' => $littleCottageDescription,
+                'name_ua' => $littleCottageNameUa . '№10',
+                'name_en' => $littleCottageNameEn . '№10',
+                'description_ua' => $littleCottageDescriptionUa,
+                'description_en' => $littleCottageDescriptionEn,
                 'zone' => 'cottages',
                 'type' => 'little cottage',
                 'max_persons' => 4,
             ],
             [
-                'name_ua' => $bigCottageName . '№11 ua',
-                'name_en' => $bigCottageName . '№11 en',
-                'description' => $bigCottageDescription,
+                'name_ua' => $bigCottageNameUa . '№11',
+                'name_en' => $bigCottageNameEn . '№11',
+                'description_ua' => $bigCottageDescriptionUa,
+                'description_en' => $bigCottageDescriptionEn,
                 'zone' => 'cottages',
                 'type' => 'big cottage',
                 'max_persons' => 4,
             ],
             [
-                'name_ua' => $bigCottageName . '№12 ua',
-                'name_en' => $bigCottageName . '№12 en',
-                'description' => $bigCottageDescription,
+                'name_ua' => $bigCottageNameUa . '№12',
+                'name_en' => $bigCottageNameEn . '№12',
+                'description_ua' => $bigCottageDescriptionUa,
+                'description_en' => $bigCottageDescriptionEn,
                 'zone' => 'cottages',
                 'type' => 'big cottage',
                 'max_persons' => 4,
             ],
             [
-                'name_ua' => $bigCottageName . '№13 ua',
-                'name_en' => $bigCottageName . '№13 en',
-                'description' => $bigCottageDescription,
+                'name_ua' => $bigCottageNameUa . '№13',
+                'name_en' => $bigCottageNameEn . '№13',
+                'description_ua' => $bigCottageDescriptionUa,
+                'description_en' => $bigCottageDescriptionEn,
                 'zone' => 'cottages',
                 'type' => 'big cottage',
                 'max_persons' => 4,
             ],
             [
-                'name_ua' => $bigCottageName . '№14 ua',
-                'name_en' => $bigCottageName . '№14 en',
-                'description' => $bigCottageDescription,
+                'name_ua' => $bigCottageNameUa . '№14',
+                'name_en' => $bigCottageNameEn . '№14',
+                'description_ua' => $bigCottageDescriptionUa,
+                'description_en' => $bigCottageDescriptionEn,
                 'zone' => 'cottages',
                 'type' => 'big cottage',
                 'max_persons' => 4,
             ],
             [
-                'name_ua' => $bigCottageName . '№15 ua',
-                'name_en' => $bigCottageName . '№15 en',
-                'description' => $bigCottageDescription,
+                'name_ua' => $bigCottageNameUa . '№15',
+                'name_en' => $bigCottageNameEn . '№15',
+                'description_ua' => $bigCottageDescriptionUa,
+                'description_en' => $bigCottageDescriptionEn,
                 'zone' => 'cottages',
                 'type' => 'big cottage',
                 'max_persons' => 4,
             ],
             [
-                'name_ua' => $bigCottageName . '№16 ua',
-                'name_en' => $bigCottageName . '№16 en',
-                'description' => $bigCottageDescription,
+                'name_ua' => $bigCottageNameUa . '№16',
+                'name_en' => $bigCottageNameEn . '№16',
+                'description_ua' => $bigCottageDescriptionUa,
+                'description_en' => $bigCottageDescriptionEn,
                 'zone' => 'cottages',
                 'type' => 'big cottage',
                 'max_persons' => 4,
             ],
             [
-                'name_ua' => $bigCottageName . '№17 ua',
-                'name_en' => $bigCottageName . '№17 en',
-                'description' => $bigCottageDescription,
+                'name_ua' => $bigCottageNameUa . '№17',
+                'name_en' => $bigCottageNameEn . '№17',
+                'description_ua' => $bigCottageDescriptionUa,
+                'description_en' => $bigCottageDescriptionEn,
                 'zone' => 'cottages',
                 'type' => 'big cottage',
                 'max_persons' => 4,
             ],
             [
-                'name_ua' => $bigCottageName . '№18 ua',
-                'name_en' => $bigCottageName . '№18 en',
-                'description' => $bigCottageDescription,
+                'name_ua' => $bigCottageNameUa . '№18',
+                'name_en' => $bigCottageNameEn . '№18',
+                'description_ua' => $bigCottageDescriptionUa,
+                'description_en' => $bigCottageDescriptionEn,
                 'zone' => 'cottages',
                 'type' => 'big cottage',
                 'max_persons' => 4,
             ],
             [
-                'name_ua' => 'ліжко ua',
-                'name_en' => 'ліжко en',
-                'description' => 'просто ліжко',
+                'name_ua' => $bedNameUa,
+                'name_en' => $bedNameEn,
+                'description_ua' => $bedDescriptionUa,
+                'description_en' => $bedDescriptionEn,
                 'zone' => 'pool',
                 'type' => 'bed',
                 'max_persons' => 1,
             ],
             [
-                'name_ua' => 'ліжко ua',
-                'name_en' => 'ліжко en',
-                'description' => 'просто ліжко',
+                'name_ua' => $bedNameUa,
+                'name_en' => $bedNameEn,
+                'description_ua' => $bedDescriptionUa,
+                'description_en' => $bedDescriptionEn,
                 'zone' => 'pool',
                 'type' => 'bed',
                 'max_persons' => 1,
             ],
             [
-                'name_ua' => 'ліжко ua',
-                'name_en' => 'ліжко en',
-                'description' => 'просто ліжко',
+                'name_ua' => $bedNameUa,
+                'name_en' => $bedNameEn,
+                'description_ua' => $bedDescriptionUa,
+                'description_en' => $bedDescriptionEn,
                 'zone' => 'pool',
                 'type' => 'bed',
                 'max_persons' => 1,
             ],
             [
-                'name_ua' => 'ліжко ua',
-                'name_en' => 'ліжко en',
-                'description' => 'просто ліжко',
+                'name_ua' => $bedNameUa,
+                'name_en' => $bedNameEn,
+                'description_ua' => $bedDescriptionUa,
+                'description_en' => $bedDescriptionEn,
                 'zone' => 'pool',
                 'type' => 'bed',
                 'max_persons' => 1,
             ],
             [
-                'name_ua' => 'лежак ua',
-                'name_en' => 'ліжко en',
-                'description' => 'просто лежак',
+                'name_ua' => $sunbedNameUa,
+                'name_en' => $sunbedNameEn,
+                'description_ua' => $sunbedDescriptionUa,
+                'description_en' => $sunbedDescriptionEn,
                 'zone' => 'pool',
                 'type' => 'sunbed',
                 'max_persons' => 1,

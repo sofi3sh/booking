@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use App\Models\Booking;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Lang;
 
 class BookingObjectController extends Controller
 {
@@ -28,10 +29,17 @@ class BookingObjectController extends Controller
      */
     public function index()
     {
-        $bookingObjects = BookingObject::select('id', 'name_'.app()->getLocale(). ' as name', 'description', 'price', 'weekend_price', 'discount', 'discount_start_date', 'discount_end_date', 'photos', 'zone', 'status', 'type', 'max_persons', 'preview_photo')->get();
+
+        $locale = app()->getLocale();
+
+        // return response()->json($locale);
+        $bookingObjects = BookingObject::select('id', 'name_'.app()->getLocale(). ' as name', 'description_'.app()->getLocale(). ' as description', 'price', 'weekend_price', 'discount', 'discount_start_date', 'discount_end_date', 'photos', 'zone', 'status', 'type', 'max_persons', 'preview_photo')->get();
 
         if ($bookingObjects->isEmpty()) {
-            return response()->json(['message' => __('no_objects_found')], 404);
+            // return response()->json(['message' => __('no_objects_found')], 404);
+            return response()->json(['message' => __('booking_objects.messages.no_objects_found.no_objects_found')], 404);
+
+            // return response()->json(['message' => Lang::get('booking_objects.messages.no_objects_found', [], $locale)], 404);
         }
 
         return response()->json($bookingObjects, 200);
@@ -57,12 +65,13 @@ class BookingObjectController extends Controller
         $user = auth()->user();
 
         if (!$this->userIsAdmin($user)) {
-            return response()->json(['message' => 'permission denied'], 403);
+            return response()->json(['message' => __('booking_objects.messages.permission_denied')], 403);
         }
 
         $rules = [
             'name' => 'required|string',
-            'description' => 'sometimes|required|string',
+            'description_ua' => 'sometimes|required|string',
+            'description_en' => 'sometimes|required|string',
             'price' => 'required|numeric',
             'weekend_price' => 'sometimes|required|numeric',
             'discount' => 'sometimes|required|numeric|between:0,100',
@@ -84,8 +93,12 @@ class BookingObjectController extends Controller
         $newObject = new BookingObject();
         $newObject->name = $request->input('name');
 
-        if($request->has('description')) {
-            $newObject->description = $request->input('description');
+        if($request->has('description_ua')) {
+            $newObject->description_ua = $request->input('description_ua');
+        }
+
+        if($request->has('description_en')) {
+            $newObject->description_en = $request->input('description_en');
         }
 
         $newObject->price = $request->input('price');
