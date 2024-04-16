@@ -129,11 +129,11 @@ class BookingController extends Controller
         $user = auth()->user();
 
         if (!$user->phone_verified_at) {
-            return response()->json(['message' => 'You need to be verified'], 403);
+            return response()->json(['message' => __('verify_needed')], 403);
         }
 
         if (!BookingObject::where('id', $request->object_id)->first()) {
-            return response()->json(['message' => 'Object not found'], 404);
+            return response()->json(['message' => __('object_not_found')], 404);
         }
 
         $newBooking = new Booking ([
@@ -149,7 +149,7 @@ class BookingController extends Controller
 
         $newBooking->save();
         
-        return response()->json(['message' => 'Object has been reserved'], 200);
+        return response()->json(['message' => __('object_has_been_reserved')], 200);
     }
 
     public function adminbookObjects (Request $request)
@@ -167,7 +167,7 @@ class BookingController extends Controller
         
         $bookings = $this->bookingService->createNewBooking($request->all());
 
-        return response()->json(['message' => 'Objects have been booked successfully', 'bookings' => $bookings], 200);
+        return response()->json(['message' => __('objects_have_been_booked'), 'bookings' => $bookings], 200);
     }
 
     public function cancelOrder (Request $request)
@@ -179,7 +179,7 @@ class BookingController extends Controller
         Booking::where('order_id', $request->order_id)
             ->update(['canceled' => 1]);
 
-        return response()->json(['message' => 'Order has been canceled'], 200);
+        return response()->json(['message' => __('order_has_been_canceled')], 200);
     }
 
     public function getBookingsByObjectId ($objectId)
@@ -187,7 +187,7 @@ class BookingController extends Controller
         $bookings = Booking::where('object_id', $objectId)->get();
 
         if ($bookings->isEmpty()) {
-            return response()->json(['message' => 'No bookings found'], 404);
+            return response()->json(['message' => __('no_bookings_found')], 404);
         }
 
         return response()->json(['bookings' => $bookings], 200);
@@ -244,7 +244,7 @@ class BookingController extends Controller
         $bookingsInOrder = Booking::where('order_id', $request->order_id)->get();
 
         if ($bookingsInOrder->isEmpty()) {
-            return response()->json(['message' => 'Order not found'], 404);
+            return response()->json(['message' => __('order_not_found')], 404);
         }
 
         foreach ($bookingsInOrder as $booking) {

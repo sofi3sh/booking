@@ -75,13 +75,13 @@ class UserController extends Controller
             if (Hash::make($request->password) == $user->password) {
                 $user->password = Hash::make($request->new_password);
             } else {
-                return response()->json(['message' => 'Incorrect password'], 200);
+                return response()->json(['message' => __('incorrect_password')], 200);
             }
         }
 
         $user->save();
 
-        return response()->json(['message' => 'Profile updated successfully'], 200);
+        return response()->json(['message' => __('profile_updated_successfully')], 200);
     }
 
     public function adminGetUsers ()
@@ -89,7 +89,7 @@ class UserController extends Controller
         $user = auth()->user();
 
         if (!$this->userIsAdmin($user)) {
-            return response()->json(['message' => 'permission denied'], 403);
+            return response()->json(['message' => __('permission_denied')], 403);
         }
 
         $allUsers = User::all()->where('role_id', 3);
@@ -102,7 +102,7 @@ class UserController extends Controller
         $user = auth()->user();
 
         if (!$this->userIsAdmin($user)) {
-            return response()->json(['message' => 'permission denied'], 403);
+            return response()->json(['message' => __('permission_denied')], 403);
         }
 
         $allUsers = User::all()->where('role_id', 2);
@@ -124,7 +124,7 @@ class UserController extends Controller
         $user = auth()->user();
 
         if (!$this->userIsAdmin($user)) {
-            return response()->json(['message' => 'permission denied'], 403);
+            return response()->json(['message' => __('permission_denied')], 403);
         }
         
         $targetUser = User::where('id', $request->user_id)->get()->first();
@@ -157,7 +157,7 @@ class UserController extends Controller
 
         $targetUser->save();
 
-        return response()->json(['message' => 'Profile updated successfully'], 200);
+        return response()->json(['message' => __('profile_updated_successfully')], 200);
     }
 
     public function getUserBookings ()
@@ -167,7 +167,7 @@ class UserController extends Controller
         $booking = Booking::where('user_id', $user->id)->get();
 
         if (!$booking) {
-            return response()->json(['message' => 'No bookings found'], 404);
+            return response()->json(['message' => __('no_bookings_found')], 404);
         }
 
         return response()->json(['bookings' => $booking], 200);
@@ -182,13 +182,13 @@ class UserController extends Controller
         $user = auth()->user();
 
         if (!($user->phone_verified_at > Carbon::now()->subMinutes(5))) {
-            return response()->json(['message' => 'You need to confirm your phone number'], 403);
+            return response()->json(['message' => __('confirm_phone')], 403);
         }
 
         $user->password = Hash::make($request->new_password);
         $user->save();
 
-        return response()->json(['message' => 'Password changed successfully'], 200);
+        return response()->json(['message' => __('password_changed_successfully')], 200);
     }
 
 }
