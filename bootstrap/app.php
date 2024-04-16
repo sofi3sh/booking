@@ -17,8 +17,6 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(function (Middleware $middleware) {
         $middleware->append(Auth::class);
-    })
-    ->withMiddleware(function (Middleware $middleware) {
         $middleware->append(Localization::class);
     })
     ->withExceptions(function (Exceptions $exceptions) {
