@@ -79,6 +79,12 @@ class OneCController extends Controller
      *                     property="max_persons",
      *                     type="integer",
      *                     description="Maximum number of persons for the booking object"
+     *                 ),
+     *                 @OA\Property(
+     *                     property="lang",
+     *                     type="string",
+     *                     description="Specify language",
+     *                     format="lang"
      *                 )
      *             )
      *         ),
@@ -149,6 +155,12 @@ class OneCController extends Controller
      *                 format="date-time",
      *                 description="Discount end date of the booking object",
      *                 example="2024-04-08"
+     *             ),
+     *             @OA\Property(
+     *                 property="lang",
+     *                 type="string",
+     *                 description="Specify language",
+     *                 format="lang"
      *             )
      *         )
      *     ),
@@ -283,6 +295,12 @@ class OneCController extends Controller
      *                 format="date-time",
      *                 description="Discount end date of the booking object",
      *                 example="2024-05-08"
+     *             ),
+     *             @OA\Property(
+     *                 property="lang",
+     *                 type="string",
+     *                 description="Specify language",
+     *                 format="lang"
      *             )
      *         )
      *     ),

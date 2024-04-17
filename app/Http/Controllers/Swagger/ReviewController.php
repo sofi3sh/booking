@@ -93,6 +93,12 @@ class ReviewController extends Controller
      *                 property="text",
      *                 type="string",
      *                 description="Text of the review"
+     *             ),
+     *             @OA\Property(
+     *                 property="lang",
+     *                 type="string",
+     *                 description="Specify language",
+     *                 format="lang"
      *             )
      *         )
      *     ),

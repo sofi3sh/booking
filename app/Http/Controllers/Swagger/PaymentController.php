@@ -49,6 +49,12 @@ class PaymentController extends Controller
      *                             description="Price of product"
      *                         )
      *                     )
+     *                 ),
+     *                 @OA\Property(
+     *                     property="lang",
+     *                     type="string",
+     *                     description="Specify language",
+     *                     format="lang"
      *                 )
      *             )
      *         )

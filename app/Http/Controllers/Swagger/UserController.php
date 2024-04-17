@@ -47,6 +47,12 @@ class UserController extends Controller
      *                 property="photo",
      *                 type="string",
      *                 description="User's photo URL"
+     *             ),
+     *             @OA\Property(
+     *                 property="lang",
+     *                 type="string",
+     *                 description="Specify language",
+     *                 format="lang"
      *             )
      *         )
      *     ),
@@ -110,6 +116,12 @@ class UserController extends Controller
      *                 property="new_password",
      *                 type="string",
      *                 description="New password"
+     *             ),
+     *             @OA\Property(
+     *                 property="lang",
+     *                 type="string",
+     *                 description="Specify language",
+     *                 format="lang"
      *             )
      *         )
      *     ),
@@ -254,6 +266,12 @@ class UserController extends Controller
      *                 type="string",
      *                 description="New password"
      *             ),
+     *             @OA\Property(
+     *                 property="lang",
+     *                 type="string",
+     *                 description="Specify language",
+     *                 format="lang"
+     *             )
      *         )
      *     ),
      *     @OA\Response(
@@ -339,6 +357,12 @@ class UserController extends Controller
      *                 type="string",
      *                 format="binary",
      *                 description="User's photo"
+     *             ),
+     *             @OA\Property(
+     *                 property="lang",
+     *                 type="string",
+     *                 description="Specify language",
+     *                 format="lang"
      *             )
      *         )
      *     ),

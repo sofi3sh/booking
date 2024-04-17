@@ -359,6 +359,11 @@
                                     "object_id": {
                                         "description": "ID of the object we want to reserve",
                                         "type": "integer"
+                                    },
+                                    "lang": {
+                                        "description": "Specify language",
+                                        "type": "string",
+                                        "format": "lang"
                                     }
                                 },
                                 "type": "object"
@@ -444,6 +449,11 @@
                                         "description": "booking end date",
                                         "type": "string",
                                         "format": "date"
+                                    },
+                                    "lang": {
+                                        "description": "Specify language",
+                                        "type": "string",
+                                        "format": "lang"
                                     }
                                 },
                                 "type": "object"
@@ -487,6 +497,11 @@
                                     "order_id": {
                                         "description": "Order ID",
                                         "type": "string"
+                                    },
+                                    "lang": {
+                                        "description": "Specify language",
+                                        "type": "string",
+                                        "format": "lang"
                                     }
                                 },
                                 "type": "object"
@@ -530,6 +545,11 @@
                                     "order_id": {
                                         "description": "Order ID",
                                         "type": "string"
+                                    },
+                                    "lang": {
+                                        "description": "Specify language",
+                                        "type": "string",
+                                        "format": "lang"
                                     }
                                 },
                                 "type": "object"
@@ -665,6 +685,11 @@
                                         "description": "Description",
                                         "type": "string",
                                         "nullable": true
+                                    },
+                                    "lang": {
+                                        "description": "Specify language",
+                                        "type": "string",
+                                        "format": "lang"
                                     }
                                 },
                                 "type": "object"
@@ -1046,6 +1071,11 @@
                                     "max_persons": {
                                         "description": "Maximum number of persons allowed for the booking object",
                                         "type": "integer"
+                                    },
+                                    "lang": {
+                                        "description": "Specify language",
+                                        "type": "string",
+                                        "format": "lang"
                                     }
                                 },
                                 "type": "object"
@@ -1197,6 +1227,11 @@
                                             "description": "Update date of the booking object",
                                             "type": "string",
                                             "format": "date-time"
+                                        },
+                                        "lang": {
+                                            "description": "Specify language",
+                                            "type": "string",
+                                            "format": "lang"
                                         }
                                     },
                                     "type": "object"
@@ -1332,6 +1367,11 @@
                                     "max_persons": {
                                         "description": "Maximum number of persons allowed for the booking object",
                                         "type": "integer"
+                                    },
+                                    "lang": {
+                                        "description": "Specify language",
+                                        "type": "string",
+                                        "format": "lang"
                                     }
                                 },
                                 "type": "object"
@@ -1394,6 +1434,11 @@
                                         "description": "Date of the booking",
                                         "type": "string",
                                         "format": "date"
+                                    },
+                                    "lang": {
+                                        "description": "Specify language",
+                                        "type": "string",
+                                        "format": "lang"
                                     }
                                 },
                                 "type": "object"
@@ -1540,6 +1585,11 @@
                                             "type": "string",
                                             "format": "binary"
                                         }
+                                    },
+                                    "lang": {
+                                        "description": "Specify language",
+                                        "type": "string",
+                                        "format": "lang"
                                     }
                                 },
                                 "type": "object"
@@ -1612,6 +1662,11 @@
                                             "description": "Name of the photo to be deleted",
                                             "type": "string"
                                         }
+                                    },
+                                    "lang": {
+                                        "description": "Specify language",
+                                        "type": "string",
+                                        "format": "lang"
                                     }
                                 },
                                 "type": "object"
@@ -1712,6 +1767,11 @@
                                             "max_persons": {
                                                 "description": "Maximum number of persons for the booking object",
                                                 "type": "integer"
+                                            },
+                                            "lang": {
+                                                "description": "Specify language",
+                                                "type": "string",
+                                                "format": "lang"
                                             }
                                         },
                                         "type": "object"
@@ -1789,6 +1849,11 @@
                                         "type": "string",
                                         "format": "date-time",
                                         "example": "2024-04-08"
+                                    },
+                                    "lang": {
+                                        "description": "Specify language",
+                                        "type": "string",
+                                        "format": "lang"
                                     }
                                 },
                                 "type": "object"
@@ -1923,6 +1988,11 @@
                                         "type": "string",
                                         "format": "date-time",
                                         "example": "2024-05-08"
+                                    },
+                                    "lang": {
+                                        "description": "Specify language",
+                                        "type": "string",
+                                        "format": "lang"
                                     }
                                 },
                                 "type": "object"
@@ -2034,6 +2104,11 @@
                                             },
                                             "type": "object"
                                         }
+                                    },
+                                    "lang": {
+                                        "description": "Specify language",
+                                        "type": "string",
+                                        "format": "lang"
                                     }
                                 },
                                 "type": "object"
@@ -2159,6 +2234,11 @@
                                     "text": {
                                         "description": "Text of the review",
                                         "type": "string"
+                                    },
+                                    "lang": {
+                                        "description": "Specify language",
+                                        "type": "string",
+                                        "format": "lang"
                                     }
                                 },
                                 "type": "object"
@@ -2339,6 +2419,11 @@
                                         "photo": {
                                             "description": "User's photo URL",
                                             "type": "string"
+                                        },
+                                        "lang": {
+                                            "description": "Specify language",
+                                            "type": "string",
+                                            "format": "lang"
                                         }
                                     },
                                     "type": "object"
@@ -2397,6 +2482,11 @@
                                     "new_password": {
                                         "description": "New password",
                                         "type": "string"
+                                    },
+                                    "lang": {
+                                        "description": "Specify language",
+                                        "type": "string",
+                                        "format": "lang"
                                     }
                                 },
                                 "type": "object"
@@ -2548,6 +2638,11 @@
                                     "new_password": {
                                         "description": "New password",
                                         "type": "string"
+                                    },
+                                    "lang": {
+                                        "description": "Specify language",
+                                        "type": "string",
+                                        "format": "lang"
                                     }
                                 },
                                 "type": "object"
@@ -2645,6 +2740,11 @@
                                         "description": "User's photo",
                                         "type": "string",
                                         "format": "binary"
+                                    },
+                                    "lang": {
+                                        "description": "Specify language",
+                                        "type": "string",
+                                        "format": "lang"
                                     }
                                 },
                                 "type": "object"
