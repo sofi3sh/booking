@@ -25,6 +25,9 @@
     "invalid_verification_code": "Неправильний код підтвердження",
     "expired_verification_code": "Термін дії верифікаційного коду закінчився",
     "success_verification_code": "Номер телефону успішно підтверджено",
+    "no_objects_details_found": "Деталей об'єкту не знайдено",
+    "object_detail_not_found": "Деталі об'єкту не знайдено",
+    "object_detail_deleted_successfully": "Деталі об'єкту видалено успішно",
     "booking_objects": {
         "seeders": {
             "bungalo_name": "Бунгало ",
