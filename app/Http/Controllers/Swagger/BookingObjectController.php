@@ -305,6 +305,12 @@ class BookingObjectController extends Controller
      *                     type="integer",
      *                     description="Maximum number of persons allowed for the booking object"
      *                 ),
+     *                 @OA\Property(
+     *                     property="lang",
+     *                     type="string",
+     *                     description="Specify language",
+     *                     format="lang"
+     *                 )
      *             )
      *         )
      *     ),
@@ -444,6 +450,12 @@ class BookingObjectController extends Controller
      *                 format="date-time",
      *                 description="Update date of the booking object"
      *             ),
+     *             @OA\Property(
+     *                 property="lang",
+     *                 type="string",
+     *                 description="Specify language",
+     *                 format="lang"
+     *             )
      *         )
      *     ),
      *     @OA\Response(
@@ -543,6 +555,12 @@ class BookingObjectController extends Controller
      *                 type="integer",
      *                 description="Maximum number of persons allowed for the booking object"
      *             ),
+     *             @OA\Property(
+     *                 property="lang",
+     *                 type="string",
+     *                 description="Specify language",
+     *                 format="lang"
+     *             )
      *         )
      *     ),
      *     @OA\Response(
@@ -632,6 +650,12 @@ class BookingObjectController extends Controller
      *                 type="string",
      *                 format="date",
      *                 description="Date of the booking"
+     *             ),
+     *             @OA\Property(
+     *                 property="lang",
+     *                 type="string",
+     *                 description="Specify language",
+     *                 format="lang"
      *             )
      *         )
      *     ),
@@ -772,6 +796,12 @@ class BookingObjectController extends Controller
      *                     ),
      *                     description="Array of photos to be added"
      *                 ),
+     *                 @OA\Property(
+     *                     property="lang",
+     *                     type="string",
+     *                     description="Specify language",
+     *                     format="lang"
+     *                 )
      *             )
      *         )
      *     ),
@@ -833,6 +863,12 @@ class BookingObjectController extends Controller
      *                     description="Name of the photo to be deleted"
      *                 ),
      *                 description="Array of photo names to be deleted"
+     *             ),
+     *             @OA\Property(
+     *                 property="lang",
+     *                 type="string",
+     *                 description="Specify language",
+     *                 format="lang"
      *             )
      *         )
      *     ),

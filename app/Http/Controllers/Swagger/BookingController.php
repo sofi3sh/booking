@@ -27,6 +27,12 @@ class BookingController extends Controller
      *                 type="integer",
      *                 description="ID of the object we want to reserve"
      *             ),
+     *             @OA\Property(
+     *                 property="lang",
+     *                 type="string",
+     *                 description="Specify language",
+     *                 format="lang"
+     *             )
      *         )
      *     ),
      *     @OA\Response(
@@ -98,6 +104,12 @@ class BookingController extends Controller
      *                 format="date",
      *                 description="booking end date"
      *             ),
+     *             @OA\Property(
+     *                 property="lang",
+     *                 type="string",
+     *                 description="Specify language",
+     *                 format="lang"
+     *             )
      *         )
      *     ),
      *     @OA\Response(
@@ -133,6 +145,12 @@ class BookingController extends Controller
      *                 type="string",
      *                 description="Order ID"
      *             ),
+     *             @OA\Property(
+     *                 property="lang",
+     *                 type="string",
+     *                 description="Specify language",
+     *                 format="lang"
+     *             )
      *         )
      *     ),
      *     @OA\Response(
@@ -168,6 +186,12 @@ class BookingController extends Controller
      *                 type="string",
      *                 description="Order ID"
      *             ),
+     *             @OA\Property(
+     *                 property="lang",
+     *                 type="string",
+     *                 description="Specify language",
+     *                 format="lang"
+     *             )
      *         )
      *     ),
      *     @OA\Response(
@@ -306,6 +330,12 @@ class BookingController extends Controller
      *             nullable=true,
      *             description="Description"
      *         ),
+     *         @OA\Property(
+     *             property="lang",
+     *             type="string",
+     *             description="Specify language",
+     *             format="lang"
+     *         )
      *     )
      * ),
      *     @OA\Response(
