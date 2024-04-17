@@ -25,6 +25,9 @@
     "invalid_verification_code": "Invalid verification code",
     "expired_verification_code": "Verification code has expired",
     "success_verification_code": "Phone number verified successfully",
+    "no_objects_details_found": "No objects details found",
+    "object_detail_not_found": "Object detail not found",
+    "object_detail_deleted_successfully": "Object detail deleted successfully",
     "booking_objects": {
         "seeders": {
             "bungalo_name": "Bungalo ",

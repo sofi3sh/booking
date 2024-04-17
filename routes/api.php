@@ -10,6 +10,7 @@ use App\Http\Controllers\BookingController;
 use App\Http\Controllers\OneCController;
 use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\PaymentController;
+use App\Http\Controllers\ObjectDetailsController;
 
 
 Route::prefix('auth')
@@ -50,6 +51,8 @@ Route::prefix('objects')
 ->controller(ReviewController::class)
 ->group(function () {
     Route::post('/{id}/reviews', 'store');
+    Route::get('/{id}/showAllByObjectId', [ObjectDetailsController::class, 'showAllByObjectId']);
+
 });
 
 Route::prefix('admin')
@@ -68,6 +71,7 @@ Route::prefix('admin')
         Route::post('objects/{id}', [BookingObjectController::class, 'update']);
         Route::post('objects/{id}/deletePhotosByName', [BookingObjectController::class, 'deletePhotosByName']);
         Route::post('objects/{id}/addObjectPhotos', [BookingObjectController::class, 'addObjectPhotos']);
+        Route::resource('objectDetails', ObjectDetailsController::class)->only(['index', 'store', 'destroy', 'update', 'show']);
     });
 
 Route::prefix('booking')
