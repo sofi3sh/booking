@@ -1652,6 +1652,365 @@
                 ]
             }
         },
+        "/api/admin/objectDetails": {
+            "get": {
+                "tags": [
+                    "ObjectDetails"
+                ],
+                "summary": "Get all object details",
+                "description": "Returns all object details",
+                "operationId": "73fc0c8c5435f9c072a52a692b5769ec",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/ObjectDetails"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Permission denied",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "description": "Message",
+                                            "type": "string",
+                                            "example": "Permission denied"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Resource Not Found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "description": "Message",
+                                            "type": "string",
+                                            "example": "No objects details found"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "ObjectDetails"
+                ],
+                "summary": "Create object details",
+                "description": "Create object details",
+                "operationId": "0fec3f1cb7250eb628d2e5e869a4b688",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/ObjectDetails"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ObjectDetails"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Permission denied",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "description": "Message",
+                                            "type": "string",
+                                            "example": "Permission denied"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/objects/{objectId}/details/showAllByObjectId": {
+            "get": {
+                "tags": [
+                    "ObjectDetails"
+                ],
+                "summary": "Get all object details by object ID",
+                "description": "Returns all object details by object ID",
+                "operationId": "3b227386ba00f6f95a15a4c470888891",
+                "parameters": [
+                    {
+                        "name": "objectId",
+                        "in": "path",
+                        "description": "ID of the booking object",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/ObjectDetailsForUsers"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Resource Not Found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "description": "Message",
+                                            "type": "string",
+                                            "example": "No objects details found"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/admin/objectDetails/{id}": {
+            "get": {
+                "tags": [
+                    "ObjectDetails"
+                ],
+                "summary": "Get object details by ID",
+                "description": "Returns object details by ID",
+                "operationId": "8106875d2e26a1ec31d25696691304d9",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the object details",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/ObjectDetails"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Permission denied",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "description": "Message",
+                                            "type": "string",
+                                            "example": "Permission denied"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Resource Not Found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "description": "Message",
+                                            "type": "string",
+                                            "example": "Object detail not found"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "ObjectDetails"
+                ],
+                "summary": "Update object details",
+                "description": "Update object details",
+                "operationId": "bdb65a16b6c8469b0e028c20b4e9378f",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the object details",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/ObjectDetails"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ObjectDetails"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Permission denied",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "description": "Message",
+                                            "type": "string",
+                                            "example": "Permission denied"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "ObjectDetails"
+                ],
+                "summary": "Delete object details",
+                "description": "Delete object details",
+                "operationId": "21aadfb023121a3cb4a00f8212bf3651",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the object details",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "description": "Message",
+                                            "type": "string",
+                                            "example": "Object detail deleted successfully"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Permission denied",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "description": "Message",
+                                            "type": "string",
+                                            "example": "Permission denied"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Resource Not Found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "description": "Message",
+                                            "type": "string",
+                                            "example": "Object detail not found"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/api/onec/objects": {
             "get": {
                 "tags": [
@@ -2934,6 +3293,63 @@
                     }
                 },
                 "type": "object"
+            },
+            "ObjectDetails": {
+                "required": [
+                    "booking_object_id",
+                    "title_ua",
+                    "title_en",
+                    "description_ua",
+                    "description_en"
+                ],
+                "properties": {
+                    "booking_object_id": {
+                        "description": "ID of the booking object",
+                        "type": "integer"
+                    },
+                    "title_ua": {
+                        "description": "Title of the object in Ukrainian",
+                        "type": "string"
+                    },
+                    "title_en": {
+                        "description": "Title of the object in English",
+                        "type": "string"
+                    },
+                    "description_ua": {
+                        "description": "Description of the object in Ukrainian",
+                        "type": "string"
+                    },
+                    "description_en": {
+                        "description": "Description of the object in English",
+                        "type": "string"
+                    },
+                    "img": {
+                        "description": "URL of the image of the object",
+                        "type": "string"
+                    }
+                },
+                "type": "object"
+            },
+            "ObjectDetailsForUsers": {
+                "properties": {
+                    "id": {
+                        "description": "ID of the booking object details",
+                        "type": "integer"
+                    },
+                    "title": {
+                        "description": "Title of the object",
+                        "type": "string"
+                    },
+                    "description": {
+                        "description": "Description of the object",
+                        "type": "string"
+                    },
+                    "img": {
+                        "description": "URL of the image of the object",
+                        "type": "string"
+                    }
+                },
+                "type": "object"
             }
         }
     },
@@ -2948,6 +3364,10 @@
         },
         {
             "name": "Objects",
+            "description": "API for managing objects"
+        },
+        {
+            "name": "ObjectDetails",
             "description": "API for managing objects"
         },
         {
