@@ -44,6 +44,7 @@ Route::prefix('objects')
     ->controller(BookingObjectController::class)
     ->group(function () {
         Route::post('/getAvailableObjectsByDate', 'getAvailableObjectsByDate');
+        Route::get('/{id}/details/showAllByObjectId', [ObjectDetailsController::class, 'showAllByObjectId']);
     });
 
 Route::prefix('objects')
@@ -51,8 +52,6 @@ Route::prefix('objects')
 ->controller(ReviewController::class)
 ->group(function () {
     Route::post('/{id}/reviews', 'store');
-    Route::get('/{id}/showAllByObjectId', [ObjectDetailsController::class, 'showAllByObjectId']);
-
 });
 
 Route::prefix('admin')
