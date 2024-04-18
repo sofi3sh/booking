@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\BookingObject;
 use App\Models\Booking;
+use App\Models\Debug;
 use Carbon\Carbon;
 
 class OneCController extends Controller
@@ -28,13 +29,24 @@ class OneCController extends Controller
     {
         $bookingObject = BookingObject::find($id);
 
+        $debug = new Debug();
+
+
+        $debug->key = "request body";
+        $debug->value = json_encode([
+            "request" => $request->all(),
+            "ID" => $id
+        ]);
+        
+        $debug->save();
+
         if (!$bookingObject) {
             return response()->json(['error' => __('object_not_found')], 404);
         }
 
         $request->validate([
-            'price' => 'sometimes|required|numeric',
-            'weekend_price' => 'sometimes|required|numeric',
+            'price' => 'required|numeric',
+            'weekend_price' => 'required|numeric',
             'discount' => 'sometimes|nullable|numeric',
             'discount_start_date' => 'sometimes|nullable|date',
             'discount_end_date' => 'sometimes|nullable|date',
@@ -61,6 +73,8 @@ class OneCController extends Controller
         }
 
         $bookingObject->save();
+
+        return response()->json($request->all(), 200);
 
         return response()->json($bookingObject->only(['id', 'name', 'price', 'weekend_price', 'discount', 'discount_start_date', 'discount_end_date', 'zone', 'status', 'type', 'max_persons']), 200);
     }

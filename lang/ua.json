@@ -14,6 +14,7 @@
     "confirm_phone": "Вам потрібно підтвердити ваш номер телефону",
     "verify_needed": "Вам потрібно пройти верифікацію",
     "object_has_been_reserved": "Об'єкт вже зарезервовано",
+    "object_reserved": "Об'єкт зарезервовано",
     "objects_have_been_booked": "Об'єкти успішно заброньовані",
     "order_has_been_canceled": "Замовлення відмінено",
     "order_not_found": "Замовлення не знайдено",

@@ -149,7 +149,7 @@ class BookingController extends Controller
 
         $newBooking->save();
         
-        return response()->json(['message' => __('object_has_been_reserved')], 200);
+        return response()->json(['message' => __('object_reserved')], 200);
     }
 
     public function adminbookObjects (Request $request)
