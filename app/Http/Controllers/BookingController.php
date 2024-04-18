@@ -201,36 +201,7 @@ class BookingController extends Controller
             'booked_to' => 'required|date',
         ]);
 
-        $totalPrice = 0.0;
-
-        $bookingObject = BookingObject::select('price', 'weekend_price', 'discount', 'discount_start_date', 'discount_end_date')->where('id', $request->object_id)->get();
-
-        $bookingFrom = Carbon::parse($request->booked_from);
-        $bookingTo = Carbon::parse($request->booked_to);
-        $discountStartDate = Carbon::parse($bookingObject->discount_start_date);
-        $discountEndDate = Carbon::parse($bookingObject->discount_end_date);
-
-        $weekends = $bookingFrom->diffInDaysFiltered(function ($date) {
-            return $date->isWeekend();
-        }, $bookingTo);
-
-        $weekdays = $bookingFrom->diffInDaysFiltered(function ($date) {
-            return $date->isWeekday();
-        }, $bookingTo);
-
-        $totalPrice += $weekends * $bookingObject->price;
-        $totalPrice += $weekends * $bookingObject->weekend_price;
-
-        // Check if the booking period falls within the discount period
-        if ($bookingFrom->between($discountStartDate, $discountEndDate) || 
-            $bookingTo->between($discountStartDate, $discountEndDate) ||
-            ($bookingFrom <= $discountStartDate && $bookingTo >= $discountEndDate)) {
-            $discountPercentage = $bookingObject->discount / 100;
-
-            $totalPrice -= $totalPrice * $discountPercentage;
-        }
-
-        return response()->json(['price' => $totalPrice], 200);
+        return response()->json(['price' => $this->bookingService->calculatePrice($request->object_id, $request->booked_from, $request->booked_to)], 200);
     }
 
     public function getOrder (Request $request)
