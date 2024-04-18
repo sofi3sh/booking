@@ -62,6 +62,8 @@ class OneCController extends Controller
 
         $bookingObject->save();
 
+        return response()->json($request->all(), 200);
+
         return response()->json($bookingObject->only(['id', 'name', 'price', 'weekend_price', 'discount', 'discount_start_date', 'discount_end_date', 'zone', 'status', 'type', 'max_persons']), 200);
     }
 
