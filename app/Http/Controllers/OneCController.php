@@ -32,8 +32,8 @@ class OneCController extends Controller
         }
 
         $request->validate([
-            'price' => 'sometimes|required|numeric',
-            'weekend_price' => 'sometimes|required|numeric',
+            'price' => 'required|numeric',
+            'weekend_price' => 'required|numeric',
             'discount' => 'sometimes|nullable|numeric',
             'discount_start_date' => 'sometimes|nullable|date',
             'discount_end_date' => 'sometimes|nullable|date',
