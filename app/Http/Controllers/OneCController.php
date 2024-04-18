@@ -17,7 +17,7 @@ class OneCController extends Controller
         }
 
         $filteredBookingObjects = $bookingObjects->map(function ($bookingObject) {
-            return $bookingObject->only(['id', 'name_' . app()->getLocale() . ' as name', 'price', 'weekend_price', 'discount', 'discount_start_date', 'discount_end_date', 'zone', 'status', 'type', 'max_persons']);
+            return $bookingObject->only(['id', 'name_ua', 'name_en', 'price', 'weekend_price', 'discount', 'discount_start_date', 'discount_end_date', 'zone', 'status', 'type', 'max_persons']);
         });
 
         return response()->json($filteredBookingObjects, 200);
