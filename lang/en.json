@@ -14,6 +14,7 @@
     "confirm_phone": "You need to confirm your phone number",
     "verify_needed": "You need to be verified",
     "object_has_been_reserved": "Object has been reserved",
+    "object_reserved": "Object reserved",
     "objects_have_been_booked": "Objects have been booked successfully",
     "order_has_been_canceled": "Order has been canceled",
     "order_not_found": "Order not found",
