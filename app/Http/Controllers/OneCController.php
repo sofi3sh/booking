@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\BookingObject;
+use App\Models\Debug;
 use Carbon\Carbon;
 
 class OneCController extends Controller
@@ -26,6 +27,17 @@ class OneCController extends Controller
     public function update(Request $request, $id)
     {
         $bookingObject = BookingObject::find($id);
+
+        $debug = new Debug();
+
+
+        $debug->key = "request body";
+        $debug->value = json_encode([
+            "request" => $request->all(),
+            "ID" => $id
+        ]);
+        
+        $debug->save();
 
         if (!$bookingObject) {
             return response()->json(['error' => __('object_not_found')], 404);
