@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\BookingObject;
+use App\Models\Booking;
 use Carbon\Carbon;
 
 class OneCController extends Controller
@@ -52,7 +53,6 @@ class OneCController extends Controller
         }
 
         if ($request->has('discount_start_date')) {
-            
             $bookingObject->discount_start_date = Carbon::parse($request->input('discount_start_date'))->startOfDay();
         }
 
@@ -100,4 +100,14 @@ class OneCController extends Controller
         return response()->json($bookingObjects, 200);
     }
 
+    public function getLastOrdersByDays (Request $request)
+    {
+        $request->validate([
+            'days' => 'required|integer'
+        ]);
+
+        $timeInterval = Carbon::now()->subDays($request->days);
+
+        return Booking::where('created_at', '>', $timeInterval)->get();
+    }
 }
