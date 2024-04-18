@@ -19,6 +19,7 @@ class Booking extends Model
         'booked_to',
         'canceled',
         'description',
+        'order_id',
         'price',
     ];
 

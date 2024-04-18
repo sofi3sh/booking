@@ -9,7 +9,7 @@ use App\Enums\ObjectStatus;
 
 class BookingService
 {
-    private function createBooking ($userId, $objectId, $dateFrom, $dateTo, $paymentStatus, $description, $price)
+    private function createBooking ($userId, $objectId, $dateFrom, $dateTo, $paymentStatus, $description, $orderId, $price)
     {
         return new Booking([
             'user_id' => $userId,
@@ -20,6 +20,7 @@ class BookingService
             'booked_to' => Carbon::parse($dateTo)->endOfDay(),
             'payment_status' => $paymentStatus,
             'description' => $description,
+            'order_id' => $orderId,
             'price' => $price,
         ]);
     }
@@ -58,7 +59,7 @@ class BookingService
             $bookedTo = $bookingData['booked_to'];
             $userId = $bookingData['user_id'];
             $description = $bookingData['description'] ?? "";
-            $price = $bookingData['price'];
+            $price = $this->calculatePrice($objectId, $bookedFrom, $bookedTo);
 
             $bookingObject = BookingObject::find($objectId);
 
@@ -66,13 +67,14 @@ class BookingService
                 $booking = ['message' => 'Object not found'];
             }
 
-            if (!$this->isObjectAvailableToBook($objectId, $bookedFrom, $bookedTo)) {
-                $booking = ['message' => 'Object ' . $bookingObject->name . ' is not available for booking during the specified dates'];
-            }
-    
             $dateFromInStartDay = Carbon::parse($bookedFrom)->startOfDay();
             $dateToInEndDay = Carbon::parse($bookedTo)->endOfDay();
-    
+
+            if (!$this->isObjectAvailableToBook($objectId, $dateFromInStartDay, $dateToInEndDay)) {
+                $bookings[] = ['message' => 'Object ' . $bookingObject->name . ' is not available for booking during the specified dates'];
+                continue;
+            }
+        
             $booking = $this->createBooking($userId, $objectId, $dateFromInStartDay, $dateToInEndDay, $bookingData['payment_status'], $description, $orderId, $price);
             $booking->save();
         
@@ -98,7 +100,7 @@ class BookingService
             $bookedTo = $bookingData['booked_to'];
             $userId = $user->id;
             $description = $bookingData['description'] ?? "";
-            $price = $bookingData['price'];
+            $price = $this->calculatePrice($objectId, $bookedFrom, $bookedTo);
 
             $bookingObject = BookingObject::find($objectId);
 
@@ -134,5 +136,40 @@ class BookingService
         }
 
         return $bookings;
+    }
+
+    public function calculatePrice ($objectId, $bookedFrom, $bookedTo) : Float
+    {
+        $totalPrice = 0.0;
+
+        $bookingObject = BookingObject::select('price', 'weekend_price', 'discount', 'discount_start_date', 'discount_end_date')->where('id', $objectId)->first();
+
+        $bookingFrom = Carbon::parse($bookedFrom);
+        $bookingTo = Carbon::parse($bookedTo);
+
+        $weekends = $bookingFrom->diffInDaysFiltered(function ($date) {
+            return $date->isWeekend();
+        }, $bookingTo);
+
+        $weekdays = $bookingFrom->diffInDaysFiltered(function ($date) {
+            return $date->isWeekday();
+        }, $bookingTo);
+
+        $totalPrice += $weekends * $bookingObject->price;
+        $totalPrice += $weekends * $bookingObject->weekend_price;
+
+        if (!empty($bookingObject->discount) && !empty($bookingObject->discount_start_date) && !empty($bookingObject->discount_end_date)) {
+            $discountStartDate = Carbon::parse($bookingObject->discount_start_date);
+            $discountEndDate = Carbon::parse($bookingObject->discount_end_date);
+    
+            if ($bookingFrom->between($discountStartDate, $discountEndDate) ||
+                $bookingTo->between($discountStartDate, $discountEndDate) ||
+                ($bookingFrom <= $discountStartDate && $bookingTo >= $discountEndDate)) {
+                $discountPercentage = $bookingObject->discount / 100;
+                $totalPrice -= $totalPrice * $discountPercentage;
+            }
+        }
+    
+        return $totalPrice;
     }
 }
