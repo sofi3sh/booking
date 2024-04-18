@@ -31,7 +31,7 @@ class AuthController extends Controller
         $message = $response->current();
     }
 
-    public function sendVerificationCode($userPhone)
+    private function createAndSendVerificationCode($userPhone)
     {
         $verificationCode = mt_rand(1000, 9999);
 
@@ -44,8 +44,17 @@ class AuthController extends Controller
         ]);
 
         // $this->sendSms($userPhone, $verificationCode); // Uncomment after setup Vonage service
+    }
 
-        return response()->json(['message' => 'Verification code sent successfully'], 200);
+    public function sendVerificationCode (Request $request)
+    {
+        $request->validate([
+            'phone' => 'required|integer',
+        ]);
+
+        $this->createAndSendVerificationCode($request->phone);
+
+        return response()->json(['message' => __('verification_code_sent_successfully')], 200);
     }
 
     public function register(Request $request)
@@ -67,9 +76,9 @@ class AuthController extends Controller
 
         $user->save();
 
-        $this->sendVerificationCode($user->phone);
+        $this->createAndSendVerificationCode($user->phone);
 
-        return response()->json(['message' => 'User registered successfully'], 201);
+        return response()->json(['message' => __('user_registered_successfully')], 201);
     }
 
     public function login(Request $request)
@@ -81,7 +90,7 @@ class AuthController extends Controller
         ]);
 
         if ($request->password == "") {
-            return response()->json(['message' => 'Unauthorized'], 401);
+            return response()->json(['message' => __('unauthorized')], 401);
         }
 
         if (Auth::attempt($credentials)) {
@@ -90,11 +99,11 @@ class AuthController extends Controller
 
             $minutes = 30 * 24 * 60; // 30 days in minutes
 
-            return response()->json(['message' => 'Authorization successful'], 200)
+            return response()->json(['message' => __('authorization_successful')], 200)
             ->cookie('access_token', $accessToken, $minutes);
         }
 
-        return response()->json(['message' => 'Unauthorized'], 401);
+        return response()->json(['message' => __('unauthorized')], 401);
     }
 
     public function logout(Request $request)
@@ -103,7 +112,7 @@ class AuthController extends Controller
 
         $accessToken->revoke();
 
-        return response()->json(['message' => 'Logged out successfully'], 200);
+        return response()->json(['message' => __('logged_out_successfully')], 200);
     }
 
     public function verify(Request $request)
@@ -118,17 +127,17 @@ class AuthController extends Controller
             ->first();
 
         if (!$verificationCode) {
-            return response()->json(['error' => 'Invalid verification code'], 422);
+            return response()->json(['error' => __('invalid_verification_code')], 422);
         }
 
         if (Carbon::now()->gt($verificationCode->expires_at)) {
-            return response()->json(['error' => 'Verification code has expired'], 422);
+            return response()->json(['error' => __('expired_verification_code')], 422);
         }
 
         $user = User::where('phone', $request->phone)->first();
 
         if (!$user) {
-            return response()->json(['error' => 'User not found'], 404);
+            return response()->json(['error' => __('user_not_found')], 404);
         }
 
         $user->phone_verified_at = now();
@@ -136,6 +145,6 @@ class AuthController extends Controller
 
         $verificationCode->delete();
 
-        return response()->json(['message' => 'Phone number verified successfully'], 200);
+        return response()->json(['message' => __('success_verification_code')], 200);
     }
 }

@@ -7,9 +7,20 @@ use App\Models\Booking;
 use App\Models\BookingObject;
 use App\Enums\ObjectStatus;
 use Carbon\Carbon;
+use App\Services\BookingService;
+use Vonage\Client;
+use Vonage\SMS\Message\SMS;
+use Vonage\Client\Credentials\Basic;
 
 class BookingController extends Controller
 {
+    protected $bookingService;
+
+    public function __construct(BookingService $bookingService)
+    {
+        $this->bookingService = $bookingService;
+    }
+
     /**
      * Automatically change the objects status of expired reserved bookings.
      *
@@ -55,6 +66,44 @@ class BookingController extends Controller
             ->update(['status' => ObjectStatus::BOOKED->value]);
     }
 
+    /**
+     * Automatically send notification for admin when 90% objects are booked.
+     *
+     * @return void
+     */
+    public static function sendNotificationWhenManyBookings ()
+    {
+        if (!$this->isBookingNotificationRequired()) {
+            return;
+        }
+
+        $to = env('ADMIN_PHONE_NUMBER');
+        $basic  = new Basic(env('VONAGE_API_KEY'), env('VONAGE_API_SECRET_KEY'));
+        $client = new Client($basic);
+
+        $message = "!ALERT!\n\n" . 
+           "90% of objects are booked today!";
+        
+        $client->sms()->send(
+            new SMS($to, 'brand', $message)
+        );
+    }
+
+    private function isBookingNotificationRequired ()
+    {
+        $currentDate = Carbon::now()->toDateString();
+    
+        $totalObjects = BookingObject::count();
+    
+        $bookedObjectsCount = Booking::whereDate('booked_from', '<=', $currentDate)
+            ->whereDate('booked_to', '>=', $currentDate)
+            ->count();
+    
+        $percentageBooked = ($bookedObjectsCount / $totalObjects) * 100;
+    
+        return $percentageBooked >= 90;
+    }
+    
     private function userIsAdmin ($user)
     {
         return $user->role_id == 1;
@@ -71,14 +120,93 @@ class BookingController extends Controller
         ]);
     }
 
-    private function calculatePriceForBooking ($objectId, $dateFrom, $dateTo)
+    public function reserveObject (Request $request)
     {
+        $request->validate([
+            'object_id' => 'required|integer',
+        ]);
+
+        $user = auth()->user();
+
+        if (!$user->phone_verified_at) {
+            return response()->json(['message' => __('verify_needed')], 403);
+        }
+
+        if (!BookingObject::where('id', $request->object_id)->first()) {
+            return response()->json(['message' => __('object_not_found')], 404);
+        }
+
+        $newBooking = new Booking ([
+            'user_id' => $user->id,
+            'object_id' => $request->object_id,
+            'reserved_from' => Carbon::now(),
+            'reserved_to' => Carbon::now()->addMinutes(2), // 2 min for test, replace to 15 in prod
+            'payment_status' => 0,
+        ]);
+
+        BookingObject::where('id', $request->object_id)
+            ->update(['status' => ObjectStatus::RESERVED->value]);
+
+        $newBooking->save();
+        
+        return response()->json(['message' => __('object_reserved')], 200);
+    }
+
+    public function adminbookObjects (Request $request)
+    {
+        $request->validate([
+            '*.object_id' => 'required|integer',
+            '*.booked_from' => 'required|date',
+            '*.booked_to' => 'required|date',
+            '*.user_id' => 'required|integer',
+            '*.payment_status' => 'required|boolean',
+            '*.description' => 'nullable|string',
+        ]);
+    
+        $user = auth()->user();
+        
+        $bookings = $this->bookingService->createNewBooking($request->all());
+
+        return response()->json(['message' => __('objects_have_been_booked'), 'bookings' => $bookings], 200);
+    }
+
+    public function cancelOrder (Request $request)
+    {
+        $request->validate([
+            'order_id' => 'required|string',
+        ]);
+
+        Booking::where('order_id', $request->order_id)
+            ->update(['canceled' => 1]);
+
+        return response()->json(['message' => __('order_has_been_canceled')], 200);
+    }
+
+    public function getBookingsByObjectId ($objectId)
+    {
+        $bookings = Booking::where('object_id', $objectId)->get();
+
+        if ($bookings->isEmpty()) {
+            return response()->json(['message' => __('no_bookings_found')], 404);
+        }
+
+        return response()->json(['bookings' => $bookings], 200);
+    }
+
+    public function calculateBookingPrice (Request $request)
+    {
+        $request->validate([
+            'object_id' => 'required|integer',
+            'booked_from' => 'required|date',
+            'booked_to' => 'required|date',
+        ]);
+
         $totalPrice = 0.0;
 
-        $bookingObject = BookingObject::select('price', 'weekend_price', 'discount', 'discount_start_date', 'discount_end_date')->where('id', $objectId)->get();
+        $bookingObject = BookingObject::select('price', 'weekend_price', 'discount', 'discount_start_date', 'discount_end_date')->where('id', $request->object_id)->get();
 
-        $bookingFrom = Carbon::parse($dateFrom);
-        $bookingTo = Carbon::parse($dateTo);
+        $bookingFrom = Carbon::parse($request->booked_from);
+        $bookingTo = Carbon::parse($request->booked_to);
         $discountStartDate = Carbon::parse($bookingObject->discount_start_date);
         $discountEndDate = Carbon::parse($bookingObject->discount_end_date);
 
@@ -102,185 +230,13 @@ class BookingController extends Controller
             $totalPrice -= $totalPrice * $discountPercentage;
         }
 
-        return $totalPrice;
-    }
-
-    private function createBooking ($userId, $objectId, $dateFrom, $dateTo, $paymentStatus, $description)
-    {
-        $dateFromInStartDay = Carbon::parse($dateFrom)->startOfDay();
-        $dateToInEndDay = Carbon::parse($dateTo)->endOfDay();
-
-        return new Booking ([
-            'user_id' => $userId,
-            'object_id' => $objectId,
-            'reserved_from' => Carbon::now(),
-            'reserved_to' => Carbon::now(),
-            'booked_from' => $dateFromInStartDay,
-            'booked_to' => $dateToInEndDay,
-            'payment_status' => $paymentStatus,
-            'description' => $description,
-            'price' => $this->calculatePriceForBooking($objectId, $dateFromInStartDay, $dateToInEndDay),
-        ]);
-    }
-
-    private function isObjectAvailableToBook ($objectId, $dateFrom, $dateTo)
-    {
-        $bookingsForObject = Booking::where('object_id', $objectId)
-        ->where(function ($query) use ($dateFrom, $dateTo) {
-            $query->where(function ($q) use ($dateFrom, $dateTo) {
-                $q->where('booked_from', '>=', $dateFrom)
-                    ->where('booked_from', '<', $dateTo);
-            })
-            ->orWhere(function ($q) use ($dateFrom, $dateTo) {
-                $q->where('booked_to', '>', $dateFrom)
-                    ->where('booked_to', '<=', $dateTo);
-            })
-            ->orWhere(function ($q) use ($dateFrom, $dateTo) {
-                $q->where('booked_from', '<', $dateFrom)
-                    ->where('booked_to', '>', $dateTo);
-            });
-        })
-        ->exists();
-
-        return !$bookingsForObject;
-    }
-
-    public function reserveObject (Request $request)
-    {
-        $request->validate([
-            'user_id' => 'required|integer',
-            'object_id' => 'required|integer',
-        ]);
-
-        $user = auth()->user();
-
-        if (!$user->phone_verified_at) {
-            return response()->json(['message' => 'You need to be verified'], 403);
-        }
-
-        if (!BookingObject::where('id', $request->object_id)->first()) {
-            return response()->json(['message' => 'Object not found'], 404);
-        }
-
-        $newBooking = new Booking ([
-            'user_id' => $request->user_id,
-            'object_id' => $request->object_id,
-            'reserved_from' => Carbon::now(),
-            'reserved_to' => Carbon::now()->addMinutes(2), // 2 min for test, replace to 15 in prod
-            'payment_status' => 0,
-        ]);
-
-        BookingObject::where('id', $request->object_id)
-            ->update(['status' => ObjectStatus::RESERVED->value]);
-
-        $newBooking->save();
-        
-        return response()->json(['message' => 'Object has been reserved'], 200);
-    }
-
-    public function bookObjects (Request $request)
-    {
-        $request->validate([
-            '*.object_id' => 'required|integer',
-            '*.booked_from' => 'required|date',
-            '*.booked_to' => 'required|date',
-            '*.user_id' => 'nullable|integer',
-            '*.payment_status' => 'nullable|boolean',
-            '*.description' => 'nullable|string',
-        ]);
-    
-        $user = auth()->user();
-    
-        $bookings = [];
-
-        $orderId = strtoupper(uniqid());
-    
-        foreach ($request->all() as $bookingData) {
-            $objectId = $bookingData['object_id'];
-            $bookedFrom = $bookingData['booked_from'];
-            $bookedTo = $bookingData['booked_to'];
-            $userId = $bookingData['user_id'] ?? $user->id;
-            $description = $bookingData['description'] ?? "";
-    
-            if (!empty($bookingData['user_id']) && !$this->userIsAdmin($user)) {
-                return response()->json(['message' => 'Permission denied'], 403);
-            }
-
-            $bookingObject = BookingObject::find($objectId);
-
-            if (!$bookingObject) {
-                return response()->json(['message' => 'Object not found'], 404);
-            }
-
-            if (!$this->isObjectAvailableToBook($objectId, $bookedFrom, $bookedTo)) {
-                return response()->json(['message' => 'Object ' . $bookingObject->name . ' is not available for booking during the specified dates'], 403);
-            }
-
-            $existingBooking = Booking::where('user_id', $userId)
-                ->where('object_id', $objectId)
-                ->where('reserved_to', '>', Carbon::now())
-                ->first();
-    
-            $dateFromInStartDay = Carbon::parse($bookedFrom)->startOfDay();
-            $dateToInEndDay = Carbon::parse($bookedTo)->endOfDay();
-    
-            if (empty($existingBooking) && !empty($bookingData['user_id'])) {
-                $booking = $this->createBooking($userId, $objectId, $dateFromInStartDay, $dateToInEndDay, $bookingData['payment_status'] ?? 1, $description, $orderId);
-                $booking->save();
-            }
-            
-            if (!empty($existingBooking)){
-                $existingBooking->booked_from = $dateFromInStartDay;
-                $existingBooking->booked_to = $dateToInEndDay;
-                $existingBooking->payment_status = $bookingData['payment_status'] ?? 1;
-                $existingBooking->description = $description;
-                $existingBooking->order_id = $orderId;
-                $existingBooking->price = $this->calculatePriceForBooking($existingBooking->object_id, $dateFromInStartDay, $dateToInEndDay);
-                $existingBooking->save();
-                $booking = $existingBooking;
-            } else {
-                return response()->json(['message' => 'Booking must be reserved', 'bookings' => $bookings], 200);
-            }
-        
-            if ($bookedFrom < Carbon::now()) {
-                $bookingObject->update(['status' => ObjectStatus::BOOKED->value]);
-            } else {
-                $bookingObject->update(['status' => ObjectStatus::FREE->value]);
-            }
-    
-            $bookings[] = $booking;
-        }
-    
-        return response()->json(['message' => 'Objects have been booked successfully', 'bookings' => $bookings], 200);
-    }
-
-    public function cancelBooking (Request $request)
-    {
-        $request->validate([
-            'booking_id' => 'required|integer',
-        ]);
-
-        Booking::where('id', $request->booking_id)
-            ->update(['canceled' => 1]);
-
-        return response()->json(['message' => 'Object has been booked'], 200);
-    }
-
-    public function getBookingsByObjectId ($objectId)
-    {
-        $bookings = Booking::where('object_id', $objectId)->get();
-
-        if ($bookings->isEmpty()) {
-            return response()->json(['message' => 'No bookings found'], 404);
-        }
-
-        return response()->json(['bookings' => $bookings], 200);
+        return response()->json(['price' => $totalPrice], 200);
     }
 
     public function getOrder (Request $request)
     {
         $request->validate([
-            'order_id' => 'required|integer',
+            'order_id' => 'required|string',
         ]);
 
         $totalPrice = 0.0;
@@ -288,7 +244,7 @@ class BookingController extends Controller
         $bookingsInOrder = Booking::where('order_id', $request->order_id)->get();
 
         if ($bookingsInOrder->isEmpty()) {
-            return response()->json(['message' => 'Order not found'], 404);
+            return response()->json(['message' => __('order_not_found')], 404);
         }
 
         foreach ($bookingsInOrder as $booking) {
@@ -296,16 +252,5 @@ class BookingController extends Controller
         }
 
         return response()->json(['bookings' => $$bookingsInOrder, 'total_price' => $totalPrice], 200);
-    }
-
-    public function getPriceForBooking(Request $request)
-    {
-        $request->validate([
-            'object_id' => 'required|integer',
-            'booked_from' => 'required|date',
-            'booked_to' => 'required|date',
-        ]);
-
-        return $this->calculatePriceForBooking($request->object_id, $request->booked_from, $request->booked_to);
     }
 }

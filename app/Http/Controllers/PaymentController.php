@@ -2,48 +2,86 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Http;
+use Carbon\Carbon;
+use App\Models\Booking;
+use App\Models\BookingObject;
+use App\Enums\ObjectStatus;
 
 class PaymentController extends Controller
 {
-    public function processPayment()
+    protected $bookingService;
+
+    public function __construct(BookingService $bookingService)
     {
-        // Визначаємо параметри оплати
-        $params = [
-            'merchantAccount' => 'test_merch_n1',
-            'merchantAuthType' => 'SimpleSignature',
-            'merchantDomainName' => 'www.market.ua',
-            'orderReference' => 'DH1712655743',
-            'orderDate' => '1415379863',
-            'amount' => 1547.36,
-            'currency' => 'UAH',
-            'orderTimeout' => 49000,
-            'productName' => ['Процессор Intel Core i5-4670 3.4GHz', 'Память Kingston DDR3-1600 4096MB PC3-12800'],
-            'productPrice' => [1000, 547.36],
-            'productCount' => [1, 1],
-            'clientFirstName' => 'Вася',
-            'clientLastName' => 'Пупкин',
-            'clientAddress' => 'пр. Гагарина, 12',
-            'clientCity' => 'Днепропетровск',
-            'clientEmail' => 'some@mail.com',
-            'defaultPaymentSystem' => 'card',
-            'merchantSignature' => 'f75c4726aab0d31b7155772e517d2079',
-        ];
+        $this->bookingService = $bookingService;
+    }
 
-        // Виконуємо POST-запит до WayForPay API
-        $response = Http::post('https://secure.wayforpay.com/pay', $params);
+    public function preparePaymentData(Request $request)
+    {
+        $request->validate([
+            'amount' => 'required|numeric',
+            'products' => 'required|array',
+            'products.*.name' => 'required|string',
+            'products.*.count' => 'required|numeric',
+            'products.*.price' => 'required|numeric',
+        ]);
 
-        // Перевіряємо статус відповіді
-        if ($response->successful()) {
-            $paymentUrl = $response->body();
 
-            // Перенаправляємо користувача на сторінку оплати
-            return redirect()->away($paymentUrl);
-        } else {
-            // Логіка для обробки помилки платежу
+        $currentDate = Carbon::now()->timestamp;
 
-            return response()->json(['error' => 'Payment processing failed'], 500);
+        $merchantAccount = env('MERCHANT_ACCOUNT');
+        $merchantDomainName = env('MERCHANT_DOMAIN_NAME');
+        $orderReference = strtoupper(uniqid());
+        $orderDate = $currentDate;
+        $amount = $request->amount;
+        $currency = 'UAH';
+        $products = $request->products;
+
+        $data = $merchantAccount . ';' . $merchantDomainName . ';' . $orderReference . ';' . $orderDate . ';' . $amount . ';' . $currency;
+
+        $productNames = [];
+        $productCounts = [];
+        $productPrices = [];
+
+        foreach ($products as $product) {
+            $productNames[] = $product['name'];
+            $productCounts[] = $product['count'];
+            $productPrices[] = $product['price'];
         }
+
+        $data .= ';' . implode(';', $productNames);
+        $data .= ';' . implode(';', $productCounts);
+        $data .= ';' . implode(';', $productPrices);
+
+        //
+        
+        $key = env('MERCHANT_kEY');
+
+        $merchantSignature = hash_hmac('md5', $data, $key);
+
+        return response()->json([
+            'merchantSignature' => $merchantSignature,
+            'merchantAccount' => $merchantAccount,
+            'merchantDomainName' => $merchantDomainName,
+            'orderReference' => $orderReference,
+            'orderDate' => $orderDate,
+            'currency' => $currency,
+        ], 200);
+    }
+
+    public function createOrder (Request $request)
+    {
+        $request->validate([
+            'order_id' => 'required|integer',
+            'amount' => 'required|decimal',
+            'fee' => 'required|decimal',
+            'issuer_bank_name' => 'required|string',
+            'card' => 'required|string',
+            'transaction_status' => 'required|string',
+        ]);
+
+        $bookings = $this->bookingService->bookExistingReserve($request, auth()->user());
+
+        return response()->json(['bookings' => $bookings], 200);
     }
 }

@@ -10,6 +10,7 @@ use App\Http\Controllers\BookingController;
 use App\Http\Controllers\OneCController;
 use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\PaymentController;
+use App\Http\Controllers\ObjectDetailsController;
 
 
 Route::prefix('auth')
@@ -20,7 +21,6 @@ Route::prefix('auth')
         Route::post('/login', 'login')->name('login');
         Route::post('/verify', 'verify');
         Route::post('/sendVerificationCode', 'sendVerificationCode');
-        Route::post('/resetPassword', 'resetPassword');
         Route::middleware('auth:api')->post('/logout', 'logout');
     });
 
@@ -30,9 +30,12 @@ Route::prefix('user')
     ->group(function () {
         Route::get('/getProfile', 'getProfile');
         Route::post('/updateProfile', 'updateProfile');
+        Route::post('/resetPassword', 'resetPassword');
+        Route::get('/getUserBookings', 'getUserBookings');
     });
 
 Route::resource('objects', BookingObjectController::class)->only(['index', 'show']);
+
 Route::get('objects/{id}/getBookingsByObjectId', [BookingController::class, 'getBookingsByObjectId']);
 Route::get('reviews', [ReviewController::class, 'index']);
 Route::get('objects/{id}/reviews/showAllByObjectId', [ReviewController::class, 'showAllByObjectId']);
@@ -41,6 +44,7 @@ Route::prefix('objects')
     ->controller(BookingObjectController::class)
     ->group(function () {
         Route::post('/getAvailableObjectsByDate', 'getAvailableObjectsByDate');
+        Route::get('/{id}/details/showAllByObjectId', [ObjectDetailsController::class, 'showAllByObjectId']);
     });
 
 Route::prefix('objects')
@@ -66,6 +70,7 @@ Route::prefix('admin')
         Route::post('objects/{id}', [BookingObjectController::class, 'update']);
         Route::post('objects/{id}/deletePhotosByName', [BookingObjectController::class, 'deletePhotosByName']);
         Route::post('objects/{id}/addObjectPhotos', [BookingObjectController::class, 'addObjectPhotos']);
+        Route::resource('objectDetails', ObjectDetailsController::class)->only(['index', 'store', 'destroy', 'update', 'show']);
     });
 
 Route::prefix('booking')
@@ -73,11 +78,19 @@ Route::prefix('booking')
     ->controller(BookingController::class)
     ->group(function () {
         Route::post('/reserveObject', 'reserveObject');
-        Route::post('/bookObjects', 'bookObjects');
-        Route::post('/cancelBooking', 'cancelBooking');
-        Route::post('/getOrderAmount', 'getOrderAmount');
-        Route::post('/getPriceForBooking', 'getPriceForBooking');
+        Route::post('/calculateBookingPrice', 'calculateBookingPrice');
+        Route::post('/cancelOrder', 'cancelOrder');
         Route::post('/getOrder', 'getOrder');
+    });
+
+Route::prefix('booking')
+    ->middleware('auth:api')
+    ->controller(BookingController::class)
+    ->group(function () {
+        Route::prefix('admin')
+            ->group(function () {
+                Route::post('/bookObjects', 'adminBookObjects');
+            });
     });
 
 // one C routes
@@ -96,4 +109,5 @@ Route::prefix('onec')->group(function () {
 
 // payment test
 
-Route::get('/payment', [PaymentController::class, 'processPayment']);
+Route::post('/preparePaymentData', [PaymentController::class, 'preparePaymentData']);
+

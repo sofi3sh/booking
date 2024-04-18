@@ -14,5 +14,6 @@ class Review extends Model
         'object_id',
         'object_type',
         'text',
+        'rating',
     ];
 }

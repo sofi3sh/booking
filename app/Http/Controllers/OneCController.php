@@ -13,11 +13,11 @@ class OneCController extends Controller
         $bookingObjects = BookingObject::all();
 
         if ($bookingObjects->isEmpty()) {
-            return response()->json(['message' => 'No booking objects found'], 404);
+            return response()->json(['message' => __('no_objects_found')], 404);
         }
 
         $filteredBookingObjects = $bookingObjects->map(function ($bookingObject) {
-            return $bookingObject->only(['id', 'name', 'price', 'weekend_price', 'discount', 'discount_start_date', 'discount_end_date', 'zone', 'status', 'type', 'max_persons']);
+            return $bookingObject->only(['id', 'name_' . app()->getLocale() . ' as name', 'price', 'weekend_price', 'discount', 'discount_start_date', 'discount_end_date', 'zone', 'status', 'type', 'max_persons']);
         });
 
         return response()->json($filteredBookingObjects, 200);
@@ -28,7 +28,7 @@ class OneCController extends Controller
         $bookingObject = BookingObject::find($id);
 
         if (!$bookingObject) {
-            return response()->json(['error' => 'Object not found'], 404);
+            return response()->json(['error' => __('object_not_found')], 404);
         }
 
         $request->validate([
@@ -61,6 +61,8 @@ class OneCController extends Controller
         }
 
         $bookingObject->save();
+
+        return response()->json($request->all(), 200);
 
         return response()->json($bookingObject->only(['id', 'name', 'price', 'weekend_price', 'discount', 'discount_start_date', 'discount_end_date', 'zone', 'status', 'type', 'max_persons']), 200);
     }

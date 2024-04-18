@@ -15,121 +15,43 @@ class AuthController extends Controller
 {
     /**
      * @OA\Post(
-     *     path="/api/auth/login",
-     *     summary="User login",
-     *     tags={"Auth"},
-     *     @OA\RequestBody(
-     *         required=true,
-     *         @OA\JsonContent(
-     *             type="object",
-     *             @OA\Property(
-     *                 property="phone",
-     *                 type="integer",
-     *                 description="User's phone number"
-     *             ),
-     *             @OA\Property(
-     *                 property="password",
-     *                 type="string",
-     *                 description="User's password"
-     *             )
-     *         )
-     *     ),
-     *     @OA\Response(
-     *         response="200",
-     *         description="Authorization successful",
-     *         @OA\JsonContent(
-     *             type="object",
-     *             @OA\Property(
-     *                 property="message",
-     *                 type="string",
-     *                 example="Authorization successful"
-     *             )
-     *         ),
-     *         @OA\Header(
-     *             header="Set-Cookie",
-     *             description="Access token cookie",
-     *             @OA\Schema(
-     *                 type="string",
-     *                 example="access_token=abc123; Expires=Wed, 21 Oct 2020 07:28:00 GMT; Max-Age=2592000; Path=/"
-     *             )
-     *         )
-     *     ),
-     *     @OA\Response(
-     *         response="401",
-     *         description="Unauthorized",
-     *         @OA\JsonContent(
-     *             type="object",
-     *             @OA\Property(
-     *                 property="message",
-     *                 type="string",
-     *                 example="Unauthorized"
-     *             )
-     *         )
-     *     )
-     * )
-     */
-    public function login(Request $request)
-    {
-        //
-    }
-
-    /**
-     * @OA\Post(
-     *     path="/api/auth/logout",
-     *     summary="User logout",
-     *     tags={"Auth"},
-     *     security={{"passport": {}}},
-     *     @OA\Response(
-     *         response="200",
-     *         description="Logged out successfully",
-     *         @OA\JsonContent(
-     *             type="object",
-     *             @OA\Property(
-     *                 property="message",
-     *                 type="string",
-     *                 example="Logged out successfully"
-     *             )
-     *         )
-     *     )
-     * )
-     */
-    public function logout(Request $request)
-    {
-        //
-    }
-
-    /**
-     * @OA\Post(
      *     path="/api/auth/register",
      *     summary="User registration",
      *     tags={"Auth"},
      *     @OA\RequestBody(
-     *         required=true,
-     *         @OA\JsonContent(
-     *             type="object",
-     *             @OA\Property(
-     *                 property="name",
-     *                 type="string",
-     *                 description="User's first name"
-     *             ),
-     *             @OA\Property(
-     *                 property="last_name",
-     *                 type="string",
-     *                 description="User's last name"
-     *             ),
-     *             @OA\Property(
-     *                 property="phone",
-     *                 type="integer",
-     *                 description="User's phone number",
-     *                 format="phone",
-     *                 uniqueItems=true
-     *             ),
-     *             @OA\Property(
-     *                 property="password",
-     *                 type="string",
-     *                 description="User's password",
-     *                 format="password",
-     *                 minLength=8
+     *         @OA\MediaType(
+     *             mediaType="application/json",
+     *             @OA\Schema(
+     *                 @OA\Property(
+     *                     property="name",
+     *                     type="string",
+     *                     description="User's first name"
+     *                 ),
+     *                 @OA\Property(
+     *                     property="last_name",
+     *                     type="string",
+     *                     description="User's last name"
+     *                 ),
+     *                 @OA\Property(
+     *                     property="phone",
+     *                     type="integer",
+     *                     description="User's phone number",
+     *                     format="phone",
+     *                     uniqueItems=true
+     *                 ),
+     *                 @OA\Property(
+     *                     property="password",
+     *                     type="string",
+     *                     description="User's password",
+     *                     format="password",
+     *                     minLength=8
+     *                 ),
+     *                 @OA\Property(
+     *                     property="lang",
+     *                     type="string",
+     *                     description="Specify language",
+     *                     format="lang"
+     *                 )
      *             )
      *         )
      *     ),
@@ -170,6 +92,12 @@ class AuthController extends Controller
      *                 property="code",
      *                 type="integer",
      *                 description="Verification code"
+     *             ),
+     *             @OA\Property(
+     *                 property="lang",
+     *                 type="string",
+     *                 description="Specify language",
+     *                 format="lang"
      *             )
      *         )
      *     ),
@@ -224,6 +152,150 @@ class AuthController extends Controller
      * )
      */
     public function verify(Request $request)
+    {
+        //
+    }
+
+    /**
+     * @OA\Post(
+     *     path="/api/auth/login",
+     *     summary="User login",
+     *     tags={"Auth"},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(
+     *                 property="phone",
+     *                 type="integer",
+     *                 description="User's phone number"
+     *             ),
+     *             @OA\Property(
+     *                 property="password",
+     *                 type="string",
+     *                 description="User's password"
+     *             ),
+     *             @OA\Property(
+     *                 property="lang",
+     *                 type="string",
+     *                 description="Specify language",
+     *                 format="lang"
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response="200",
+     *         description="Authorization successful",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(
+     *                 property="message",
+     *                 type="string",
+     *                 example="Authorization successful"
+     *             )
+     *         ),
+     *         @OA\Header(
+     *             header="Set-Cookie",
+     *             description="Access token cookie",
+     *             @OA\Schema(
+     *                 type="string",
+     *                 example="access_token=abc123; Expires=Wed, 21 Oct 2020 07:28:00 GMT; Max-Age=2592000; Path=/"
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response="401",
+     *         description="Unauthorized",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(
+     *                 property="message",
+     *                 type="string",
+     *                 example="Unauthorized"
+     *             )
+     *         )
+     *     )
+     * )
+     */
+    public function login(Request $request)
+    {
+        //
+    }
+
+    /**
+     * @OA\Post(
+     *     path="/api/auth/logout",
+     *     summary="User logout",
+     *     tags={"Auth"},
+     *     security={{"passport": {}}},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(
+     *                 property="lang",
+     *                 type="string",
+     *                 description="Specify language",
+     *                 format="lang"
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response="200",
+     *         description="Logged out successfully",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(
+     *                 property="message",
+     *                 type="string",
+     *                 example="Logged out successfully"
+     *             )
+     *         )
+     *     )
+     * )
+     */
+    public function logout(Request $request)
+    {
+        //
+    }
+
+    /**
+     * @OA\Post(
+     *     path="/api/auth/sendVerificationCode",
+     *     summary="Send verification code via SMS to the user's phone number for authentication",
+     *     tags={"Auth"},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(
+     *                 property="phone",
+     *                 type="integer",
+     *                 description="User's phone number"
+     *             ),
+     *             @OA\Property(
+     *                 property="lang",
+     *                 type="string",
+     *                 description="Specify language",
+     *                 format="lang"
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response="200",
+     *         description="Verification code sent successfully",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(
+     *                 property="message",
+     *                 type="string",
+     *                 example="Verification code sent successfully"
+     *             )
+     *         )
+     *     ),
+     * )
+     */
+    public function sendVerificationCode ()
     {
         //
     }
