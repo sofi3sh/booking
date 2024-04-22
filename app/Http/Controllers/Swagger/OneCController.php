@@ -312,7 +312,8 @@ class OneCController extends Controller
      *             @OA\Items(
      *                 type="object",
      *                 @OA\Property(property="id", type="integer", description="Booking object ID"),
-     *                 @OA\Property(property="name", type="string", description="Booking object name"),
+     *                 @OA\Property(property="name_ua", type="string", description="Booking object name in Ukrainian"),
+     *                 @OA\Property(property="name_en", type="string", description="Booking object name in English"),
      *                 @OA\Property(property="price", type="number", format="float", description="Booking object price"),
      *                 @OA\Property(property="weekend_price", type="number", format="float", description="Booking object weekend price"),
      *                 @OA\Property(property="discount", type="number", format="float", description="Booking object discount"),

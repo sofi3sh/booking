@@ -109,7 +109,7 @@ class OneCController extends Controller
 
         BookingObject::where('type', $request->input('type'))->update($updateData);
 
-        $bookingObjects = BookingObject::where('type', $request->input('type'))->select('id', 'name', 'price', 'weekend_price', 'discount', 'discount_start_date', 'discount_end_date', 'zone', 'status', 'type', 'max_persons')->get();
+        $bookingObjects = BookingObject::where('type', $request->input('type'))->select('id', 'name_ua', 'name_en', 'price', 'weekend_price', 'discount', 'discount_start_date', 'discount_end_date', 'zone', 'status', 'type', 'max_persons')->get();
 
         return response()->json($bookingObjects, 200);
     }
