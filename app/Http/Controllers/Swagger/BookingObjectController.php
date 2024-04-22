@@ -91,6 +91,109 @@ use OpenApi\Annotations as OA;
  *         type="integer",
  *         description="Maximum number of persons allowed for the booking object"
  *     ),
+ * ),
+ * @OA\Schema(
+ *     schema="BookingObjectForAdmin",
+ *     required={"name_ua", "name_en", "price"},
+ *     description="Booking object for admin",
+ *     @OA\Property(
+ *         property="name_ua",
+ *         type="string",
+ *         description="Name of the booking object in Ukrainian"
+ *     ),
+ *     @OA\Property(
+ *         property="name_en",
+ *         type="string",
+ *         description="Name of the booking object in English"
+ *     ),
+ *     @OA\Property(
+ *         property="description_ua",
+ *         type="string",
+ *         description="Description of the booking object in Ukrainian"
+ *     ),
+ *     @OA\Property(
+ *         property="description_en",
+ *         type="string",
+ *         description="Description of the booking object in English"
+ *     ),
+ *     @OA\Property(
+ *         property="price",
+ *         type="number",
+ *         format="float",
+ *         description="Price of the booking object"
+ *     ),
+ *     @OA\Property(
+ *         property="weekend_price",
+ *         type="number",
+ *         format="float",
+ *         description="Price of the booking object on weekends"
+ *     ),
+ *     @OA\Property(
+ *         property="discount",
+ *         type="number",
+ *         format="float",
+ *         description="Discount percentage for the booking object"
+ *     ),
+ *     @OA\Property(
+ *         property="discount_start_date",
+ *         type="string",
+ *         format="date",
+ *         description="Start date of the discount period"
+ *     ),
+ *     @OA\Property(
+ *         property="discount_end_date",
+ *         type="string",
+ *         format="date",
+ *         description="End date of the discount period"
+ *     ),
+ *     @OA\Property(
+ *         property="zone",
+ *         type="string",
+ *         description="Zone of the booking object (bungalow, pool, cottages)"
+ *     ),
+ *     @OA\Property(
+ *         property="status",
+ *         type="string",
+ *         description="Status of the booking object (free, reserved, booked)"
+ *     ),
+ *     @OA\Property(
+ *         property="type",
+ *         type="string",
+ *         description="Type of the booking object (sunbed, bed, bungalow, second bungalow, little cottage, big cottage)"
+ *     ),
+ *     @OA\Property(
+ *         property="preview_photo",
+ *         type="string",
+ *         format="binary",
+ *         description="Preview photo of the object (base64 encoded image)"
+ *     ),
+ *     @OA\Property(
+ *         property="photos",
+ *         type="array",
+ *         @OA\Items(
+ *             type="string",
+ *             format="binary",
+ *             description="Photos for the booking object (base64 encoded image)"
+ *         ),
+ *         description="Array of photos for the booking object"
+ *     ),
+ *     @OA\Property(
+ *         property="max_persons",
+ *         type="integer",
+ *         description="Maximum number of persons allowed for the booking object"
+ *     ),
+ *     @OA\Property(
+ *         property="created_at",
+ *         type="string",
+ *         format="date-time",
+ *         description="Date and time when the booking object was created"
+ *     ),
+ *     @OA\Property(
+ *         property="updated_at",
+ *         type="string",
+ *         format="date-time",
+ *         description="Date and time when the booking object was last updated"
+ *     ),
  * )
  */
 
@@ -230,14 +333,24 @@ class BookingObjectController extends Controller
      *             mediaType="application/json",
      *             @OA\Schema(
      *                 @OA\Property(
-     *                     property="name",
+     *                     property="name_ua",
      *                     type="string",
-     *                     description="Name of the booking object"
+     *                     description="Name of the booking object in Ukrainian"
      *                 ),
      *                 @OA\Property(
-     *                     property="description",
+     *                     property="name_en",
      *                     type="string",
-     *                     description="Description of the booking object"
+     *                     description="Name of the booking object in English"
+     *                 ),
+     *                 @OA\Property(
+     *                     property="description_ua",
+     *                     type="string",
+     *                     description="Description of the booking object in Ukrainian"
+     *                 ),
+     *                 @OA\Property(
+     *                     property="description_en",
+     *                     type="string",
+     *                     description="Description of the booking object in English"
      *                 ),
      *                 @OA\Property(
      *                     property="price",
@@ -325,7 +438,7 @@ class BookingObjectController extends Controller
      *             ),
      *             @OA\Property(
      *                 property="object",
-     *                 ref="#/components/schemas/BookingObject"
+     *                 ref="#/components/schemas/BookingObjectForAdmin"
      *             )
      *         )
      *     ),

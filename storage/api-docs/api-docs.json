@@ -1009,12 +1009,20 @@
                         "application/json": {
                             "schema": {
                                 "properties": {
-                                    "name": {
-                                        "description": "Name of the booking object",
+                                    "name_ua": {
+                                        "description": "Name of the booking object in Ukrainian",
                                         "type": "string"
                                     },
-                                    "description": {
-                                        "description": "Description of the booking object",
+                                    "name_en": {
+                                        "description": "Name of the booking object in English",
+                                        "type": "string"
+                                    },
+                                    "description_ua": {
+                                        "description": "Description of the booking object in Ukrainian",
+                                        "type": "string"
+                                    },
+                                    "description_en": {
+                                        "description": "Description of the booking object in English",
                                         "type": "string"
                                     },
                                     "price": {
@@ -1095,7 +1103,7 @@
                                             "example": "Object created successfully"
                                         },
                                         "object": {
-                                            "$ref": "#/components/schemas/BookingObject"
+                                            "$ref": "#/components/schemas/BookingObjectForAdmin"
                                         }
                                     },
                                     "type": "object"
@@ -2372,8 +2380,12 @@
                                                 "description": "Booking object ID",
                                                 "type": "integer"
                                             },
-                                            "name": {
-                                                "description": "Booking object name",
+                                            "name_ua": {
+                                                "description": "Booking object name in Ukrainian",
+                                                "type": "string"
+                                            },
+                                            "name_en": {
+                                                "description": "Booking object name in English",
                                                 "type": "string"
                                             },
                                             "price": {
@@ -2598,6 +2610,10 @@
                                         "description": "Specify language",
                                         "type": "string",
                                         "format": "lang"
+                                    },
+                                    "rating": {
+                                        "description": "Rating of the review from 1 to 5",
+                                        "type": "integer"
                                     }
                                 },
                                 "type": "object"
@@ -3390,6 +3406,98 @@
                     "max_persons": {
                         "description": "Maximum number of persons allowed for the booking object",
                         "type": "integer"
+                    }
+                },
+                "type": "object"
+            },
+            "BookingObjectForAdmin": {
+                "description": "Booking object for admin",
+                "required": [
+                    "name_ua",
+                    "name_en",
+                    "price"
+                ],
+                "properties": {
+                    "name_ua": {
+                        "description": "Name of the booking object in Ukrainian",
+                        "type": "string"
+                    },
+                    "name_en": {
+                        "description": "Name of the booking object in English",
+                        "type": "string"
+                    },
+                    "description_ua": {
+                        "description": "Description of the booking object in Ukrainian",
+                        "type": "string"
+                    },
+                    "description_en": {
+                        "description": "Description of the booking object in English",
+                        "type": "string"
+                    },
+                    "price": {
+                        "description": "Price of the booking object",
+                        "type": "number",
+                        "format": "float"
+                    },
+                    "weekend_price": {
+                        "description": "Price of the booking object on weekends",
+                        "type": "number",
+                        "format": "float"
+                    },
+                    "discount": {
+                        "description": "Discount percentage for the booking object",
+                        "type": "number",
+                        "format": "float"
+                    },
+                    "discount_start_date": {
+                        "description": "Start date of the discount period",
+                        "type": "string",
+                        "format": "date"
+                    },
+                    "discount_end_date": {
+                        "description": "End date of the discount period",
+                        "type": "string",
+                        "format": "date"
+                    },
+                    "zone": {
+                        "description": "Zone of the booking object (bungalow, pool, cottages)",
+                        "type": "string"
+                    },
+                    "status": {
+                        "description": "Status of the booking object (free, reserved, booked)",
+                        "type": "string"
+                    },
+                    "type": {
+                        "description": "Type of the booking object (sunbed, bed, bungalow, second bungalow, little cottage, big cottage)",
+                        "type": "string"
+                    },
+                    "preview_photo": {
+                        "description": "Preview photo of the object (base64 encoded image)",
+                        "type": "string",
+                        "format": "binary"
+                    },
+                    "photos": {
+                        "description": "Array of photos for the booking object",
+                        "type": "array",
+                        "items": {
+                            "description": "Photos for the booking object (base64 encoded image)",
+                            "type": "string",
+                            "format": "binary"
+                        }
+                    },
+                    "max_persons": {
+                        "description": "Maximum number of persons allowed for the booking object",
+                        "type": "integer"
+                    },
+                    "created_at": {
+                        "description": "Date and time when the booking object was created",
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "updated_at": {
+                        "description": "Date and time when the booking object was last updated",
+                        "type": "string",
+                        "format": "date-time"
                     }
                 },
                 "type": "object"
