@@ -144,31 +144,37 @@ class BookingService
 
         $bookingObject = BookingObject::select('price', 'weekend_price', 'discount', 'discount_start_date', 'discount_end_date')->where('id', $objectId)->first();
 
+        if (!$bookingObject) {
+            return $totalPrice;
+        }
+        
         $bookingFrom = Carbon::parse($bookedFrom);
         $bookingTo = Carbon::parse($bookedTo);
 
-        $weekends = $bookingFrom->diffInDaysFiltered(function ($date) {
-            return $date->isWeekend();
-        }, $bookingTo);
-
-        $weekdays = $bookingFrom->diffInDaysFiltered(function ($date) {
-            return $date->isWeekday();
-        }, $bookingTo);
-
-        $totalPrice += $weekends * $bookingObject->price;
-        $totalPrice += $weekends * $bookingObject->weekend_price;
-
-        if (!empty($bookingObject->discount) && !empty($bookingObject->discount_start_date) && !empty($bookingObject->discount_end_date)) {
-            $discountStartDate = Carbon::parse($bookingObject->discount_start_date);
-            $discountEndDate = Carbon::parse($bookingObject->discount_end_date);
-    
-            if ($bookingFrom->between($discountStartDate, $discountEndDate) ||
-                $bookingTo->between($discountStartDate, $discountEndDate) ||
-                ($bookingFrom <= $discountStartDate && $bookingTo >= $discountEndDate)) {
-                $discountPercentage = $bookingObject->discount / 100;
-                $totalPrice -= $totalPrice * $discountPercentage;
-            }
+        if ($bookingFrom > $bookingTo) {
+            return $totalPrice;
         }
+
+        $weekends = 0;
+        $weekdays = 0;
+
+        $currentDay = clone $bookingFrom;
+
+        while ($currentDay <= $bookingTo) {
+            $dailyPrice = $bookingObject->price; // Default daily price
+        
+            if ($currentDay->isWeekend()) {
+                $dailyPrice = $bookingObject->weekend_price;
+            }
+    
+            if ($currentDay->between($bookingObject->discount_start_date, $bookingObject->discount_end_date)) {
+                $dailyPrice *= (1 - ($bookingObject->discount / 100)); // Apply discount
+            }
+            
+            $totalPrice += $dailyPrice;
+    
+            $currentDay->addDay();
+        }    
     
         return $totalPrice;
     }
