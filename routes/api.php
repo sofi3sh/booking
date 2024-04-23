@@ -100,12 +100,12 @@ Route::prefix('onec')->group(function () {
         Route::get('/', 'index');
         Route::post('/updateObject/{id}', 'update');
         Route::post('/updateAllByType', 'updateAllByType');
-        Route::post('/getLastOrdersByDays', 'getLastOrdersByDays');
     });
 
-    // Route::prefix('booking')->controller(OneCController::class)->group(function () {
-        
-    // });
+    Route::prefix('booking')->controller(OneCController::class)->group(function () {
+        Route::post('/getLastOrdersByDays', 'getLastOrdersByDays');
+        Route::post('/getLastTransactionsByDays', 'getLastTransactionsByDays');
+    });
 });
 
 // payment test
