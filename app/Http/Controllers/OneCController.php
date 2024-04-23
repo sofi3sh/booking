@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\BookingObject;
 use App\Models\Booking;
+use App\Models\Transaction;
 use App\Models\Debug;
 use Carbon\Carbon;
 
@@ -123,5 +124,17 @@ class OneCController extends Controller
         $timeInterval = Carbon::now()->subDays($request->days);
 
         return Booking::where('created_at', '>', $timeInterval)->get();
+    }
+
+
+    public function getLastTransactionsByDays (Request $request)
+    {
+        $request->validate([
+            'days' => 'required|integer'
+        ]);
+
+        $timeInterval = Carbon::now()->subDays($request->days);
+
+        return Transaction::where('created_at', '>', $timeInterval)->get();
     }
 }
