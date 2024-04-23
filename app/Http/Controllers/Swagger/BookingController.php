@@ -70,7 +70,20 @@ class BookingController extends Controller
      *                 example="Object not found"
      *             )
      *         )
-     *     )
+     *     ),
+     *     @OA\Response(
+     *         response="403",
+     *         description="Object is blocked to booking",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(
+     *                 property="message",
+     *                 type="string",
+     *                 example="Object is blocked to booking"
+     *             )
+     *         )
+     *     ),
+
      * )
      */
     public function reserveObject ()

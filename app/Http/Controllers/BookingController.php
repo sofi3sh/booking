@@ -132,8 +132,14 @@ class BookingController extends Controller
             return response()->json(['message' => __('verify_needed')], 403);
         }
 
-        if (!BookingObject::where('id', $request->object_id)->first()) {
+        $bookingObject = BookingObject::where('id', $request->object_id)->first();
+
+        if (!$bookingObject) {
             return response()->json(['message' => __('object_not_found')], 404);
+        }
+
+        if ($bookingObject->is_blocked) {
+            return response()->json(['message' => __('object_is_blocked')], 403);
         }
 
         $newBooking = new Booking ([
@@ -144,8 +150,7 @@ class BookingController extends Controller
             'payment_status' => 0,
         ]);
 
-        BookingObject::where('id', $request->object_id)
-            ->update(['status' => ObjectStatus::RESERVED->value]);
+        $bookingObject->update(['status' => ObjectStatus::RESERVED->value]);
 
         $newBooking->save();
         
@@ -164,6 +169,10 @@ class BookingController extends Controller
         ]);
     
         $user = auth()->user();
+
+        if (!$this->userIsAdmin($user)) {
+            return response()->json(['message' => __('permission_denied')], 403);
+        }
         
         $bookings = $this->bookingService->createNewBooking($request->all());
 

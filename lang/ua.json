@@ -29,6 +29,7 @@
     "no_objects_details_found": "Деталей об'єкту не знайдено",
     "object_detail_not_found": "Деталі об'єкту не знайдено",
     "object_detail_deleted_successfully": "Деталі об'єкту видалено успішно",
+    "object_is_blocked": "Обʼєкт заблоковано для бронювання",
     "booking_objects": {
         "seeders": {
             "bungalo_name": "Бунгало ",
