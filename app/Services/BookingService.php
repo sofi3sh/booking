@@ -64,7 +64,13 @@ class BookingService
             $bookingObject = BookingObject::find($objectId);
 
             if (!$bookingObject) {
-                $booking = ['message' => 'Object not found'];
+                $bookings[] = ['message' => __('object_not_found')];
+                continue;
+            }
+
+            if ($bookingObject->is_blocked) {
+                $bookings[] = ['message' => __('object_is_blocked')];
+                continue;
             }
 
             $dateFromInStartDay = Carbon::parse($bookedFrom)->startOfDay();
@@ -166,9 +172,11 @@ class BookingService
             if ($currentDay->isWeekend()) {
                 $dailyPrice = $bookingObject->weekend_price;
             }
-    
-            if ($currentDay->between($bookingObject->discount_start_date, $bookingObject->discount_end_date)) {
-                $dailyPrice *= (1 - ($bookingObject->discount / 100)); // Apply discount
+            
+            if (!empty($bookingObject->discount_start_date) && !empty($bookingObject->discount_end_date) && ($bookingObject->discount > 0 && $bookingObject->discount <= 100)) {
+                if ($currentDay->between($bookingObject->discount_start_date, $bookingObject->discount_end_date)) {
+                    $dailyPrice *= (1 - ($bookingObject->discount / 100)); // Apply discount
+                }
             }
             
             $totalPrice += $dailyPrice;

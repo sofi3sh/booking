@@ -31,6 +31,7 @@ return new class extends Migration
             $table->enum('type', ['sunbed', 'bed', 'bungalow', 'second bungalow', 'little cottage', 'big cottage'])->default(ObjectType::SUNBED->value);
             $table->string('preview_photo')->nullable();
             $table->integer('max_persons')->nullable();
+            $table->boolean('is_blocked')->default(0);
             $table->timestamps();
         });
     }
