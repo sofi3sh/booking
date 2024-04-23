@@ -200,10 +200,24 @@ use OpenApi\Annotations as OA;
 class BookingObjectController extends Controller
 {
     /**
-     * @OA\Get(
-     *     path="/api/objects",
+     * @OA\Post(
+     *     path="/api/objects/showAll",
      *     summary="Get all booking objects",
      *     tags={"Objects"},
+     *     @OA\RequestBody(
+     *         @OA\JsonContent(
+     *             @OA\Property(
+     *                 property="zone",
+     *                 type="string",
+     *                 description="Zone of the booking objects (bungalow, pool, cottages)"
+     *             ),
+     *             @OA\Property(
+     *                 property="type",
+     *                 type="string",
+     *                 description="Type of the booking objects (sunbed, bed, bungalow, second bungalow, little cottage, big cottage)"
+     *             ),
+     *         ),
+     *     ),
      *     @OA\Response(
      *         response="200",
      *         description="Successful response",
@@ -602,14 +616,24 @@ class BookingObjectController extends Controller
      *         description="Object details",
      *         @OA\JsonContent(
      *             @OA\Property(
-     *                 property="name",
+     *                 property="name_ua",
      *                 type="string",
-     *                 description="Name of the booking object"
+     *                 description="Name of the booking object in Ukrainian"
      *             ),
      *             @OA\Property(
-     *                 property="description",
+     *                 property="name_en",
      *                 type="string",
-     *                 description="Description of the booking object"
+     *                 description="Name of the booking object in English"
+     *             ),
+     *             @OA\Property(
+     *                 property="description_ua",
+     *                 type="string",
+     *                 description="Description of the booking object in Ukrainian"
+     *             ),
+     *             @OA\Property(
+     *                 property="description_en",
+     *                 type="string",
+     *                 description="Description of the booking object in English"
      *             ),
      *             @OA\Property(
      *                 property="price",
@@ -688,7 +712,7 @@ class BookingObjectController extends Controller
      *             ),
      *             @OA\Property(
      *                 property="object",
-     *                 ref="#/components/schemas/BookingObject"
+     *                 ref="#/components/schemas/BookingObjectForAdmin"
      *             )
      *         )
      *     ),
@@ -713,7 +737,7 @@ class BookingObjectController extends Controller
 
     /**
      * @OA\Delete(
-     *     path="/api/objects/{id}",
+     *     path="/api/admin/objects/{id}",
      *     summary="Delete a booking object by ID",
      *     tags={"Objects"},
      *     @OA\Parameter(
