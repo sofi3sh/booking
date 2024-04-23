@@ -34,7 +34,9 @@ Route::prefix('user')
         Route::get('/getUserBookings', 'getUserBookings');
     });
 
-Route::resource('objects', BookingObjectController::class)->only(['index', 'show']);
+Route::resource('objects', BookingObjectController::class)->only(['show']);
+
+Route::post('objects/showAll', [BookingObjectController::class, 'index']);
 
 Route::get('objects/{id}/getBookingsByObjectId', [BookingController::class, 'getBookingsByObjectId']);
 Route::get('reviews', [ReviewController::class, 'index']);

@@ -866,13 +866,32 @@
                 }
             }
         },
-        "/api/objects": {
-            "get": {
+        "/api/objects/showAll": {
+            "post": {
                 "tags": [
                     "Objects"
                 ],
                 "summary": "Get all booking objects",
-                "operationId": "2196cb81e8dc2947ce385a8e25bccb43",
+                "operationId": "bf8c3b6db81e5d7cfda53b550e4e3bfe",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "zone": {
+                                        "description": "Zone of the booking objects (bungalow, pool, cottages)",
+                                        "type": "string"
+                                    },
+                                    "type": {
+                                        "description": "Type of the booking objects (sunbed, bed, bungalow, second bungalow, little cottage, big cottage)",
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
                 "responses": {
                     "200": {
                         "description": "Successful response",
@@ -1251,45 +1270,6 @@
                         "description": "Object not found"
                     }
                 }
-            },
-            "delete": {
-                "tags": [
-                    "Objects"
-                ],
-                "summary": "Delete a booking object by ID",
-                "operationId": "1ebad6cbad824a3c8bd016fbfabb9960",
-                "parameters": [
-                    {
-                        "name": "id",
-                        "in": "path",
-                        "description": "ID of the booking object",
-                        "required": true,
-                        "schema": {
-                            "type": "integer"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Object deleted successfully",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "message": {
-                                            "description": "Success message",
-                                            "type": "string"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    },
-                    "404": {
-                        "description": "Object not found"
-                    }
-                }
             }
         },
         "/api/admin/objects/{id}": {
@@ -1317,12 +1297,20 @@
                         "application/json": {
                             "schema": {
                                 "properties": {
-                                    "name": {
-                                        "description": "Name of the booking object",
+                                    "name_ua": {
+                                        "description": "Name of the booking object in Ukrainian",
                                         "type": "string"
                                     },
-                                    "description": {
-                                        "description": "Description of the booking object",
+                                    "name_en": {
+                                        "description": "Name of the booking object in English",
+                                        "type": "string"
+                                    },
+                                    "description_ua": {
+                                        "description": "Description of the booking object in Ukrainian",
+                                        "type": "string"
+                                    },
+                                    "description_en": {
+                                        "description": "Description of the booking object in English",
                                         "type": "string"
                                     },
                                     "price": {
@@ -1399,7 +1387,7 @@
                                             "type": "string"
                                         },
                                         "object": {
-                                            "$ref": "#/components/schemas/BookingObject"
+                                            "$ref": "#/components/schemas/BookingObjectForAdmin"
                                         }
                                     },
                                     "type": "object"
@@ -1422,6 +1410,45 @@
                         "bearerAuth": []
                     }
                 ]
+            },
+            "delete": {
+                "tags": [
+                    "Objects"
+                ],
+                "summary": "Delete a booking object by ID",
+                "operationId": "0e4d0a3331ca388681920e249b5bfe24",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the booking object",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Object deleted successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "description": "Success message",
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Object not found"
+                    }
+                }
             }
         },
         "/api/objects/getAvailableObjectsByDate": {
