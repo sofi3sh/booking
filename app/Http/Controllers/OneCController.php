@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\BookingObject;
 use App\Models\Booking;
+use App\Models\Transaction;
 use App\Models\Debug;
 use Carbon\Carbon;
 
@@ -109,7 +110,7 @@ class OneCController extends Controller
 
         BookingObject::where('type', $request->input('type'))->update($updateData);
 
-        $bookingObjects = BookingObject::where('type', $request->input('type'))->select('id', 'name', 'price', 'weekend_price', 'discount', 'discount_start_date', 'discount_end_date', 'zone', 'status', 'type', 'max_persons')->get();
+        $bookingObjects = BookingObject::where('type', $request->input('type'))->select('id', 'name_ua', 'name_en', 'price', 'weekend_price', 'discount', 'discount_start_date', 'discount_end_date', 'zone', 'status', 'type', 'max_persons')->get();
 
         return response()->json($bookingObjects, 200);
     }
@@ -123,5 +124,17 @@ class OneCController extends Controller
         $timeInterval = Carbon::now()->subDays($request->days);
 
         return Booking::where('created_at', '>', $timeInterval)->get();
+    }
+
+
+    public function getLastTransactionsByDays (Request $request)
+    {
+        $request->validate([
+            'days' => 'required|integer'
+        ]);
+
+        $timeInterval = Carbon::now()->subDays($request->days);
+
+        return Transaction::where('created_at', '>', $timeInterval)->get();
     }
 }

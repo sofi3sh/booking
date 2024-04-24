@@ -34,7 +34,9 @@ Route::prefix('user')
         Route::get('/getUserBookings', 'getUserBookings');
     });
 
-Route::resource('objects', BookingObjectController::class)->only(['index', 'show']);
+Route::resource('objects', BookingObjectController::class)->only(['show']);
+
+Route::post('objects/showAll', [BookingObjectController::class, 'index']);
 
 Route::get('objects/{id}/getBookingsByObjectId', [BookingController::class, 'getBookingsByObjectId']);
 Route::get('reviews', [ReviewController::class, 'index']);
@@ -100,12 +102,12 @@ Route::prefix('onec')->group(function () {
         Route::get('/', 'index');
         Route::post('/updateObject/{id}', 'update');
         Route::post('/updateAllByType', 'updateAllByType');
-        Route::post('/getLastOrdersByDays', 'getLastOrdersByDays');
     });
 
-    // Route::prefix('booking')->controller(OneCController::class)->group(function () {
-        
-    // });
+    Route::prefix('booking')->controller(OneCController::class)->group(function () {
+        Route::post('/getLastOrdersByDays', 'getLastOrdersByDays');
+        Route::post('/getLastTransactionsByDays', 'getLastTransactionsByDays');
+    });
 });
 
 // payment test

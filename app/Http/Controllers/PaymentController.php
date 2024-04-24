@@ -5,7 +5,10 @@ namespace App\Http\Controllers;
 use Carbon\Carbon;
 use App\Models\Booking;
 use App\Models\BookingObject;
+use App\Models\Transaction;
 use App\Enums\ObjectStatus;
+use Illuminate\Http\Request;
+use App\Services\BookingService;
 
 class PaymentController extends Controller
 {
@@ -80,8 +83,17 @@ class PaymentController extends Controller
             'transaction_status' => 'required|string',
         ]);
 
-        $bookings = $this->bookingService->bookExistingReserve($request, auth()->user());
+        $transaction = Transaction::create([
+            'order_id' => $request->order_id,
+            'amount' => $request->amount,
+            'fee' => $request->fee,
+            'issuer_bank_name' => $request->issuer_bank_name,
+            'card' => $request->card,
+            'transaction_status' => $request->transaction_status,
+        ]);
+    
+        $bookings = $this->bookingService->bookExistingReserve($request->all(), auth()->user());
 
-        return response()->json(['bookings' => $bookings], 200);
+        return response()->json(['bookings' => $bookings, 'transaction' => $transaction], 200);
     }
 }
