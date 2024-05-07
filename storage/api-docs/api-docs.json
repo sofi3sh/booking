@@ -880,11 +880,18 @@
                                 "properties": {
                                     "zone": {
                                         "description": "Zone of the booking objects (bungalow, pool, cottages)",
-                                        "type": "string"
+                                        "type": "string",
+                                        "example": "pool"
                                     },
                                     "type": {
                                         "description": "Type of the booking objects (sunbed, bed, bungalow, second bungalow, little cottage, big cottage)",
-                                        "type": "string"
+                                        "type": "string",
+                                        "example": "sunbed"
+                                    },
+                                    "lang": {
+                                        "description": "Response language (en || ua)",
+                                        "type": "string",
+                                        "example": "en"
                                     }
                                 },
                                 "type": "object"
