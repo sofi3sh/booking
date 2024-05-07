@@ -209,12 +209,20 @@ class BookingObjectController extends Controller
      *             @OA\Property(
      *                 property="zone",
      *                 type="string",
+     *                 example="pool",
      *                 description="Zone of the booking objects (bungalow, pool, cottages)"
      *             ),
      *             @OA\Property(
      *                 property="type",
      *                 type="string",
+     *                 example="sunbed",
      *                 description="Type of the booking objects (sunbed, bed, bungalow, second bungalow, little cottage, big cottage)"
+     *             ),
+     *             @OA\Property(
+     *                 property="lang",
+     *                 type="string",
+     *                 example="en",
+     *                 description="Response language (en || ua)"
      *             ),
      *         ),
      *     ),
