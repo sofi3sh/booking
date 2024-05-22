@@ -53,7 +53,9 @@ class BookingObjectController extends Controller
             'status', 
             'type', 
             'max_persons', 
-            'preview_photo'
+            'preview_photo',
+            'location',
+            'position'
         );
 
         if ($zoneFilter) {
@@ -113,9 +115,9 @@ class BookingObjectController extends Controller
             'photos' => 'sometimes|required|array',
             'photos.*' => 'image|max:2048',
             'max_persons' => 'sometimes|required|integer',
+            'location' => 'sometimes|required|string',
+            'position' => 'sometimes|required|integer'
         ];
-
-        // $rules['photos.*'] = 'image|max:2048';
 
         $request->validate($rules);
 
@@ -183,6 +185,14 @@ class BookingObjectController extends Controller
             $newObject->max_persons = $request->input('max_persons');
         }
 
+        if($request->has('location')) {
+            $newObject->location = $request->input('location');
+        }
+
+        if($request->has('position')) {
+            $newObject->position = $request->input('position');
+        }
+
         $newObject->save();
 
         return response()->json(['message' => __('object_created_successfully'), 'object' => $newObject], 201);
@@ -229,6 +239,8 @@ class BookingObjectController extends Controller
             'type' => 'sometimes|required|in:sunbed,bed,bungalow,second bungalow,little cottage,big cottage',
             'preview_photo' => 'sometimes|required|image|max:2048', // Max size: 2MB
             'max_persons' => 'sometimes|required|integer',
+            'location' => 'sometimes|required|string',
+            'position' => 'sometimes|required|integer'
         ];
         
         $request->validate($rules);
@@ -299,6 +311,14 @@ class BookingObjectController extends Controller
 
         if($request->has('max_persons')) {
             $bookingObject->max_persons = $request->input('max_persons');
+        }
+
+        if($request->has('location')) {
+            $bookingObject->location = $request->input('location');
+        }
+
+        if($request->has('position')) {
+            $bookingObject->position = $request->input('position');
         }
 
         $bookingObject->save();

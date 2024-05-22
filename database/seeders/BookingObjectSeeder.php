@@ -55,6 +55,8 @@ class BookingObjectSeeder extends Seeder
                 'zone' => 'bungalow',
                 'type' => 'second bungalow',
                 'max_persons' => null,
+                'location' => null,
+                'position' => 2,
             ],
             [
                 'name_ua' => $bungaloNameUa . '№3',
@@ -64,6 +66,8 @@ class BookingObjectSeeder extends Seeder
                 'zone' => 'bungalow',
                 'type' => 'bungalow',
                 'max_persons' => null,
+                'location' => null,
+                'position' => 3,
             ],
             [
                 'name_ua' => $bungaloNameUa . '№4',
@@ -73,6 +77,8 @@ class BookingObjectSeeder extends Seeder
                 'zone' => 'bungalow',
                 'type' => 'bungalow',
                 'max_persons' => null,
+                'location' => null,
+                'position' => 4,
             ],
             [
                 'name_ua' => $bungaloNameUa . '№5',
@@ -82,6 +88,8 @@ class BookingObjectSeeder extends Seeder
                 'zone' => 'bungalow',
                 'type' => 'bungalow',
                 'max_persons' => null,
+                'location' => null,
+                'position' => 5,
             ],
             [
                 'name_ua' => $bungaloNameUa . '№6',
@@ -91,6 +99,8 @@ class BookingObjectSeeder extends Seeder
                 'zone' => 'bungalow',
                 'type' => 'bungalow',
                 'max_persons' => null,
+                'location' => null,
+                'position' => 6,
             ],
             [
                 'name_ua' => $littleCottageNameUa . '№7',
@@ -100,6 +110,8 @@ class BookingObjectSeeder extends Seeder
                 'zone' => 'cottages',
                 'type' => 'little cottage',
                 'max_persons' => 4,
+                'location' => null,
+                'position' => 7,
             ],
             [
                 'name_ua' => $littleCottageNameUa . '№8',
@@ -109,6 +121,8 @@ class BookingObjectSeeder extends Seeder
                 'zone' => 'cottages',
                 'type' => 'little cottage',
                 'max_persons' => 4,
+                'location' => null,
+                'position' => 8,
             ],
             [
                 'name_ua' => $littleCottageNameUa . '№9',
@@ -118,6 +132,8 @@ class BookingObjectSeeder extends Seeder
                 'zone' => 'cottages',
                 'type' => 'little cottage',
                 'max_persons' => 4,
+                'location' => null,
+                'position' => 9,
             ],
             [
                 'name_ua' => $littleCottageNameUa . '№10',
@@ -127,6 +143,8 @@ class BookingObjectSeeder extends Seeder
                 'zone' => 'cottages',
                 'type' => 'little cottage',
                 'max_persons' => 4,
+                'location' => null,
+                'position' => 10,
             ],
             [
                 'name_ua' => $bigCottageNameUa . '№11',
@@ -136,6 +154,8 @@ class BookingObjectSeeder extends Seeder
                 'zone' => 'cottages',
                 'type' => 'big cottage',
                 'max_persons' => 4,
+                'location' => null,
+                'position' => 11,
             ],
             [
                 'name_ua' => $bigCottageNameUa . '№12',
@@ -145,6 +165,8 @@ class BookingObjectSeeder extends Seeder
                 'zone' => 'cottages',
                 'type' => 'big cottage',
                 'max_persons' => 4,
+                'location' => null,
+                'position' => 12,
             ],
             [
                 'name_ua' => $bigCottageNameUa . '№13',
@@ -154,6 +176,8 @@ class BookingObjectSeeder extends Seeder
                 'zone' => 'cottages',
                 'type' => 'big cottage',
                 'max_persons' => 4,
+                'location' => null,
+                'position' => 13,
             ],
             [
                 'name_ua' => $bigCottageNameUa . '№14',
@@ -163,6 +187,8 @@ class BookingObjectSeeder extends Seeder
                 'zone' => 'cottages',
                 'type' => 'big cottage',
                 'max_persons' => 4,
+                'location' => null,
+                'position' => 14,
             ],
             [
                 'name_ua' => $bigCottageNameUa . '№15',
@@ -172,6 +198,8 @@ class BookingObjectSeeder extends Seeder
                 'zone' => 'cottages',
                 'type' => 'big cottage',
                 'max_persons' => 4,
+                'location' => null,
+                'position' => 15,
             ],
             [
                 'name_ua' => $bigCottageNameUa . '№16',
@@ -181,6 +209,8 @@ class BookingObjectSeeder extends Seeder
                 'zone' => 'cottages',
                 'type' => 'big cottage',
                 'max_persons' => 4,
+                'location' => null,
+                'position' => 16,
             ],
             [
                 'name_ua' => $bigCottageNameUa . '№17',
@@ -190,6 +220,8 @@ class BookingObjectSeeder extends Seeder
                 'zone' => 'cottages',
                 'type' => 'big cottage',
                 'max_persons' => 4,
+                'location' => null,
+                'position' => 17,
             ],
             [
                 'name_ua' => $bigCottageNameUa . '№18',
@@ -199,6 +231,8 @@ class BookingObjectSeeder extends Seeder
                 'zone' => 'cottages',
                 'type' => 'big cottage',
                 'max_persons' => 4,
+                'location' => null,
+                'position' => 18,
             ],
             [
                 'name_ua' => $bedNameUa,
@@ -208,6 +242,8 @@ class BookingObjectSeeder extends Seeder
                 'zone' => 'pool',
                 'type' => 'bed',
                 'max_persons' => 1,
+                'location' => null,
+                'position' => null,
             ],
             [
                 'name_ua' => $bedNameUa,
@@ -217,6 +253,8 @@ class BookingObjectSeeder extends Seeder
                 'zone' => 'pool',
                 'type' => 'bed',
                 'max_persons' => 1,
+                'location' => "Zone 1",
+                'position' => 1,
             ],
             [
                 'name_ua' => $bedNameUa,
@@ -226,6 +264,8 @@ class BookingObjectSeeder extends Seeder
                 'zone' => 'pool',
                 'type' => 'bed',
                 'max_persons' => 1,
+                'location' => "Zone 1",
+                'position' => 2,
             ],
             [
                 'name_ua' => $bedNameUa,
@@ -235,6 +275,8 @@ class BookingObjectSeeder extends Seeder
                 'zone' => 'pool',
                 'type' => 'bed',
                 'max_persons' => 1,
+                'location' => "Zone 1",
+                'position' => 3,
             ],
             [
                 'name_ua' => $sunbedNameUa,
@@ -244,6 +286,8 @@ class BookingObjectSeeder extends Seeder
                 'zone' => 'pool',
                 'type' => 'sunbed',
                 'max_persons' => 1,
+                'location' => "Zone 2",
+                'position' => 1,
             ],
 
         ];
