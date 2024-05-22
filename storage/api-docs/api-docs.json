@@ -977,6 +977,14 @@
                                                 "description": "Max persons of the booking object",
                                                 "type": "integer"
                                             },
+                                            "location": {
+                                                "description": "The name of the location within the zone in which the object is located",
+                                                "type": "string"
+                                            },
+                                            "position": {
+                                                "description": "The position of the object in the location",
+                                                "type": "integer"
+                                            },
                                             "created_at": {
                                                 "description": "Creation date of the booking object",
                                                 "type": "string",
@@ -1097,6 +1105,14 @@
                                     },
                                     "max_persons": {
                                         "description": "Maximum number of persons allowed for the booking object",
+                                        "type": "integer"
+                                    },
+                                    "location": {
+                                        "description": "The name of the location within the zone in which the object is located",
+                                        "type": "string"
+                                    },
+                                    "position": {
+                                        "description": "The position of the object in the location",
                                         "type": "integer"
                                     },
                                     "lang": {
@@ -1245,6 +1261,14 @@
                                             "description": "Maximum person of the booking object",
                                             "type": "integer"
                                         },
+                                        "location": {
+                                            "description": "The name of the location within the zone in which the object is located",
+                                            "type": "string"
+                                        },
+                                        "position": {
+                                            "description": "The position of the object in the location",
+                                            "type": "integer"
+                                        },
                                         "created_at": {
                                             "description": "Creation date of the booking object",
                                             "type": "string",
@@ -1362,6 +1386,14 @@
                                     },
                                     "max_persons": {
                                         "description": "Maximum number of persons allowed for the booking object",
+                                        "type": "integer"
+                                    },
+                                    "location": {
+                                        "description": "The name of the location within the zone in which the object is located",
+                                        "type": "string"
+                                    },
+                                    "position": {
+                                        "description": "The position of the object in the location",
                                         "type": "integer"
                                     },
                                     "lang": {
@@ -1565,6 +1597,14 @@
                                             },
                                             "max_persons": {
                                                 "description": "Max persons of the booking object",
+                                                "type": "integer"
+                                            },
+                                            "location": {
+                                                "description": "The name of the location within the zone in which the object is located",
+                                                "type": "string"
+                                            },
+                                            "position": {
+                                                "description": "The position of the object in the location",
                                                 "type": "integer"
                                             },
                                             "created_at": {
@@ -3433,6 +3473,14 @@
                     "max_persons": {
                         "description": "Maximum number of persons allowed for the booking object",
                         "type": "integer"
+                    },
+                    "location": {
+                        "description": "The name of the location within the zone in which the object is located",
+                        "type": "string"
+                    },
+                    "position": {
+                        "description": "The position of the object in the location",
+                        "type": "integer"
                     }
                 },
                 "type": "object"
@@ -3514,6 +3562,14 @@
                     },
                     "max_persons": {
                         "description": "Maximum number of persons allowed for the booking object",
+                        "type": "integer"
+                    },
+                    "location": {
+                        "description": "The name of the location within the zone in which the object is located",
+                        "type": "string"
+                    },
+                    "position": {
+                        "description": "The position of the object in the location",
                         "type": "integer"
                     },
                     "created_at": {
