@@ -24,7 +24,9 @@ class BookingObject extends Model
         'status',
         'type',
         'preview_photo', 
-        'max_persons'
+        'max_persons',
+        'location',
+        'position'
     ];
 
     protected $casts = [

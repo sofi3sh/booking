@@ -91,6 +91,16 @@ use OpenApi\Annotations as OA;
  *         type="integer",
  *         description="Maximum number of persons allowed for the booking object"
  *     ),
+ *     @OA\Property(
+ *         property="location",
+ *         type="string",
+ *         description="The name of the location within the zone in which the object is located"
+ *     ),
+ *     @OA\Property(
+ *         property="position",
+ *         type="integer",
+ *         description="The position of the object in the location"
+ *     ),
  * ),
  * @OA\Schema(
  *     schema="BookingObjectForAdmin",
@@ -181,6 +191,16 @@ use OpenApi\Annotations as OA;
  *         property="max_persons",
  *         type="integer",
  *         description="Maximum number of persons allowed for the booking object"
+ *     ),
+ *     @OA\Property(
+ *         property="location",
+ *         type="string",
+ *         description="The name of the location within the zone in which the object is located"
+ *     ),
+ *     @OA\Property(
+ *         property="position",
+ *         type="integer",
+ *         description="The position of the object in the location"
  *     ),
  *     @OA\Property(
  *         property="created_at",
@@ -306,6 +326,16 @@ class BookingObjectController extends Controller
      *                     property="max_persons",
      *                     type="integer",
      *                     description="Max persons of the booking object"
+     *                 ),
+     *                 @OA\Property(
+     *                     property="location",
+     *                     type="string",
+     *                     description="The name of the location within the zone in which the object is located"
+     *                 ),
+     *                 @OA\Property(
+     *                     property="position",
+     *                     type="integer",
+     *                     description="The position of the object in the location"
      *                 ),
      *                 @OA\Property(
      *                     property="created_at",
@@ -441,6 +471,16 @@ class BookingObjectController extends Controller
      *                     description="Maximum number of persons allowed for the booking object"
      *                 ),
      *                 @OA\Property(
+     *                     property="location",
+     *                     type="string",
+     *                     description="The name of the location within the zone in which the object is located"
+     *                 ),
+     *                 @OA\Property(
+     *                     property="position",
+     *                     type="integer",
+     *                     description="The position of the object in the location"
+     *                 ),
+     *                 @OA\Property(
      *                     property="lang",
      *                     type="string",
      *                     description="Specify language",
@@ -574,6 +614,16 @@ class BookingObjectController extends Controller
      *                 description="Maximum person of the booking object"
      *             ),
      *             @OA\Property(
+     *                 property="location",
+     *                 type="string",
+     *                 description="The name of the location within the zone in which the object is located"
+     *             ),
+     *             @OA\Property(
+     *                 property="position",
+     *                 type="integer",
+     *                 description="The position of the object in the location"
+     *             ),
+     *             @OA\Property(
      *                 property="created_at",
      *                 type="string",
      *                 format="date-time",
@@ -701,6 +751,16 @@ class BookingObjectController extends Controller
      *                 description="Maximum number of persons allowed for the booking object"
      *             ),
      *             @OA\Property(
+     *                 property="location",
+     *                 type="string",
+     *                 description="The name of the location within the zone in which the object is located"
+     *             ),
+     *             @OA\Property(
+     *                 property="position",
+     *                 type="integer",
+     *                 description="The position of the object in the location"
+     *             ),
+     *             @OA\Property(
      *                 property="lang",
      *                 type="string",
      *                 description="Specify language",
@@ -779,7 +839,6 @@ class BookingObjectController extends Controller
     {
         //
     }
-
 
     /**
      * @OA\Post(
@@ -886,6 +945,16 @@ class BookingObjectController extends Controller
      *                     property="max_persons",
      *                     type="integer",
      *                     description="Max persons of the booking object"
+     *                 ),
+     *                 @OA\Property(
+     *                     property="location",
+     *                     type="string",
+     *                     description="The name of the location within the zone in which the object is located"
+     *                 ),
+     *                 @OA\Property(
+     *                     property="position",
+     *                     type="integer",
+     *                     description="The position of the object in the location"
      *                 ),
      *                 @OA\Property(
      *                     property="created_at",
