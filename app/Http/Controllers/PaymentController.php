@@ -81,6 +81,7 @@ class PaymentController extends Controller
             'issuer_bank_name' => 'required|string',
             'card' => 'required|string',
             'transaction_status' => 'required|string',
+            'is_child' => 'required|boolean'
         ]);
 
         $transaction = Transaction::create([

@@ -26,7 +26,9 @@ class BookingObject extends Model
         'preview_photo', 
         'max_persons',
         'location',
-        'position'
+        'position',
+        'childrens_price',
+        'childrens_weekend_price'
     ];
 
     protected $casts = [

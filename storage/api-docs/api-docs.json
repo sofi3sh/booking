@@ -450,6 +450,10 @@
                                         "type": "string",
                                         "format": "date"
                                     },
+                                    "is_child": {
+                                        "description": "Should the price be calculated for the child",
+                                        "type": "boolean"
+                                    },
                                     "lang": {
                                         "description": "Specify language",
                                         "type": "string",
@@ -685,6 +689,10 @@
                                         "description": "Description",
                                         "type": "string",
                                         "nullable": true
+                                    },
+                                    "is_child": {
+                                        "description": "Should the price be calculated for the child",
+                                        "type": "boolean"
                                     },
                                     "lang": {
                                         "description": "Specify language",
@@ -928,6 +936,14 @@
                                                 "description": "Weekend price of the booking object",
                                                 "type": "number"
                                             },
+                                            "childrens_price": {
+                                                "description": "Price of the booking object for children",
+                                                "type": "number"
+                                            },
+                                            "childrens_weekend_price": {
+                                                "description": "Weekend price of the booking object for children",
+                                                "type": "number"
+                                            },
                                             "discount": {
                                                 "description": "Discount of the booking object",
                                                 "type": "number"
@@ -1066,6 +1082,16 @@
                                     },
                                     "weekend_price": {
                                         "description": "Price of the booking object on weekends",
+                                        "type": "number",
+                                        "format": "float"
+                                    },
+                                    "childrens_price": {
+                                        "description": "Price of the booking object for children",
+                                        "type": "number",
+                                        "format": "float"
+                                    },
+                                    "childrens_weekend_price": {
+                                        "description": "Price of the booking object on weekends for children",
                                         "type": "number",
                                         "format": "float"
                                     },
@@ -1212,6 +1238,14 @@
                                             "description": "Weekend price of the booking object",
                                             "type": "number"
                                         },
+                                        "childrens_price": {
+                                            "description": "Price of the booking object for childrens",
+                                            "type": "number"
+                                        },
+                                        "childrens_weekend_price": {
+                                            "description": "Weekend price of the booking object for children",
+                                            "type": "number"
+                                        },
                                         "discount": {
                                             "description": "Discount of the booking object",
                                             "type": "number"
@@ -1351,6 +1385,16 @@
                                     },
                                     "weekend_price": {
                                         "description": "Weekend price of the booking object",
+                                        "type": "number",
+                                        "format": "float"
+                                    },
+                                    "childrens_price": {
+                                        "description": "Price of the booking object for children",
+                                        "type": "number",
+                                        "format": "float"
+                                    },
+                                    "childrens_weekend_price": {
+                                        "description": "Weekend price of the booking object for children",
                                         "type": "number",
                                         "format": "float"
                                     },
@@ -1547,6 +1591,14 @@
                                             },
                                             "weekend_price": {
                                                 "description": "Weekend price of the booking object",
+                                                "type": "number"
+                                            },
+                                            "childrens_price": {
+                                                "description": "Price of the booking object for children",
+                                                "type": "number"
+                                            },
+                                            "childrens_weekend_price": {
+                                                "description": "Weekend price of the booking object for children",
                                                 "type": "number"
                                             },
                                             "discount": {
@@ -2182,6 +2234,16 @@
                                                 "type": "number",
                                                 "format": "float"
                                             },
+                                            "childrens_price": {
+                                                "description": "Price of the booking object for children",
+                                                "type": "number",
+                                                "format": "float"
+                                            },
+                                            "childrens_weekend_price": {
+                                                "description": "Weekend price of the booking object for children",
+                                                "type": "number",
+                                                "format": "float"
+                                            },
                                             "discount": {
                                                 "description": "Discount of the booking object",
                                                 "type": "number",
@@ -2274,6 +2336,16 @@
                                         "type": "number",
                                         "format": "float"
                                     },
+                                    "childrens_price": {
+                                        "description": "Price of the booking object for children",
+                                        "type": "number",
+                                        "format": "float"
+                                    },
+                                    "childrens_weekend_price": {
+                                        "description": "Weekend price of the booking object for children",
+                                        "type": "number",
+                                        "format": "float"
+                                    },
                                     "discount": {
                                         "description": "Discount of the booking object",
                                         "type": "number",
@@ -2324,6 +2396,16 @@
                                         },
                                         "weekend_price": {
                                             "description": "Weekend price of the booking object",
+                                            "type": "number",
+                                            "format": "float"
+                                        },
+                                        "childrens_price": {
+                                            "description": "Price of the booking object for children",
+                                            "type": "number",
+                                            "format": "float"
+                                        },
+                                        "childrens_weekend_price": {
+                                            "description": "Weekend price of the booking object for children",
                                             "type": "number",
                                             "format": "float"
                                         },
@@ -2412,6 +2494,18 @@
                                         "format": "float",
                                         "example": 120
                                     },
+                                    "childrens_price": {
+                                        "description": "Price of the booking object for children",
+                                        "type": "number",
+                                        "format": "float",
+                                        "example": 100
+                                    },
+                                    "childrens_weekend_price": {
+                                        "description": "Weekend price of the booking object for children",
+                                        "type": "number",
+                                        "format": "float",
+                                        "example": 120
+                                    },
                                     "discount": {
                                         "description": "Discount of the booking object",
                                         "type": "number",
@@ -2469,6 +2563,16 @@
                                             },
                                             "weekend_price": {
                                                 "description": "Booking object weekend price",
+                                                "type": "number",
+                                                "format": "float"
+                                            },
+                                            "childrens_price": {
+                                                "description": "Booking object price for children",
+                                                "type": "number",
+                                                "format": "float"
+                                            },
+                                            "childrens_weekend_price": {
+                                                "description": "Booking object weekend price for children",
                                                 "type": "number",
                                                 "format": "float"
                                             },
@@ -3436,6 +3540,16 @@
                         "type": "number",
                         "format": "float"
                     },
+                    "childrens_price": {
+                        "description": "Price of the booking object for children",
+                        "type": "number",
+                        "format": "float"
+                    },
+                    "childrens_weekend_price": {
+                        "description": "Price of the booking object on weekends for children",
+                        "type": "number",
+                        "format": "float"
+                    },
                     "discount": {
                         "description": "Discount percentage for the booking object",
                         "type": "number",
@@ -3523,6 +3637,16 @@
                     },
                     "weekend_price": {
                         "description": "Price of the booking object on weekends",
+                        "type": "number",
+                        "format": "float"
+                    },
+                    "childrens_price": {
+                        "description": "Price of the booking object for children",
+                        "type": "number",
+                        "format": "float"
+                    },
+                    "childrens_weekend_price": {
+                        "description": "Price of the booking object on weekends for children",
                         "type": "number",
                         "format": "float"
                     },
