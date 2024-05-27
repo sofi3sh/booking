@@ -59,7 +59,7 @@ class BookingService
             $bookedTo = $bookingData['booked_to'];
             $userId = $bookingData['user_id'];
             $description = $bookingData['description'] ?? "";
-            $price = $this->calculatePrice($objectId, $bookedFrom, $bookedTo);
+            $price = $this->calculatePrice($objectId, $bookedFrom, $bookedTo, $bookingData['is_child']);
 
             $bookingObject = BookingObject::find($objectId);
 
@@ -96,17 +96,18 @@ class BookingService
         return $bookings;
     }
 
-    public function bookExistingReserve ($bookingsData, $user, $orderId)
+    public function bookExistingReserve ($bookingsData, $user)
     {
         $bookings = [];
     
         foreach ($bookingsData as $bookingData) {
             $objectId = $bookingData['object_id'];
+            $orderId = $bookingData['order_id'];
             $bookedFrom = $bookingData['booked_from'];
             $bookedTo = $bookingData['booked_to'];
             $userId = $user->id;
             $description = $bookingData['description'] ?? "";
-            $price = $this->calculatePrice($objectId, $bookedFrom, $bookedTo);
+            $price = $this->calculatePrice($objectId, $bookedFrom, $bookedTo, $bookingData['is_child']);
 
             $bookingObject = BookingObject::find($objectId);
 
@@ -144,11 +145,11 @@ class BookingService
         return $bookings;
     }
 
-    public function calculatePrice ($objectId, $bookedFrom, $bookedTo) : Float
+    public function calculatePrice ($objectId, $bookedFrom, $bookedTo, $isChild = false) : Float
     {
         $totalPrice = 0.0;
 
-        $bookingObject = BookingObject::select('price', 'weekend_price', 'discount', 'discount_start_date', 'discount_end_date')->where('id', $objectId)->first();
+        $bookingObject = BookingObject::select('price', 'weekend_price', 'childrens_price', 'childrens_weekend_price', 'discount', 'discount_start_date', 'discount_end_date')->where('id', $objectId)->first();
 
         if (!$bookingObject) {
             return $totalPrice;
@@ -161,16 +162,19 @@ class BookingService
             return $totalPrice;
         }
 
+        $regularPrice = $isChild ? $bookingObject->childrens_price : $bookingObject->price;
+        $weekendPrice = $isChild ? $bookingObject->childrens_weekend_price : $bookingObject->weekend_price;
+
         $weekends = 0;
         $weekdays = 0;
 
         $currentDay = clone $bookingFrom;
 
         while ($currentDay <= $bookingTo) {
-            $dailyPrice = $bookingObject->price; // Default daily price
+            $dailyPrice = $regularPrice; // Default daily price
         
             if ($currentDay->isWeekend()) {
-                $dailyPrice = $bookingObject->weekend_price;
+                $dailyPrice = $weekendPrice;
             }
             
             if (!empty($bookingObject->discount_start_date) && !empty($bookingObject->discount_end_date) && ($bookingObject->discount > 0 && $bookingObject->discount <= 100)) {
@@ -182,7 +186,7 @@ class BookingService
             $totalPrice += $dailyPrice;
     
             $currentDay->addDay();
-        }    
+        }
     
         return $totalPrice;
     }

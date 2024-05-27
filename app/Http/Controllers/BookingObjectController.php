@@ -55,7 +55,9 @@ class BookingObjectController extends Controller
             'max_persons', 
             'preview_photo',
             'location',
-            'position'
+            'position',
+            'childrens_price',
+            'childrens_weekend_price'
         );
 
         if ($zoneFilter) {
@@ -116,7 +118,9 @@ class BookingObjectController extends Controller
             'photos.*' => 'image|max:2048',
             'max_persons' => 'sometimes|required|integer',
             'location' => 'sometimes|required|string',
-            'position' => 'sometimes|required|integer'
+            'position' => 'sometimes|required|integer',
+            'childrens_price' => 'sometimes|required|numeric',
+            'childrens_weekend_price' => 'sometimes|required|numeric'
         ];
 
         $request->validate($rules);
@@ -193,6 +197,14 @@ class BookingObjectController extends Controller
             $newObject->position = $request->input('position');
         }
 
+        if($request->has('childrens_price')) {
+            $newObject->childrens_price = $request->input('childrens_price');
+        }
+
+        if($request->has('childrens_weekend_price')) {
+            $newObject->childrens_weekend_price = $request->input('childrens_weekend_price');
+        }
+
         $newObject->save();
 
         return response()->json(['message' => __('object_created_successfully'), 'object' => $newObject], 201);
@@ -223,7 +235,6 @@ class BookingObjectController extends Controller
             return response()->json(['message' => __('permission_denied')], 403);
         }
 
-
         $rules = [
             'name_ua' => 'sometimes|required|string',
             'name_en' => 'sometimes|required|string',
@@ -240,7 +251,10 @@ class BookingObjectController extends Controller
             'preview_photo' => 'sometimes|required|image|max:2048', // Max size: 2MB
             'max_persons' => 'sometimes|required|integer',
             'location' => 'sometimes|required|string',
-            'position' => 'sometimes|required|integer'
+            'position' => 'sometimes|required|integer',
+            'childrens_price' => 'sometimes|required|numeric',
+            'childrens_weekend_price' => 'sometimes|required|numeric'
+
         ];
         
         $request->validate($rules);
@@ -319,6 +333,14 @@ class BookingObjectController extends Controller
 
         if($request->has('position')) {
             $bookingObject->position = $request->input('position');
+        }
+
+        if($request->has('childrens_price')) {
+            $bookingObject->childrens_price = $request->input('childrens_price');
+        }
+
+        if($request->has('childrens_weekend_price')) {
+            $bookingObject->childrens_weekend_price = $request->input('childrens_weekend_price');
         }
 
         $bookingObject->save();

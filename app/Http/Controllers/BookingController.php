@@ -165,6 +165,7 @@ class BookingController extends Controller
             '*.booked_to' => 'required|date',
             '*.user_id' => 'required|integer',
             '*.payment_status' => 'required|boolean',
+            '*.is_child' => 'required|boolean',
             '*.description' => 'nullable|string',
         ]);
     
@@ -208,9 +209,10 @@ class BookingController extends Controller
             'object_id' => 'required|integer',
             'booked_from' => 'required|date',
             'booked_to' => 'required|date',
+            'is_child' => 'required|boolean'
         ]);
 
-        return response()->json(['price' => $this->bookingService->calculatePrice($request->object_id, $request->booked_from, $request->booked_to)], 200);
+        return response()->json(['price' => $this->bookingService->calculatePrice($request->object_id, $request->booked_from, $request->booked_to, $isChild)], 200);
     }
 
     public function getOrder (Request $request)

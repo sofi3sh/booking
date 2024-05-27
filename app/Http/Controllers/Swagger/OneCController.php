@@ -48,6 +48,18 @@ class OneCController extends Controller
      *                     description="Weekend price of the booking object"
      *                 ),
      *                 @OA\Property(
+     *                     property="childrens_price",
+     *                     type="number",
+     *                     format="float",
+     *                     description="Price of the booking object for children"
+     *                 ),
+     *                 @OA\Property(
+     *                     property="childrens_weekend_price",
+     *                     type="number",
+     *                     format="float",
+     *                     description="Weekend price of the booking object for children"
+     *                 ),
+     *                 @OA\Property(
      *                     property="discount",
      *                     type="number",
      *                     format="float",
@@ -137,6 +149,18 @@ class OneCController extends Controller
      *                 description="Weekend price of the booking object"
      *             ),
      *             @OA\Property(
+     *                 property="childrens_price",
+     *                 type="number",
+     *                 format="float",
+     *                 description="Price of the booking object for children"
+     *             ),
+     *             @OA\Property(
+     *                 property="childrens_weekend_price",
+     *                 type="number",
+     *                 format="float",
+     *                 description="Weekend price of the booking object for children"
+     *             ),
+     *             @OA\Property(
      *                 property="discount",
      *                 type="number",
      *                 format="float",
@@ -190,6 +214,18 @@ class OneCController extends Controller
      *                 type="number",
      *                 format="float",
      *                 description="Weekend price of the booking object"
+     *             ),
+     *             @OA\Property(
+     *                 property="childrens_price",
+     *                 type="number",
+     *                 format="float",
+     *                 description="Price of the booking object for children"
+     *             ),
+     *             @OA\Property(
+     *                 property="childrens_weekend_price",
+     *                 type="number",
+     *                 format="float",
+     *                 description="Weekend price of the booking object for children"
      *             ),
      *             @OA\Property(
      *                 property="discount",
@@ -276,6 +312,20 @@ class OneCController extends Controller
      *                 example=120.00
      *             ),
      *             @OA\Property(
+     *                 property="childrens_price",
+     *                 type="number",
+     *                 format="float",
+     *                 description="Price of the booking object for children",
+     *                 example=100.00
+     *             ),
+     *             @OA\Property(
+     *                 property="childrens_weekend_price",
+     *                 type="number",
+     *                 format="float",
+     *                 description="Weekend price of the booking object for children",
+     *                 example=120.00
+     *             ),
+     *             @OA\Property(
      *                 property="discount",
      *                 type="number",
      *                 format="float",
@@ -316,6 +366,8 @@ class OneCController extends Controller
      *                 @OA\Property(property="name_en", type="string", description="Booking object name in English"),
      *                 @OA\Property(property="price", type="number", format="float", description="Booking object price"),
      *                 @OA\Property(property="weekend_price", type="number", format="float", description="Booking object weekend price"),
+     *                 @OA\Property(property="childrens_price", type="number", format="float", description="Booking object price for children"),
+     *                 @OA\Property(property="childrens_weekend_price", type="number", format="float", description="Booking object weekend price for children"),
      *                 @OA\Property(property="discount", type="number", format="float", description="Booking object discount"),
      *                 @OA\Property(property="discount_start_date", type="string", format="date-time", description="Booking object discount start date"),
      *                 @OA\Property(property="discount_end_date", type="string", format="date-time", description="Booking object discount end date"),
