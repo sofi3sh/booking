@@ -105,6 +105,11 @@ class BookingController extends Controller
      *                 description="booking end date"
      *             ),
      *             @OA\Property(
+     *                 property="is_child",
+     *                 type="boolean",
+     *                 description="Should the price be calculated for the child"
+     *             ),
+     *             @OA\Property(
      *                 property="lang",
      *                 type="string",
      *                 description="Specify language",
@@ -329,6 +334,11 @@ class BookingController extends Controller
      *             type="string",
      *             nullable=true,
      *             description="Description"
+     *         ),
+     *         @OA\Property(
+     *             property="is_child",
+     *             type="boolean",
+     *             description="Should the price be calculated for the child"
      *         ),
      *         @OA\Property(
      *             property="lang",
