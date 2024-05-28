@@ -122,17 +122,17 @@ class AuthController extends Controller
             'code' => 'required|integer',
         ]);
 
-        $verificationCode = VerificationCode::where('phone', $request->phone)
-            ->where('code', $request->code)
-            ->first();
+        // $verificationCode = VerificationCode::where('phone', $request->phone)
+        //     ->where('code', $request->code)
+        //     ->first();
 
-        if (!$verificationCode) {
-            return response()->json(['error' => __('invalid_verification_code')], 422);
-        }
+        // if (!$verificationCode) {
+        //     return response()->json(['error' => __('invalid_verification_code')], 422);
+        // }
 
-        if (Carbon::now()->gt($verificationCode->expires_at)) {
-            return response()->json(['error' => __('expired_verification_code')], 422);
-        }
+        // if (Carbon::now()->gt($verificationCode->expires_at)) {
+        //     return response()->json(['error' => __('expired_verification_code')], 422);
+        // }
 
         $user = User::where('phone', $request->phone)->first();
 
@@ -143,7 +143,7 @@ class AuthController extends Controller
         $user->phone_verified_at = now();
         $user->save();
 
-        $verificationCode->delete();
+        // $verificationCode->delete();
 
         return response()->json(['message' => __('success_verification_code')], 200);
     }
