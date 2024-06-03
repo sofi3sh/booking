@@ -207,7 +207,7 @@ class BookingObjectController extends Controller
 
         $newObject->save();
 
-        return response()->json(['message' => __('object_created_successfully'), 'object' => $newObject], 201);
+        return response()->json(['message' => __('object_created_successfully'), 'object' => BookingObject::get()->last()], 201);
     }
 
     /**
