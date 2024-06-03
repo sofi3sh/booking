@@ -419,6 +419,11 @@ class BookingObjectController extends Controller
      *             mediaType="application/json",
      *             @OA\Schema(
      *                 @OA\Property(
+     *                     property="id",
+     *                     type="integer",
+     *                     description="ID of the created object"
+     *                 ),
+     *                 @OA\Property(
      *                     property="name_ua",
      *                     type="string",
      *                     description="Name of the booking object in Ukrainian"
