@@ -388,10 +388,53 @@ class UserController extends Controller
      *     )
      * )
      */
-     public function adminEditUser(Request $request)
-     {
-        //
-     }
+    public function adminEditUser(Request $request)
+    {
+       //
+    }
+
+    /**
+    * @OA\Post(
+    *     path="/api/admin/adminBlockUser",
+    *     summary="Block user (Admin)",
+    *     tags={"Users"},
+    *     @OA\RequestBody(
+    *         required=true,
+    *         @OA\JsonContent(
+    *             type="object",
+    *             @OA\Property(
+    *                 property="user_id",
+    *                 type="integer",
+    *                 description="User ID"
+    *             )
+    *         )
+    *     ),
+    *     @OA\Response(
+    *         response="200",
+    *         description="Profile updated successfully",
+    *         @OA\JsonContent(
+    *             type="object",
+    *             @OA\Property(
+    *                 property="message",
+    *                 type="string",
+    *                 description="Success message"
+    *             )
+    *         )
+    *     ),
+    *     @OA\Response(
+    *         response="400",
+    *         description="Validation error"
+    *     ),
+    *     @OA\Response(
+    *         response="403",
+    *         description="Permission denied"
+    *     )
+    * )
+    */
+    public function adminBlockUser(Request $request)
+    {
+       //
+    }
 
      /**
      * @OA\Get(
