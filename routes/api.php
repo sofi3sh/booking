@@ -63,6 +63,7 @@ Route::prefix('admin')
         Route::get('/getUsers', 'adminGetUsers');
         Route::get('/getBookingAgents', 'adminGetBookingAgents');
         Route::post('/editUser', 'adminEditUser');
+        Route::post('/adminBlockUser', 'adminBlockUser');
     });
 
 Route::prefix('admin')

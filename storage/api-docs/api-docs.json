@@ -3335,6 +3335,55 @@
                 }
             }
         },
+        "/api/admin/adminBlockUser": {
+            "post": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Block user (Admin)",
+                "operationId": "d1a6b8aa0a794d333cf23dc9be86ce80",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "user_id": {
+                                        "description": "User ID",
+                                        "type": "integer"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Profile updated successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "description": "Success message",
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Validation error"
+                    },
+                    "403": {
+                        "description": "Permission denied"
+                    }
+                }
+            }
+        },
         "/api/admin/getBookingAgents": {
             "get": {
                 "tags": [
