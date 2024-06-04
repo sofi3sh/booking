@@ -95,6 +95,11 @@ class AuthController extends Controller
 
         if (Auth::attempt($credentials)) {
             $user = Auth::user();
+
+            if ($user->is_blocked) {
+                return response()->json(['message' => __('permission_denied')], 403);
+            }
+
             $accessToken = $user->createToken('authToken')->accessToken;
 
             $minutes = 30 * 24 * 60; // 30 days in minutes

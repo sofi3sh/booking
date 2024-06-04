@@ -11,9 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('booking_objects', function (Blueprint $table) {
-            $table->decimal('childrens_price', 10, 2)->default(0);
-            $table->decimal('childrens_weekend_price', 10, 2)->default(0);    
+        Schema::table('users', function (Blueprint $table) {
+            $table->boolean('is_blocked')->default(0);
         });
     }
 
@@ -22,7 +21,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('booking_objects', function (Blueprint $table) {
+        Schema::table('users', function (Blueprint $table) {
             //
         });
     }

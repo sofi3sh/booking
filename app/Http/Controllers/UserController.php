@@ -191,4 +191,25 @@ class UserController extends Controller
         return response()->json(['message' => __('password_changed_successfully')], 200);
     }
 
+    public function adminBlockUser (Request $request)
+    {
+        $request->validate([
+            'user_id' => 'required|integer',
+        ]);
+
+        $user = auth()->user();
+
+        if (!$this->userIsAdmin($user)) {
+            return response()->json(['message' => __('permission_denied')], 403);
+        }
+
+        if(!User::where('id', $request->user_id)->get()->first()) {
+            return response()->json(['message' => __('user_not_found')], 404);
+        }
+
+        User::where('id', $request->user_id)
+            ->update(['is_blocked' => 1]);
+
+        return response()->json(['message' => __('profile_updated_successfully')], 200);
+    }
 }
