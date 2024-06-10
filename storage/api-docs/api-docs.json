@@ -2977,10 +2977,9 @@
                                             "description": "User's photo URL",
                                             "type": "string"
                                         },
-                                        "lang": {
-                                            "description": "Specify language",
-                                            "type": "string",
-                                            "format": "lang"
+                                        "role_id": {
+                                            "description": "User role ID",
+                                            "type": "integer"
                                         }
                                     },
                                     "type": "object"
