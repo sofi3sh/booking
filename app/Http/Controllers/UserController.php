@@ -27,6 +27,7 @@ class UserController extends Controller
             'email' => $user->email,
             'date_of_birth' => $user->date_of_birth,
             'photo' => $user->photo,
+            'role_id' => $user->role_id,
         ]);
     }
 

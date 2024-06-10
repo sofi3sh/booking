@@ -49,10 +49,9 @@ class UserController extends Controller
      *                 description="User's photo URL"
      *             ),
      *             @OA\Property(
-     *                 property="lang",
-     *                 type="string",
-     *                 description="Specify language",
-     *                 format="lang"
+     *                 property="role_id",
+     *                 type="integer",
+     *                 description="User role ID",
      *             )
      *         )
      *     ),
