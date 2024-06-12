@@ -119,11 +119,23 @@ class ObjectDetailsController extends Controller
     }
 
     /**
-     * @OA\Get(
+     * @OA\Post(
      *      path="/api/objects/{objectId}/details/showAllByObjectId",
      *      tags={"ObjectDetails"},
      *      summary="Get all object details by object ID",
      *      description="Returns all object details by object ID",
+     *      @OA\RequestBody (
+     *          required=true,
+     *          @OA\JsonContent(
+     *              type="object",
+     *              @OA\Property(
+     *                  property="lang",
+     *                  type="string",
+     *                  description="Language",
+     *                  example="ua"
+     *              )
+     *          )
+     *      ),
      *      @OA\Parameter(
      *          name="objectId",
      *          in="path",
