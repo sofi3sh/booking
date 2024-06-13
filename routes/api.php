@@ -11,6 +11,7 @@ use App\Http\Controllers\OneCController;
 use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ObjectDetailsController;
+use App\Http\Controllers\RoleController;
 
 
 Route::prefix('auth')
@@ -58,12 +59,13 @@ Route::prefix('objects')
 
 Route::prefix('admin')
     ->middleware('auth:api')
-    ->controller(UserController::class)
     ->group(function () {
-        Route::get('/getUsers', 'adminGetUsers');
-        Route::get('/getBookingAgents', 'adminGetBookingAgents');
-        Route::post('/editUser', 'adminEditUser');
-        Route::post('/adminBlockUser', 'adminBlockUser');
+        Route::get('/getUsers', [UserController::class, 'adminGetUsers']);
+        Route::get('/getBookingAgents', [UserController::class, 'adminGetBookingAgents']);
+        Route::post('/editUser', [UserController::class, 'adminEditUser']);
+        Route::post('/adminBlockUser', [UserController::class, 'adminBlockUser']);
+        
+        Route::get('/getRoles', [RoleController::class, 'index']);
     });
 
 Route::prefix('admin')

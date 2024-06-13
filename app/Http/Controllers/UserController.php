@@ -120,6 +120,7 @@ class UserController extends Controller
             'email' => 'sometimes|required|email|unique:users,email,' . $request->user_id,
             'date_of_birth' => 'sometimes|required|date',
             'photo' => 'sometimes|required|image|max:2048', // Max size: 2MB
+            'role_id' => 'sometimes|required|integer',
         ]);
 
         $user = auth()->user();
@@ -154,6 +155,10 @@ class UserController extends Controller
             }
 
             $targetUser->photo = $photoPath;
+        }
+
+        if ($request->has('role_id')) {
+            $targetUser->role_id = $request->role_id;
         }
 
         $targetUser->save();
