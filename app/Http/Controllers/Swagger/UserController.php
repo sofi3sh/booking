@@ -641,6 +641,107 @@ class UserController extends Controller
     }
 
     /**
+     * @OA\Post(
+     *     path="/api/admin/getUserByPhone",
+     *     summary="Get user by phone number (Admin)",
+     *     tags={"Users"},
+     *     @OA\RequestBody(
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(
+     *                 property="phone",
+     *                 type="string",
+     *                 description="Phone number"
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response="200",
+     *         description="User",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(
+     *                 property="user",
+     *                 type="object",
+     *                 @OA\Property(
+     *                     property="id",
+     *                     type="integer",
+     *                     format="int64",
+     *                     description="User ID"
+     *                 ),
+     *                 @OA\Property(
+     *                     property="name",
+     *                     type="string",
+     *                     description="User's first name"
+     *                 ),
+     *                 @OA\Property(
+     *                     property="last_name",
+     *                     type="string",
+     *                     description="User's last name"
+     *                 ),
+     *                 @OA\Property(
+     *                     property="phone",
+     *                     type="string",
+     *                     description="User's phone number"
+     *                 ),
+     *                 @OA\Property(
+     *                     property="phone_verified_at",
+     *                     type="string",
+     *                     format="date-time",
+     *                     description="Timestamp when the user's phone number was verified"
+     *                 ),
+     *                 @OA\Property(
+     *                     property="role_id",
+     *                     type="integer",
+     *                     format="int32",
+     *                     description="User's role ID"
+     *                 ),
+     *                 @OA\Property(
+     *                     property="email",
+     *                     type="string",
+     *                     description="User's email address"
+     *                 ),
+     *                 @OA\Property(
+     *                     property="date_of_birth",
+     *                     type="string",
+     *                     description="User's date of birth"
+     *                 ),
+     *                 @OA\Property(
+     *                     property="photo",
+     *                     type="string",
+     *                     description="User's photo URL"
+     *                 ),
+     *                 @OA\Property(
+     *                     property="created_at",
+     *                     type="string",
+     *                     format="date-time",
+     *                     description="Timestamp when the user was created"
+     *                 ),
+     *                 @OA\Property(
+     *                     property="updated_at",
+     *                     type="string",
+     *                     format="date-time",
+     *                     description="Timestamp when the user was last updated"
+     *                 )
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response="403",
+     *         description="Permission denied"
+     *     ),
+     *     @OA\Response(
+     *         response="404",
+     *         description="User not found"
+     *     )
+     * )
+     */
+    public function adminGetUserByPhone(Request $request)
+    {
+        //
+    }
+  
+    /**
      * @OA\Get(
      *     path="/api/admin/getRoles",
      *     summary="Get all roles (Admin)",

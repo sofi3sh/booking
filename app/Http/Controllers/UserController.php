@@ -98,6 +98,25 @@ class UserController extends Controller
         return response()->json(['users' => $allUsers], 200);
     }
 
+    public function adminGetUserByPhone (Request $request)
+    {
+        $request->validate([
+            'phone' => 'required|string',
+        ]);
+
+        $user = auth()->user();
+
+        if (!$this->userIsAdmin($user)) {
+            return response()->json(['message' => __('permission_denied')], 403);
+        }
+
+        if(!User::where('phone', $request->phone)->get()->first()) {
+            return response()->json(['message' => __('user_not_found')], 404);
+        }
+
+        return response()->json(['user' => User::where('phone', $request->phone)->get()->first()], 200);
+    }
+
     public function adminGetBookingAgents ()
     {
         $user = auth()->user();

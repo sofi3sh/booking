@@ -1952,13 +1952,13 @@
             }
         },
         "/api/objects/{objectId}/details/showAllByObjectId": {
-            "get": {
+            "post": {
                 "tags": [
                     "ObjectDetails"
                 ],
                 "summary": "Get all object details by object ID",
                 "description": "Returns all object details by object ID",
-                "operationId": "3b227386ba00f6f95a15a4c470888891",
+                "operationId": "67041eb2f122ded0d941be3b9b3a74fc",
                 "parameters": [
                     {
                         "name": "objectId",
@@ -1970,6 +1970,23 @@
                         }
                     }
                 ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "lang": {
+                                        "description": "Language",
+                                        "type": "string",
+                                        "example": "ua"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
                 "responses": {
                     "200": {
                         "description": "Successful operation",
@@ -3569,46 +3586,88 @@
                 }
             }
         },
-        "/api/admin/getRoles": {
-            "get": {
+        "/api/admin/getUserByPhone": {
+            "post": {
                 "tags": [
                     "Users"
                 ],
-                "summary": "Get all roles (Admin)",
-                "operationId": "7c24ae19292919c840432013d565e593",
+                "summary": "Get user by phone number (Admin)",
+                "operationId": "a6575c7ccbcb4edf66ad1b7b2c808bcd",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "phone": {
+                                        "description": "Phone number",
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
                 "responses": {
                     "200": {
-                        "description": "List of roles",
+                        "description": "User",
                         "content": {
                             "application/json": {
                                 "schema": {
                                     "properties": {
-                                        "roles": {
-                                            "type": "array",
-                                            "items": {
-                                                "properties": {
-                                                    "id": {
-                                                        "description": "Role ID",
-                                                        "type": "integer",
-                                                        "format": "int64"
-                                                    },
-                                                    "name": {
-                                                        "description": "Role name",
-                                                        "type": "string"
-                                                    },
-                                                    "created_at": {
-                                                        "description": "Timestamp when the role was created",
-                                                        "type": "string",
-                                                        "format": "date-time"
-                                                    },
-                                                    "updated_at": {
-                                                        "description": "Timestamp when the role was last updated",
-                                                        "type": "string",
-                                                        "format": "date-time"
-                                                    }
+                                        "user": {
+                                            "properties": {
+                                                "id": {
+                                                    "description": "User ID",
+                                                    "type": "integer",
+                                                    "format": "int64"
                                                 },
-                                                "type": "object"
-                                            }
+                                                "name": {
+                                                    "description": "User's first name",
+                                                    "type": "string"
+                                                },
+                                                "last_name": {
+                                                    "description": "User's last name",
+                                                    "type": "string"
+                                                },
+                                                "phone": {
+                                                    "description": "User's phone number",
+                                                    "type": "string"
+                                                },
+                                                "phone_verified_at": {
+                                                    "description": "Timestamp when the user's phone number was verified",
+                                                    "type": "string",
+                                                    "format": "date-time"
+                                                },
+                                                "role_id": {
+                                                    "description": "User's role ID",
+                                                    "type": "integer",
+                                                    "format": "int32"
+                                                },
+                                                "email": {
+                                                    "description": "User's email address",
+                                                    "type": "string"
+                                                },
+                                                "date_of_birth": {
+                                                    "description": "User's date of birth",
+                                                    "type": "string"
+                                                },
+                                                "photo": {
+                                                    "description": "User's photo URL",
+                                                    "type": "string"
+                                                },
+                                                "created_at": {
+                                                    "description": "Timestamp when the user was created",
+                                                    "type": "string",
+                                                    "format": "date-time"
+                                                },
+                                                "updated_at": {
+                                                    "description": "Timestamp when the user was last updated",
+                                                    "type": "string",
+                                                    "format": "date-time"
+                                                }
+                                            },
+                                            "type": "object"
                                         }
                                     },
                                     "type": "object"
