@@ -3314,6 +3314,10 @@
                                         "type": "string",
                                         "format": "binary"
                                     },
+                                    "role_id": {
+                                        "description": "User's role ID",
+                                        "type": "integer"
+                                    },
                                     "lang": {
                                         "description": "Specify language",
                                         "type": "string",
@@ -3673,9 +3677,6 @@
                     },
                     "403": {
                         "description": "Permission denied"
-                    },
-                    "404": {
-                        "description": "User not found"
                     }
                 }
             }

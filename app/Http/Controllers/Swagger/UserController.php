@@ -358,6 +358,11 @@ class UserController extends Controller
      *                 description="User's photo"
      *             ),
      *             @OA\Property(
+     *                 property="role_id",
+     *                 type="integer",
+     *                 description="User's role ID"
+     *             ),
+     *             @OA\Property(
      *                 property="lang",
      *                 type="string",
      *                 description="Specify language",
@@ -734,5 +739,58 @@ class UserController extends Controller
     public function adminGetUserByPhone(Request $request)
     {
         //
+    }
+  
+    /**
+     * @OA\Get(
+     *     path="/api/admin/getRoles",
+     *     summary="Get all roles (Admin)",
+     *     tags={"Users"},
+     *     @OA\Response(
+     *         response="200",
+     *         description="List of roles",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(
+     *                 property="roles",
+     *                 type="array",
+     *                 @OA\Items(
+     *                     type="object",
+     *                     @OA\Property(
+     *                         property="id",
+     *                         type="integer",
+     *                         format="int64",
+     *                         description="Role ID"
+     *                     ),
+     *                     @OA\Property(
+     *                         property="name",
+     *                         type="string",
+     *                         description="Role name"
+     *                     ),
+     *                     @OA\Property(
+     *                         property="created_at",
+     *                         type="string",
+     *                         format="date-time",
+     *                         description="Timestamp when the role was created"
+     *                     ),
+     *                     @OA\Property(
+     *                         property="updated_at",
+     *                         type="string",
+     *                         format="date-time",
+     *                         description="Timestamp when the role was last updated"
+     *                     )
+     *                 )
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response="403",
+     *         description="Permission denied"
+     *     )
+     * )
+     */
+    public function getRoles() 
+    {
+      //
     }
 }

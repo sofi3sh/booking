@@ -101,4 +101,30 @@ class PaymentController extends Controller
     {
         //
     }
+
+
+    /**
+     * @OA\Post(
+     *     path="/api/createOrder",
+     *     summary="Create order",
+     *     description="Create order",
+     *     operationId="createOrder",
+     *     tags={"Payment"},
+     *     @OA\Response(
+     *         response="200",
+     *         description="Successful response",
+     *         @OA\JsonContent(
+     *             @OA\Property(
+     *                 property="message",
+     *                 type="string",
+     *                 description="Success message"
+     *             )
+     *         )
+     *     )
+     * )
+     */
+    public function createOrder() 
+    {
+        //
+    }
 }
