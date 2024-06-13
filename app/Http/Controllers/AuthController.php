@@ -111,11 +111,9 @@ class AuthController extends Controller
         return response()->json(['message' => __('unauthorized')], 401);
     }
 
-    public function logout(Request $request)
+    public function logout()
     {
-        $accessToken = $request->user()->token();
-
-        $accessToken->revoke();
+        Auth::user()->token()->revoke();
 
         return response()->json(['message' => __('logged_out_successfully')], 200);
     }

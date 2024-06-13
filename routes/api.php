@@ -112,7 +112,10 @@ Route::prefix('onec')->group(function () {
     });
 });
 
-// payment test
-
-Route::post('/preparePaymentData', [PaymentController::class, 'preparePaymentData']);
-
+Route::prefix('payment')
+    ->middleware('auth:api')
+    ->controller(PaymentController::class)
+    ->group(function () {
+        Route::post('/preparePaymentData', 'preparePaymentData');
+        Route::post('/createOrder', 'createOrder');
+    });
