@@ -109,17 +109,6 @@ class BookingController extends Controller
         return $user->role_id == 1;
     }
 
-    private function createObjectReservation ($userId, $objectId)
-    {
-        return new Booking ([
-            'user_id' => $userId,
-            'object_id' => $objectId,
-            'reserved_from' => Carbon::now(),
-            'reserved_to' => Carbon::now()->addMinutes(2), // 2 min for test, replace to 15 in prod
-            'payment_status' => 0,
-        ]);
-    }
-
     public function reserveObject (Request $request)
     {
         $request->validate([
@@ -142,11 +131,13 @@ class BookingController extends Controller
             return response()->json(['message' => __('object_is_blocked')], 403);
         }
 
+        $existReservation = Booking::where('user_id', $user->id)->where('reserved_to', '>', Carbon::now())->get('reserved_to')->first();
+
         $newBooking = new Booking ([
             'user_id' => $user->id,
             'object_id' => $request->object_id,
             'reserved_from' => Carbon::now(),
-            'reserved_to' => Carbon::now()->addMinutes(2), // 2 min for test, replace to 15 in prod
+            'reserved_to' => $existReservation->reserved_to ?? Carbon::now()->addMinutes(2), // 2 min for test, replace to 15 in prod
             'payment_status' => 0,
         ]);
 
