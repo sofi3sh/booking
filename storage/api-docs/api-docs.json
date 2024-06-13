@@ -2726,6 +2726,34 @@
                 }
             }
         },
+        "/api/createOrder": {
+            "post": {
+                "tags": [
+                    "Payment"
+                ],
+                "summary": "Create order",
+                "description": "Create order",
+                "operationId": "createOrder",
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "description": "Success message",
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/api/reviews": {
             "get": {
                 "tags": [
@@ -3668,6 +3696,62 @@
                                                 }
                                             },
                                             "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Permission denied"
+                    },
+                    "404": {
+                        "description": "User not found"
+                    }
+                }
+            }
+        },
+        "/api/admin/getRoles": {
+            "get": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Get all roles (Admin)",
+                "operationId": "7c24ae19292919c840432013d565e593",
+                "responses": {
+                    "200": {
+                        "description": "List of roles",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "roles": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "id": {
+                                                        "description": "Role ID",
+                                                        "type": "integer",
+                                                        "format": "int64"
+                                                    },
+                                                    "name": {
+                                                        "description": "Role name",
+                                                        "type": "string"
+                                                    },
+                                                    "created_at": {
+                                                        "description": "Timestamp when the role was created",
+                                                        "type": "string",
+                                                        "format": "date-time"
+                                                    },
+                                                    "updated_at": {
+                                                        "description": "Timestamp when the role was last updated",
+                                                        "type": "string",
+                                                        "format": "date-time"
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
                                         }
                                     },
                                     "type": "object"
