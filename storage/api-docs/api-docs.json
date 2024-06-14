@@ -2638,7 +2638,7 @@
                 }
             }
         },
-        "/api/preparePaymentData": {
+        "/api/payment/preparePaymentData": {
             "post": {
                 "tags": [
                     "Payment"
@@ -2726,24 +2726,207 @@
                 }
             }
         },
-        "/api/createOrder": {
+        "/api/payment/createOrder": {
             "post": {
                 "tags": [
                     "Payment"
                 ],
-                "summary": "Create order",
-                "description": "Create order",
+                "summary": "Create an order",
+                "description": "Create an order with the given details",
                 "operationId": "createOrder",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "order_id": {
+                                        "description": "Order ID",
+                                        "type": "integer"
+                                    },
+                                    "amount": {
+                                        "description": "Amount",
+                                        "type": "number"
+                                    },
+                                    "fee": {
+                                        "description": "Fee",
+                                        "type": "number"
+                                    },
+                                    "issuer_bank_name": {
+                                        "description": "Issuer Bank Name",
+                                        "type": "string"
+                                    },
+                                    "card": {
+                                        "description": "Card",
+                                        "type": "string"
+                                    },
+                                    "transaction_status": {
+                                        "description": "Transaction Status",
+                                        "type": "boolean"
+                                    },
+                                    "objects": {
+                                        "type": "array",
+                                        "items": {
+                                            "properties": {
+                                                "object_id": {
+                                                    "description": "Object ID",
+                                                    "type": "integer"
+                                                },
+                                                "booked_from": {
+                                                    "description": "Booked From",
+                                                    "type": "string",
+                                                    "format": "date"
+                                                },
+                                                "booked_to": {
+                                                    "description": "Booked To",
+                                                    "type": "string",
+                                                    "format": "date"
+                                                },
+                                                "user_id": {
+                                                    "description": "User ID",
+                                                    "type": "integer"
+                                                },
+                                                "payment_status": {
+                                                    "description": "Payment Status",
+                                                    "type": "boolean"
+                                                },
+                                                "description": {
+                                                    "description": "Description",
+                                                    "type": "string"
+                                                },
+                                                "is_child": {
+                                                    "description": "Is Child",
+                                                    "type": "boolean"
+                                                },
+                                                "lang": {
+                                                    "description": "Language",
+                                                    "type": "string"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
                 "responses": {
                     "200": {
-                        "description": "Successful response",
+                        "description": "Order created successfully",
                         "content": {
                             "application/json": {
                                 "schema": {
                                     "properties": {
-                                        "message": {
-                                            "description": "Success message",
-                                            "type": "string"
+                                        "bookings": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "user_id": {
+                                                        "description": "User ID",
+                                                        "type": "integer"
+                                                    },
+                                                    "object_id": {
+                                                        "description": "Object ID",
+                                                        "type": "integer"
+                                                    },
+                                                    "reserved_from": {
+                                                        "description": "Reserved From",
+                                                        "type": "string",
+                                                        "format": "date-time"
+                                                    },
+                                                    "reserved_to": {
+                                                        "description": "Reserved To",
+                                                        "type": "string",
+                                                        "format": "date-time"
+                                                    },
+                                                    "booked_from": {
+                                                        "description": "Booked From",
+                                                        "type": "string",
+                                                        "format": "date-time"
+                                                    },
+                                                    "booked_to": {
+                                                        "description": "Booked To",
+                                                        "type": "string",
+                                                        "format": "date-time"
+                                                    },
+                                                    "payment_status": {
+                                                        "description": "Payment Status",
+                                                        "type": "boolean"
+                                                    },
+                                                    "description": {
+                                                        "description": "Description",
+                                                        "type": "string"
+                                                    },
+                                                    "order_id": {
+                                                        "description": "Order ID",
+                                                        "type": "string"
+                                                    },
+                                                    "price": {
+                                                        "description": "Price",
+                                                        "type": "number"
+                                                    },
+                                                    "updated_at": {
+                                                        "description": "Updated At",
+                                                        "type": "string",
+                                                        "format": "date-time"
+                                                    },
+                                                    "created_at": {
+                                                        "description": "Created At",
+                                                        "type": "string",
+                                                        "format": "date-time"
+                                                    },
+                                                    "id": {
+                                                        "description": "Booking ID",
+                                                        "type": "integer"
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        },
+                                        "transaction": {
+                                            "properties": {
+                                                "order_id": {
+                                                    "description": "Order ID",
+                                                    "type": "string"
+                                                },
+                                                "amount": {
+                                                    "description": "Amount",
+                                                    "type": "number"
+                                                },
+                                                "fee": {
+                                                    "description": "Fee",
+                                                    "type": "number"
+                                                },
+                                                "issuer_bank_name": {
+                                                    "description": "Issuer Bank Name",
+                                                    "type": "string"
+                                                },
+                                                "card": {
+                                                    "description": "Card",
+                                                    "type": "string"
+                                                },
+                                                "transaction_status": {
+                                                    "description": "Transaction Status",
+                                                    "type": "boolean"
+                                                },
+                                                "updated_at": {
+                                                    "description": "Updated At",
+                                                    "type": "string",
+                                                    "format": "date-time"
+                                                },
+                                                "created_at": {
+                                                    "description": "Created At",
+                                                    "type": "string",
+                                                    "format": "date-time"
+                                                },
+                                                "id": {
+                                                    "description": "Transaction ID",
+                                                    "type": "integer"
+                                                }
+                                            },
+                                            "type": "object"
                                         }
                                     },
                                     "type": "object"

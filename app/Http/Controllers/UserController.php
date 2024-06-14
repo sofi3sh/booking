@@ -228,12 +228,20 @@ class UserController extends Controller
             return response()->json(['message' => __('permission_denied')], 403);
         }
 
-        if(!User::where('id', $request->user_id)->get()->first()) {
+        $targetUser = User::where('id', $request->user_id)->first();
+
+        if(!$targetUser) {
             return response()->json(['message' => __('user_not_found')], 404);
         }
 
-        User::where('id', $request->user_id)
-            ->update(['is_blocked' => 1]);
+        $userTokens = $targetUser->tokens;
+
+        foreach ($userTokens as $userToken) {
+            $userToken->revoke();
+        }
+        
+        $targetUser->is_blocked = 1;
+        $targetUser->save();
 
         return response()->json(['message' => __('profile_updated_successfully')], 200);
     }
