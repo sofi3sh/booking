@@ -3525,6 +3525,10 @@
                                         "type": "string",
                                         "format": "binary"
                                     },
+                                    "role_id": {
+                                        "description": "User's role ID",
+                                        "type": "integer"
+                                    },
                                     "lang": {
                                         "description": "Specify language",
                                         "type": "string",
@@ -3887,6 +3891,59 @@
                     },
                     "404": {
                         "description": "User not found"
+                    }
+                }
+            }
+        },
+        "/api/admin/getRoles": {
+            "get": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Get all roles (Admin)",
+                "operationId": "7c24ae19292919c840432013d565e593",
+                "responses": {
+                    "200": {
+                        "description": "List of roles",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "roles": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "id": {
+                                                        "description": "Role ID",
+                                                        "type": "integer",
+                                                        "format": "int64"
+                                                    },
+                                                    "name": {
+                                                        "description": "Role name",
+                                                        "type": "string"
+                                                    },
+                                                    "created_at": {
+                                                        "description": "Timestamp when the role was created",
+                                                        "type": "string",
+                                                        "format": "date-time"
+                                                    },
+                                                    "updated_at": {
+                                                        "description": "Timestamp when the role was last updated",
+                                                        "type": "string",
+                                                        "format": "date-time"
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Permission denied"
                     }
                 }
             }
