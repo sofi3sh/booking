@@ -96,17 +96,17 @@ class BookingService
         return $bookings;
     }
 
-    public function bookExistingReserve ($bookingsData, $user)
+    public function bookExistingReserve ($bookingsData, $user, $orderId)
     {
         $bookings = [];
     
         foreach ($bookingsData as $bookingData) {
             $objectId = $bookingData['object_id'];
-            $orderId = $bookingData['order_id'];
             $bookedFrom = $bookingData['booked_from'];
             $bookedTo = $bookingData['booked_to'];
             $userId = $user->id;
             $description = $bookingData['description'] ?? "";
+            
             $price = $this->calculatePrice($objectId, $bookedFrom, $bookedTo, $bookingData['is_child']);
 
             $bookingObject = BookingObject::find($objectId);

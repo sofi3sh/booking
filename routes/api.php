@@ -11,6 +11,7 @@ use App\Http\Controllers\OneCController;
 use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ObjectDetailsController;
+use App\Http\Controllers\RoleController;
 
 
 Route::prefix('auth')
@@ -58,13 +59,13 @@ Route::prefix('objects')
 
 Route::prefix('admin')
     ->middleware('auth:api')
-    ->controller(UserController::class)
     ->group(function () {
-        Route::get('/getUsers', 'adminGetUsers');
-        Route::get('/getBookingAgents', 'adminGetBookingAgents');
-        Route::post('/editUser', 'adminEditUser');
-        Route::post('/adminBlockUser', 'adminBlockUser');
-        Route::post('/getUserByPhone', 'adminGetUserByPhone');
+        Route::get('/getUsers', [UserController::class, 'adminGetUsers']);
+        Route::get('/getBookingAgents', [UserController::class, 'adminGetBookingAgents']);
+        Route::post('/editUser', [UserController::class, 'adminEditUser']);
+        Route::post('/adminBlockUser', [UserController::class, 'adminBlockUser']);
+        Route::post('/getUserByPhone', [UserController::class, 'adminGetUserByPhone']);
+        Route::get('/getRoles', [RoleController::class, 'index']);
     });
 
 Route::prefix('admin')
@@ -112,7 +113,10 @@ Route::prefix('onec')->group(function () {
     });
 });
 
-// payment test
-
-Route::post('/preparePaymentData', [PaymentController::class, 'preparePaymentData']);
-
+Route::prefix('payment')
+    ->middleware('auth:api')
+    ->controller(PaymentController::class)
+    ->group(function () {
+        Route::post('/preparePaymentData', 'preparePaymentData');
+        Route::post('/createOrder', 'createOrder');
+    });

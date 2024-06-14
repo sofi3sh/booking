@@ -76,12 +76,20 @@ class PaymentController extends Controller
     {
         $request->validate([
             'order_id' => 'required|integer',
-            'amount' => 'required|decimal',
-            'fee' => 'required|decimal',
+            'amount' => 'required|numeric',
+            'fee' => 'required|numeric',
             'issuer_bank_name' => 'required|string',
             'card' => 'required|string',
-            'transaction_status' => 'required|string',
-            'is_child' => 'required|boolean'
+            'transaction_status' => 'required|boolean',
+            'objects' => 'required|array|min:1',
+            'objects.*.object_id' => 'required|integer',
+            'objects.*.booked_from' => 'required|date',
+            'objects.*.booked_to' => 'required|date|after_or_equal:objects.*.booked_from',
+            'objects.*.user_id' => 'required|integer',
+            'objects.*.payment_status' => 'required|boolean',
+            'objects.*.description' => 'nullable|string',
+            'objects.*.is_clild' => 'nullable|boolean',
+            'objects.*.lang' => 'sometimes|required|string'
         ]);
 
         $transaction = Transaction::create([
@@ -92,8 +100,8 @@ class PaymentController extends Controller
             'card' => $request->card,
             'transaction_status' => $request->transaction_status,
         ]);
-    
-        $bookings = $this->bookingService->bookExistingReserve($request->all(), auth()->user());
+
+        $bookings = $this->bookingService->bookExistingReserve($request->objects, auth()->user(), $request->order_id);
 
         return response()->json(['bookings' => $bookings, 'transaction' => $transaction], 200);
     }

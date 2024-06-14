@@ -139,6 +139,7 @@ class UserController extends Controller
             'email' => 'sometimes|required|email|unique:users,email,' . $request->user_id,
             'date_of_birth' => 'sometimes|required|date',
             'photo' => 'sometimes|required|image|max:2048', // Max size: 2MB
+            'role_id' => 'sometimes|required|integer',
         ]);
 
         $user = auth()->user();
@@ -173,6 +174,10 @@ class UserController extends Controller
             }
 
             $targetUser->photo = $photoPath;
+        }
+
+        if ($request->has('role_id')) {
+            $targetUser->role_id = $request->role_id;
         }
 
         $targetUser->save();
@@ -223,12 +228,20 @@ class UserController extends Controller
             return response()->json(['message' => __('permission_denied')], 403);
         }
 
-        if(!User::where('id', $request->user_id)->get()->first()) {
+        $targetUser = User::where('id', $request->user_id)->first();
+
+        if(!$targetUser) {
             return response()->json(['message' => __('user_not_found')], 404);
         }
 
-        User::where('id', $request->user_id)
-            ->update(['is_blocked' => 1]);
+        $userTokens = $targetUser->tokens;
+
+        foreach ($userTokens as $userToken) {
+            $userToken->revoke();
+        }
+        
+        $targetUser->is_blocked = 1;
+        $targetUser->save();
 
         return response()->json(['message' => __('profile_updated_successfully')], 200);
     }
