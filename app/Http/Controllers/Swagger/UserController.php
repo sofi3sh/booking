@@ -24,6 +24,11 @@ class UserController extends Controller
      *         @OA\JsonContent(
      *             type="object",
      *             @OA\Property(
+     *                 property="id",
+     *                 type="integer",
+     *                 description="User's ID"
+     *             ),
+     *             @OA\Property(
      *                 property="phone",
      *                 type="integer",
      *                 description="User's phone"
