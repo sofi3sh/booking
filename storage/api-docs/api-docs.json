@@ -3185,6 +3185,10 @@
                             "application/json": {
                                 "schema": {
                                     "properties": {
+                                        "id": {
+                                            "description": "User's ID",
+                                            "type": "integer"
+                                        },
                                         "phone": {
                                             "description": "User's phone",
                                             "type": "integer"
