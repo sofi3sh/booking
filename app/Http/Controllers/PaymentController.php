@@ -82,7 +82,7 @@ class PaymentController extends Controller
     public function createOrder (Request $request)
     {
         $request->validate([
-            'order_id' => 'required|integer',
+            'order_id' => 'required|string',
             'amount' => 'required|numeric',
             'fee' => 'required|numeric',
             'issuer_bank_name' => 'required|string',
