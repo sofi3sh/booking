@@ -22,6 +22,7 @@ class UserController extends Controller
         $user = auth()->user();
 
         return response()->json([
+            'phone' => $user->phone,
             'name' => $user->name,
             'last_name' => $user->last_name,
             'email' => $user->email,
