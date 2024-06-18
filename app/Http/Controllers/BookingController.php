@@ -203,7 +203,7 @@ class BookingController extends Controller
             'is_child' => 'required|boolean'
         ]);
 
-        return response()->json(['price' => $this->bookingService->calculatePrice($request->object_id, $request->booked_from, $request->booked_to, $isChild)], 200);
+        return response()->json(['price' => $this->bookingService->calculatePrice($request->object_id, $request->booked_from, $request->booked_to, $request->isChild)], 200);
     }
 
     public function getOrder (Request $request)
