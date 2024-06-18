@@ -32,8 +32,11 @@ class PaymentController extends Controller
 
         $currentDate = Carbon::now()->timestamp;
 
-        $merchantAccount = env('MERCHANT_ACCOUNT');
-        $merchantDomainName = env('MERCHANT_DOMAIN_NAME');
+        // $merchantAccount = env('MERCHANT_ACCOUNT');
+        // $merchantDomainName = env('MERCHANT_DOMAIN_NAME');
+
+        $merchantAccount = 'freelance_user_6615038fd77a0';
+        $merchantDomainName = 'bookingTest';
         $orderReference = strtoupper(uniqid());
         $orderDate = $currentDate;
         $amount = $request->amount;
@@ -58,7 +61,11 @@ class PaymentController extends Controller
 
         //
         
-        $key = env('MERCHANT_kEY');
+        // $key = env('MERCHANT_kEY');
+
+        $key = '51c8aa745bcd94455c32b71bb8075871cbafc09c';
+
+
 
         $merchantSignature = hash_hmac('md5', $data, $key);
 
