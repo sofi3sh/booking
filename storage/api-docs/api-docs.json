@@ -2974,6 +2974,10 @@
                             "application/json": {
                                 "schema": {
                                     "properties": {
+                                        "phone": {
+                                            "description": "User's phone",
+                                            "type": "integer"
+                                        },
                                         "name": {
                                             "description": "User's name",
                                             "type": "string"
