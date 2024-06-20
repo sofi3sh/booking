@@ -66,6 +66,7 @@ Route::prefix('admin')
         Route::post('/adminBlockUser', [UserController::class, 'adminBlockUser']);
         Route::post('/getUserByPhone', [UserController::class, 'adminGetUserByPhone']);
         Route::get('/getRoles', [RoleController::class, 'index']);
+        Route::post('/getUserBookings', [UserController::class, 'adminGetUserBookings']);
     });
 
 Route::prefix('admin')

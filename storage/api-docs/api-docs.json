@@ -3325,69 +3325,56 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "type": "array",
-                                    "items": {
-                                        "properties": {
-                                            "id": {
-                                                "description": "Unique identifier for the booking",
-                                                "type": "integer"
-                                            },
-                                            "user_id": {
-                                                "description": "User id",
-                                                "type": "integer"
-                                            },
-                                            "object_id": {
-                                                "description": "Object id",
-                                                "type": "integer"
-                                            },
-                                            "reserved_from": {
-                                                "description": "Reserved from",
-                                                "type": "string"
-                                            },
-                                            "reserved_to": {
-                                                "description": "Reserved to",
-                                                "type": "string"
-                                            },
-                                            "booked_from": {
-                                                "description": "Booked from",
-                                                "type": "string"
-                                            },
-                                            "booked_to": {
-                                                "description": "Booked to",
-                                                "type": "string"
-                                            },
-                                            "payment_status": {
-                                                "description": "Payment status",
-                                                "type": "boolean"
-                                            },
-                                            "canceled": {
-                                                "description": "Is booking canceled",
-                                                "type": "boolean"
-                                            },
-                                            "order_id": {
-                                                "description": "Order ID",
-                                                "type": "string"
-                                            },
-                                            "description": {
-                                                "description": "Description",
-                                                "type": "string"
-                                            }
-                                        },
-                                        "type": "object"
-                                    }
-                                }
-                            }
-                        }
-                    },
-                    "401": {
-                        "description": "No bookings found",
-                        "content": {
-                            "application/json": {
-                                "schema": {
                                     "properties": {
-                                        "message": {
-                                            "type": "string",
-                                            "example": "No bookings found"
+                                        "bookings": {
+                                            "type": "object",
+                                            "additionalProperties": {
+                                                "type": "array",
+                                                "items": {
+                                                    "properties": {
+                                                        "id": {
+                                                            "description": "Unique identifier for the booking",
+                                                            "type": "integer"
+                                                        },
+                                                        "user_id": {
+                                                            "description": "User id",
+                                                            "type": "integer"
+                                                        },
+                                                        "object_id": {
+                                                            "description": "Object id",
+                                                            "type": "integer"
+                                                        },
+                                                        "booked_from": {
+                                                            "description": "Booked from",
+                                                            "type": "string",
+                                                            "format": "date-time"
+                                                        },
+                                                        "booked_to": {
+                                                            "description": "Booked to",
+                                                            "type": "string",
+                                                            "format": "date-time"
+                                                        },
+                                                        "payment_status": {
+                                                            "description": "Payment status",
+                                                            "type": "boolean"
+                                                        },
+                                                        "canceled": {
+                                                            "description": "Is booking canceled",
+                                                            "type": "boolean"
+                                                        },
+                                                        "description": {
+                                                            "description": "Description",
+                                                            "type": "string"
+                                                        },
+                                                        "price": {
+                                                            "description": "Price",
+                                                            "type": "string"
+                                                        }
+                                                    },
+                                                    "type": "object"
+                                                },
+                                                "property": null
+                                            }
                                         }
                                     },
                                     "type": "object"
@@ -3819,7 +3806,7 @@
                                 "properties": {
                                     "phone": {
                                         "description": "Phone number",
-                                        "type": "string"
+                                        "type": "integer"
                                     }
                                 },
                                 "type": "object"
@@ -3952,6 +3939,105 @@
                     },
                     "403": {
                         "description": "Permission denied"
+                    }
+                }
+            }
+        },
+        "/api/admin/getUserBookings": {
+            "post": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Get users bookings (Admin)",
+                "operationId": "6a9cda45dc713372462995acfd33de9f",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "phone": {
+                                        "description": "Phone number",
+                                        "type": "integer"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "bookings": {
+                                            "type": "object",
+                                            "additionalProperties": {
+                                                "type": "array",
+                                                "items": {
+                                                    "properties": {
+                                                        "id": {
+                                                            "description": "Unique identifier for the booking",
+                                                            "type": "integer"
+                                                        },
+                                                        "user_id": {
+                                                            "description": "User id",
+                                                            "type": "integer"
+                                                        },
+                                                        "object_id": {
+                                                            "description": "Object id",
+                                                            "type": "integer"
+                                                        },
+                                                        "booked_from": {
+                                                            "description": "Booked from",
+                                                            "type": "string",
+                                                            "format": "date-time"
+                                                        },
+                                                        "booked_to": {
+                                                            "description": "Booked to",
+                                                            "type": "string",
+                                                            "format": "date-time"
+                                                        },
+                                                        "payment_status": {
+                                                            "description": "Payment status",
+                                                            "type": "boolean"
+                                                        },
+                                                        "canceled": {
+                                                            "description": "Is booking canceled",
+                                                            "type": "boolean"
+                                                        },
+                                                        "description": {
+                                                            "description": "Description",
+                                                            "type": "string"
+                                                        },
+                                                        "price": {
+                                                            "description": "Price",
+                                                            "type": "string"
+                                                        },
+                                                        "created_at": {
+                                                            "description": "Created order at",
+                                                            "type": "string",
+                                                            "format": "date"
+                                                        }
+                                                    },
+                                                    "type": "object"
+                                                },
+                                                "property": null
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Permission denied"
+                    },
+                    "404": {
+                        "description": "User not found"
                     }
                 }
             }
