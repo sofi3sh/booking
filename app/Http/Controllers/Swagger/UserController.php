@@ -161,105 +161,92 @@ class UserController extends Controller
         //
      }
 
-   /**
-     * @OA\Get(
-     *     path="/api/user/getUserBookings",
-     *     summary="Get user bookings",
-     *     tags={"Users"},
-     *     @OA\Response(
-     *         response="200",
-     *         description="Successful response",
-     *         @OA\JsonContent(
-     *             type="array",
-     *             @OA\Items(
-     *                 @OA\Property(
-     *                     property="id",
-     *                     type="integer",
-     *                     description="Unique identifier for the booking"
-     *                 ),
-     *                 @OA\Property(
-     *                     property="user_id",
-     *                     type="integer",
-     *                     description="User id"
-     *                 ),
-     *                 @OA\Property(
-     *                     property="object_id",
-     *                     type="integer",
-     *                     description="Object id"
-     *                 ),
-     *                 @OA\Property(
-     *                     property="reserved_from",
-     *                     type="string",
-     *                     description="Reserved from"
-     *                 ),
-     *                 @OA\Property(
-     *                     property="reserved_to",
-     *                     type="string",
-     *                     description="Reserved to"
-     *                 ),
-     *                 @OA\Property(
-     *                     property="booked_from",
-     *                     type="string",
-     *                     description="Booked from"
-     *                 ),
-     *                 @OA\Property(
-     *                     property="booked_to",
-     *                     type="string",
-     *                     description="Booked to"
-     *                 ),
-     *                 @OA\Property(
-     *                     property="payment_status",
-     *                     type="boolean",
-     *                     description="Payment status"
-     *                 ),
-     *                 @OA\Property(
-     *                     property="canceled",
-     *                     type="boolean",
-     *                     description="Is booking canceled"
-     *                 ),
-     *                 @OA\Property(
-     *                     property="order_id",
-     *                     type="string",
-     *                     description="Order ID"
-     *                 ),
-     *                 @OA\Property(
-     *                     property="description",
-     *                     type="string",
-     *                     description="Description"
-     *                 )
-     *             )
-     *         ),
-     *     ),
-     *     @OA\Response(
-     *         response="401",
-     *         description="No bookings found",
-     *         @OA\JsonContent(
-     *             type="object",
-     *             @OA\Property(
-     *                 property="message",
-     *                 type="string",
-     *                 example="No bookings found"
-     *             )
-     *         )
-     *     ),
-     *     @OA\Response(
-     *         response="404",
-     *         description="No bookings found",
-     *         @OA\JsonContent(
-     *             type="object",
-     *             @OA\Property(
-     *                 property="message",
-     *                 type="string",
-     *                 example="No bookings found"
-     *             )
-     *         )
-     *     )
-     * )
-     */
-     public function getUserBookings ()
-     {
-         //
-     }
+/**
+ * @OA\Get(
+ *     path="/api/user/getUserBookings",
+ *     summary="Get user bookings",
+ *     tags={"Users"},
+ *     @OA\Response(
+ *         response="200",
+ *         description="Successful response",
+ *         @OA\JsonContent(
+ *             type="object",
+ *             @OA\Property(
+ *                 property="bookings",
+ *                 type="object",
+ *                 additionalProperties=@OA\Property(
+ *                     type="array",
+ *                     @OA\Items(
+ *                         @OA\Property(
+ *                             property="id",
+ *                             type="integer",
+ *                             description="Unique identifier for the booking"
+ *                         ),
+ *                         @OA\Property(
+ *                             property="user_id",
+ *                             type="integer",
+ *                             description="User id"
+ *                         ),
+ *                         @OA\Property(
+ *                             property="object_id",
+ *                             type="integer",
+ *                             description="Object id"
+ *                         ),
+ *                         @OA\Property(
+ *                             property="booked_from",
+ *                             type="string",
+ *                             format="date-time",
+ *                             description="Booked from"
+ *                         ),
+ *                         @OA\Property(
+ *                             property="booked_to",
+ *                             type="string",
+ *                             format="date-time",
+ *                             description="Booked to"
+ *                         ),
+ *                         @OA\Property(
+ *                             property="payment_status",
+ *                             type="boolean",
+ *                             description="Payment status"
+ *                         ),
+ *                         @OA\Property(
+ *                             property="canceled",
+ *                             type="boolean",
+ *                             description="Is booking canceled"
+ *                         ),
+ *                         @OA\Property(
+ *                             property="description",
+ *                             type="string",
+ *                             description="Description"
+ *                         ),
+ *                         @OA\Property(
+ *                             property="price",
+ *                             type="string",
+ *                             description="Price"
+ *                         )
+ *                     )
+ *                 )
+ *             )
+ *         )
+ *     ),
+ *     @OA\Response(
+ *         response="404",
+ *         description="No bookings found",
+ *         @OA\JsonContent(
+ *             type="object",
+ *             @OA\Property(
+ *                 property="message",
+ *                 type="string",
+ *                 example="No bookings found"
+ *             )
+ *         )
+ *     )
+ * )
+ */
+public function getUserBookings ()
+{
+    //
+}
 
    /**
      * @OA\Post(
@@ -660,7 +647,7 @@ class UserController extends Controller
      *             type="object",
      *             @OA\Property(
      *                 property="phone",
-     *                 type="string",
+     *                 type="integer",
      *                 description="Phone number"
      *             )
      *         )
@@ -800,6 +787,104 @@ class UserController extends Controller
      * )
      */
     public function getRoles() 
+    {
+      //
+    }
+
+    /**
+     * @OA\Post(
+     *     path="/api/admin/getUserBookings",
+     *     summary="Get users bookings (Admin)",
+     *     tags={"Users"},
+     *     @OA\RequestBody(
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(
+     *                 property="phone",
+     *                 type="integer",
+     *                 description="Phone number"
+     *             )
+     *         )
+     *     ),
+ *     @OA\Response(
+ *         response="200",
+ *         description="Successful response",
+ *         @OA\JsonContent(
+ *             type="object",
+ *             @OA\Property(
+ *                 property="bookings",
+ *                 type="object",
+ *                 additionalProperties=@OA\Property(
+ *                     type="array",
+ *                     @OA\Items(
+ *                         @OA\Property(
+ *                             property="id",
+ *                             type="integer",
+ *                             description="Unique identifier for the booking"
+ *                         ),
+ *                         @OA\Property(
+ *                             property="user_id",
+ *                             type="integer",
+ *                             description="User id"
+ *                         ),
+ *                         @OA\Property(
+ *                             property="object_id",
+ *                             type="integer",
+ *                             description="Object id"
+ *                         ),
+ *                         @OA\Property(
+ *                             property="booked_from",
+ *                             type="string",
+ *                             format="date-time",
+ *                             description="Booked from"
+ *                         ),
+ *                         @OA\Property(
+ *                             property="booked_to",
+ *                             type="string",
+ *                             format="date-time",
+ *                             description="Booked to"
+ *                         ),
+ *                         @OA\Property(
+ *                             property="payment_status",
+ *                             type="boolean",
+ *                             description="Payment status"
+ *                         ),
+     *                         @OA\Property(
+     *                             property="canceled",
+     *                             type="boolean",
+     *                             description="Is booking canceled"
+     *                         ),
+     *                         @OA\Property(
+     *                             property="description",
+     *                             type="string",
+     *                             description="Description"
+     *                         ),
+     *                         @OA\Property(
+     *                             property="price",
+     *                             type="string",
+     *                             description="Price"
+     *                         ),
+     *                         @OA\Property(
+     *                             property="created_at",
+     *                             type="date",
+     *                             description="Created order at"
+     *                         )
+     *                     )
+     *                 )
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response="403",
+     *         description="Permission denied"
+     *     ),
+     *     @OA\Response(
+     *         response="404",
+     *         description="User not found"
+     *     )
+     * )
+     */
+    public function adminGetUserBookings() 
     {
       //
     }

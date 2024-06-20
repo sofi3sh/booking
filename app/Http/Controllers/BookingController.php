@@ -224,6 +224,6 @@ class BookingController extends Controller
             $totalPrice += $booking->price;
         }
 
-        return response()->json(['bookings' => $$bookingsInOrder, 'total_price' => $totalPrice], 200);
+        return response()->json(['bookings' => $bookingsInOrder, 'total_price' => $totalPrice], 200);
     }
 }
