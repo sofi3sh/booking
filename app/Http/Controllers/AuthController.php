@@ -162,6 +162,8 @@ class AuthController extends Controller
         $client = new \GuzzleHttp\Client();
 
         try {
+
+
             $response = $client->post("{$baseUrl}/uaa/oauth/token", [
                 'form_params' => [
                     'grant_type' => 'password',
@@ -180,10 +182,42 @@ class AuthController extends Controller
             $accessToken = $data['access_token'];
             $refreshToken = $data['refresh_token'];
 
-            return response()->json([
-                'access_token' => $accessToken,
-                'refresh_token' => $refreshToken,
+
+            $response = $client->post("{$baseUrl}/communication-event/api/communicationManagement/v2/communicationMessage/send", [
+                'json' => [
+                    'content' => 'Hello World',
+                    'type' => 'SMS',
+                    'receiver' => [
+                        [
+                            'id' => 0,
+                            'phoneNumber' => '380988657090'
+                        ]
+                    ],
+                    'sender' => [
+                        'id' => 0,
+                        'phoneNumber' => 'Pool Beach'
+                    ],
+                    'characteristic' => [
+                        [
+                            'name' => 'DISTRIBUTION.ID',
+                            'value' => '1'
+                        ],
+                        [
+                            'name' => 'VALIDITY.PERIOD',
+                            'value' => '000000000900000R'
+                        ]
+                    ]
+                ],
+                'headers' => [
+                    'Authorization' => "Bearer {$accessToken}",
+                    'Content-Type' => 'application/json',
+                ],
             ]);
+
+            return response()->json([
+                'message' => $response->getBody()->getContents(),
+            ], $response->getStatusCode());
+            
         } catch (\GuzzleHttp\Exception\ClientException $e) {
             $response = $e->getResponse();
             $responseBodyAsString = $response->getBody()->getContents();
