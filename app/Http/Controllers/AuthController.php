@@ -110,7 +110,7 @@ class AuthController extends Controller
             // cookie($name = null, $value = null, $minutes = 0, $path = null, $domain = null, $secure = null, $httpOnly = true, $raw = false, $sameSite = null)
 
             return response()->json(['message' => __('authorization_successful')], 200)
-                ->cookie('access_token', $accessToken, $minutes, '/', '.booking.siteweb.org.ua', true, false, false, 'None');
+                ->cookie('access_token', $accessToken, $minutes, '/', '.booking.siteweb.org.ua', true, false, false, 'Strict');
         }
 
         return response()->json(['message' => __('unauthorized')], 401);
@@ -203,7 +203,7 @@ class AuthController extends Controller
                     'characteristic' => [
                         [
                             'name' => 'DISTRIBUTION.ID',
-                            'value' => '1'
+                            'value' => '5840964'
                         ],
                         [
                             'name' => 'VALIDITY.PERIOD',
@@ -217,9 +217,21 @@ class AuthController extends Controller
                 ],
             ]);
 
+            $message = $response->getBody()->getContents();
+            $decodedMessage = json_decode($message, true);
+
+
+            $response2 = $client->get("{$baseUrl}/communication-event/api/communicationManagement/v2/communicationMessage/status?messageId={$decodedMessage[0]['id']}", [
+                'headers' => [
+                    'Authorization' => "Bearer {$accessToken}",
+                    'Content-Type' => 'application/json',
+                ],
+            ]);
+
+
             return response()->json([
-                'message' => $response->getBody()->getContents(),
-            ], $response->getStatusCode());
+                'message' => $response2->getBody()->getContents(),
+            ], $response2->getStatusCode());
             
         } catch (\GuzzleHttp\Exception\ClientException $e) {
             $response = $e->getResponse();
