@@ -190,7 +190,7 @@ class AuthController extends Controller
                     'receiver' => [
                         [
                             'id' => 0,
-                            'phoneNumber' => '380988657090'
+                            'phoneNumber' => '380982859149'
                         ]
                     ],
                     'sender' => [
