@@ -106,21 +106,11 @@ class AuthController extends Controller
 
             $minutes = 30 * 24 * 60; // 30 days in minutes
 
-            // return response()->json(['message' => __('authorization_successful')], 200)
-            //     ->cookie('access_token', $accessToken, $minutes, null, null, null, false, false, 'None');
+            // To see required params
+            // cookie($name = null, $value = null, $minutes = 0, $path = null, $domain = null, $secure = null, $httpOnly = true, $raw = false, $sameSite = null)
 
             return response()->json(['message' => __('authorization_successful')], 200)
-                ->cookie(
-                    'access_token',
-                    $accessToken,
-                    $minutes,
-                    '/',
-                    null,
-                    true, // Secure attribute
-                    true, // HttpOnly attribute
-                    false, // Disable raw cookie encoding
-                    'Lax' // SameSite attribute
-                );
+                ->cookie('access_token', $accessToken, $minutes, '/', '.booking.siteweb.org.ua', true, false, false, 'None');
         }
 
         return response()->json(['message' => __('unauthorized')], 401);
