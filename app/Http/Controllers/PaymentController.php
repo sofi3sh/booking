@@ -35,8 +35,8 @@ class PaymentController extends Controller
         // $merchantAccount = env('MERCHANT_ACCOUNT');
         // $merchantDomainName = env('MERCHANT_DOMAIN_NAME');
 
-        $merchantAccount = 'freelance_user_6615038fd77a0';
-        $merchantDomainName = 'bookingTest';
+        $merchantAccount = 'poolandbeach_zp_ua';
+        $merchantDomainName = 'poolandbeach.zp.ua';
         $orderReference = strtoupper(uniqid());
         $orderDate = $currentDate;
         $amount = $request->amount;
@@ -63,7 +63,7 @@ class PaymentController extends Controller
         
         // $key = env('MERCHANT_kEY');
 
-        $key = '51c8aa745bcd94455c32b71bb8075871cbafc09c';
+        $key = 'c632cb72916700a3d83ac83794925ab09642bbe7';
 
 
 

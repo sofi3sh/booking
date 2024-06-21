@@ -8,9 +8,11 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\Hash;
 use App\Models\User;
 use App\Models\VerificationCode;
-use Vonage\Client;
+// use Vonage\Client;
 use Vonage\SMS\Message\SMS;
 use Vonage\Client\Credentials\Basic;
+
+use GuzzleHttp\Client;
 
 class AuthController extends Controller
 {
@@ -149,5 +151,84 @@ class AuthController extends Controller
         // $verificationCode->delete();
 
         return response()->json(['message' => __('success_verification_code')], 200);
+    }
+
+    public function sendSMSVodafone()
+    {
+        $baseUrl = 'https://a2p.vodafone.ua';
+        $username = '380956139029';
+        $password = 'STRe456892-=wr';
+
+        $client = new \GuzzleHttp\Client();
+
+        try {
+
+
+            $response = $client->post("{$baseUrl}/uaa/oauth/token", [
+                'form_params' => [
+                    'grant_type' => 'password',
+                    'username' => $username,
+                    'password' => $password,
+                ],
+                'headers' => [
+                    'Authorization' => 'Basic aW50ZXJuYWw6aW50ZXJuYWw=',
+                    'Content-Type' => 'application/x-www-form-urlencoded',
+                ],
+            ]);
+
+            $body = $response->getBody();
+            $data = json_decode($body, true);
+
+            $accessToken = $data['access_token'];
+            $refreshToken = $data['refresh_token'];
+
+
+            $response = $client->post("{$baseUrl}/communication-event/api/communicationManagement/v2/communicationMessage/send", [
+                'json' => [
+                    'content' => 'Hello World',
+                    'type' => 'SMS',
+                    'receiver' => [
+                        [
+                            'id' => 0,
+                            'phoneNumber' => '380982859149'
+                        ]
+                    ],
+                    'sender' => [
+                        'id' => 0,
+                        'phoneNumber' => 'Pool Beach'
+                    ],
+                    'characteristic' => [
+                        [
+                            'name' => 'DISTRIBUTION.ID',
+                            'value' => '1'
+                        ],
+                        [
+                            'name' => 'VALIDITY.PERIOD',
+                            'value' => '000000000900000R'
+                        ]
+                    ]
+                ],
+                'headers' => [
+                    'Authorization' => "Bearer {$accessToken}",
+                    'Content-Type' => 'application/json',
+                ],
+            ]);
+
+            return response()->json([
+                'message' => $response->getBody()->getContents(),
+            ], $response->getStatusCode());
+            
+        } catch (\GuzzleHttp\Exception\ClientException $e) {
+            $response = $e->getResponse();
+            $responseBodyAsString = $response->getBody()->getContents();
+
+            return response()->json([
+                'error' => $responseBodyAsString,
+            ], $response->getStatusCode());
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => $e->getMessage(),
+            ], 500);
+        }
     }
 }

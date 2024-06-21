@@ -14,6 +14,8 @@ use App\Http\Controllers\ObjectDetailsController;
 use App\Http\Controllers\RoleController;
 
 
+Route::get('sendSMSVodafone', [AuthController::class, 'sendSMSVodafone']);
+
 Route::prefix('auth')
     ->controller(AuthController::class)
     ->middleware('throttle:password_access')
