@@ -16,22 +16,6 @@ use GuzzleHttp\Client;
 
 class AuthController extends Controller
 {
-    private function sendSms($to, $verificationCode)
-    {
-        $basic  = new Basic(env('VONAGE_API_KEY'), env('VONAGE_API_SECRET_KEY'));
-        $client = new Client($basic);
-
-        $message = "Hello!\n\n" . 
-           "Your verification code is: $verificationCode. \n\n" . 
-           "Please use this code to complete the verification process. \n\n" . 
-           "Have a great day!";
-        
-        $response = $client->sms()->send(
-            new SMS($to, 'brand', $message)
-        );
-
-        $message = $response->current();
-    }
 
     private function createAndSendVerificationCode($userPhone)
     {
@@ -45,7 +29,7 @@ class AuthController extends Controller
             'expires_at' => Carbon::now()->addMinutes(5),
         ]);
 
-        // $this->sendSms($userPhone, $verificationCode); // Uncomment after setup Vonage service
+        $this->sendSms($userPhone, $verificationCode);
     }
 
     public function sendVerificationCode (Request $request)
@@ -130,17 +114,17 @@ class AuthController extends Controller
             'code' => 'required|integer',
         ]);
 
-        // $verificationCode = VerificationCode::where('phone', $request->phone)
-        //     ->where('code', $request->code)
-        //     ->first();
+        $verificationCode = VerificationCode::where('phone', $request->phone)
+            ->where('code', $request->code)
+            ->first();
 
-        // if (!$verificationCode) {
-        //     return response()->json(['error' => __('invalid_verification_code')], 422);
-        // }
+        if (!$verificationCode) {
+            return response()->json(['error' => __('invalid_verification_code')], 422);
+        }
 
-        // if (Carbon::now()->gt($verificationCode->expires_at)) {
-        //     return response()->json(['error' => __('expired_verification_code')], 422);
-        // }
+        if (Carbon::now()->gt($verificationCode->expires_at)) {
+            return response()->json(['error' => __('expired_verification_code')], 422);
+        }
 
         $user = User::where('phone', $request->phone)->first();
 
@@ -151,16 +135,18 @@ class AuthController extends Controller
         $user->phone_verified_at = now();
         $user->save();
 
-        // $verificationCode->delete();
+        $verificationCode->delete();
 
         return response()->json(['message' => __('success_verification_code')], 200);
     }
 
-    public function sendSMSVodafone()
+    public function sendSms($to, $verificationCode)
     {
         $baseUrl = 'https://a2p.vodafone.ua';
         $username = '380956139029';
         $password = 'STRe456892-=wr';
+
+        $message = __('verification_code') . ' ' . $verificationCode;
 
         $client = new \GuzzleHttp\Client();
 
@@ -188,17 +174,18 @@ class AuthController extends Controller
 
             $response = $client->post("{$baseUrl}/communication-event/api/communicationManagement/v2/communicationMessage/send", [
                 'json' => [
-                    'content' => 'Hello World',
+                    'content' => $message,
                     'type' => 'SMS',
                     'receiver' => [
                         [
                             'id' => 0,
-                            'phoneNumber' => '380982859149'
+                            'phoneNumber' => $to
                         ]
                     ],
                     'sender' => [
-                        'id' => 0,
-                        'phoneNumber' => 'Pool Beach'
+                        'id' => 'Pool Beach',
+                        'name' => 'Pool Beach',
+                        'phoneNumber' => '380956139029'
                     ],
                     'characteristic' => [
                         [
@@ -216,22 +203,6 @@ class AuthController extends Controller
                     'Content-Type' => 'application/json',
                 ],
             ]);
-
-            $message = $response->getBody()->getContents();
-            $decodedMessage = json_decode($message, true);
-
-
-            $response2 = $client->get("{$baseUrl}/communication-event/api/communicationManagement/v2/communicationMessage/status?messageId={$decodedMessage[0]['id']}", [
-                'headers' => [
-                    'Authorization' => "Bearer {$accessToken}",
-                    'Content-Type' => 'application/json',
-                ],
-            ]);
-
-
-            return response()->json([
-                'message' => $response2->getBody()->getContents(),
-            ], $response2->getStatusCode());
             
         } catch (\GuzzleHttp\Exception\ClientException $e) {
             $response = $e->getResponse();
