@@ -30,6 +30,7 @@
     "object_detail_not_found": "Object detail not found",
     "object_detail_deleted_successfully": "Object detail deleted successfully",
     "object_is_blocked": "Object is blocked to booking",
+    "verification_code": "Your verification code: ",
     "booking_objects": {
         "seeders": {
             "bungalo_name": "Bungalo ",
