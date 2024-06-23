@@ -10,10 +10,12 @@
         "guzzlehttp/guzzle": "^7.8",
         "laravel/framework": "^11.0",
         "laravel/passport": "^12.0",
+        "laravel/reverb": "@beta",
         "laravel/sanctum": "^4.0",
         "laravel/tinker": "^2.9",
         "laravel/vonage-notification-channel": "^3.3",
         "predis/predis": "^2.2",
+        "pusher/pusher-php-server": "^7.2",
         "vonage/client": "^4.0"
     },
     "require-dev": {

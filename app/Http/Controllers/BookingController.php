@@ -7,6 +7,8 @@ use App\Models\Booking;
 use App\Models\BookingObject;
 use App\Enums\ObjectStatus;
 use Carbon\Carbon;
+use App\Events\BookingObjectStatusUpdated;
+use Illuminate\Support\Facades\Event;
 use App\Services\BookingService;
 use Vonage\Client;
 use Vonage\SMS\Message\SMS;
@@ -34,6 +36,10 @@ class BookingController extends Controller
 
         BookingObject::whereIn('id', $expiredBookingObjectsIds)
             ->update(['status' => ObjectStatus::FREE->value]);
+
+        foreach ($expiredBookingObjectsIds as $objectId) {
+            event(new BookingObjectStatusUpdated($objectId, ObjectStatus::FREE->value));
+        }
     }
 
     /**
@@ -48,6 +54,10 @@ class BookingController extends Controller
 
         BookingObject::whereIn('id', $expiredBookingObjects)
             ->update(['status' => ObjectStatus::FREE->value]);
+        
+        foreach ($expiredBookingObjectsIds as $objectId) {
+            event(new BookingObjectStatusUpdated($objectId, ObjectStatus::FREE->value));
+        }
     }
 
     /**
@@ -64,6 +74,10 @@ class BookingController extends Controller
 
         BookingObject::whereIn('id', $bookedObjects)
             ->update(['status' => ObjectStatus::BOOKED->value]);
+
+        foreach ($bookedObjects as $objectId) {
+            event(new BookingObjectStatusUpdated($objectId, ObjectStatus::BOOKED->value));
+        }
     }
 
     /**
