@@ -6,110 +6,6 @@
     },
     "paths": {
         "/api/": {},
-        "/api/auth/login": {
-            "post": {
-                "tags": [
-                    "Auth"
-                ],
-                "summary": "User login",
-                "operationId": "7fbb2acb605c2adaebf7c7cfaa5e7f49",
-                "requestBody": {
-                    "required": true,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "properties": {
-                                    "phone": {
-                                        "description": "User's phone number",
-                                        "type": "integer"
-                                    },
-                                    "password": {
-                                        "description": "User's password",
-                                        "type": "string"
-                                    }
-                                },
-                                "type": "object"
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "200": {
-                        "description": "Authorization successful",
-                        "headers": {
-                            "Set-Cookie": {
-                                "description": "Access token cookie",
-                                "schema": {
-                                    "type": "string",
-                                    "example": "access_token=abc123; Expires=Wed, 21 Oct 2020 07:28:00 GMT; Max-Age=2592000; Path=/"
-                                }
-                            }
-                        },
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "message": {
-                                            "type": "string",
-                                            "example": "Authorization successful"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    },
-                    "401": {
-                        "description": "Unauthorized",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "message": {
-                                            "type": "string",
-                                            "example": "Unauthorized"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/api/auth/logout": {
-            "post": {
-                "tags": [
-                    "Auth"
-                ],
-                "summary": "User logout",
-                "operationId": "16a402dc4a790a2e0dad16fe340eca9d",
-                "responses": {
-                    "200": {
-                        "description": "Logged out successfully",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "message": {
-                                            "type": "string",
-                                            "example": "Logged out successfully"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    }
-                },
-                "security": [
-                    {
-                        "passport": []
-                    }
-                ]
-            }
-        },
         "/api/auth/register": {
             "post": {
                 "tags": [
@@ -118,7 +14,6 @@
                 "summary": "User registration",
                 "operationId": "4cd55ed2516a9b023429e773b7b85064",
                 "requestBody": {
-                    "required": true,
                     "content": {
                         "application/json": {
                             "schema": {
@@ -142,6 +37,11 @@
                                         "type": "string",
                                         "format": "password",
                                         "minLength": 8
+                                    },
+                                    "lang": {
+                                        "description": "Specify language",
+                                        "type": "string",
+                                        "format": "lang"
                                     }
                                 },
                                 "type": "object"
@@ -189,6 +89,11 @@
                                     "code": {
                                         "description": "Verification code",
                                         "type": "integer"
+                                    },
+                                    "lang": {
+                                        "description": "Specify language",
+                                        "type": "string",
+                                        "format": "lang"
                                     }
                                 },
                                 "type": "object"
@@ -264,6 +169,614 @@
                 }
             }
         },
+        "/api/auth/login": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "User login",
+                "operationId": "7fbb2acb605c2adaebf7c7cfaa5e7f49",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "phone": {
+                                        "description": "User's phone number",
+                                        "type": "integer"
+                                    },
+                                    "password": {
+                                        "description": "User's password",
+                                        "type": "string"
+                                    },
+                                    "lang": {
+                                        "description": "Specify language",
+                                        "type": "string",
+                                        "format": "lang"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Authorization successful",
+                        "headers": {
+                            "Set-Cookie": {
+                                "description": "Access token cookie",
+                                "schema": {
+                                    "type": "string",
+                                    "example": "access_token=abc123; Expires=Wed, 21 Oct 2020 07:28:00 GMT; Max-Age=2592000; Path=/"
+                                }
+                            }
+                        },
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Authorization successful"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unauthorized"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/auth/logout": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "User logout",
+                "operationId": "16a402dc4a790a2e0dad16fe340eca9d",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "lang": {
+                                        "description": "Specify language",
+                                        "type": "string",
+                                        "format": "lang"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Logged out successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Logged out successfully"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "passport": []
+                    }
+                ]
+            }
+        },
+        "/api/auth/sendVerificationCode": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Send verification code via SMS to the user's phone number for authentication",
+                "operationId": "2bb0c6e8f0a32f5d46a34f6b8b93dce8",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "phone": {
+                                        "description": "User's phone number",
+                                        "type": "integer"
+                                    },
+                                    "lang": {
+                                        "description": "Specify language",
+                                        "type": "string",
+                                        "format": "lang"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Verification code sent successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Verification code sent successfully"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/booking/reserveObject": {
+            "post": {
+                "tags": [
+                    "Bookings"
+                ],
+                "summary": "Reserve booking object for future booking",
+                "operationId": "58367aa01f1f3f86c85a12068d6ed9e1",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "object_id": {
+                                        "description": "ID of the object we want to reserve",
+                                        "type": "integer"
+                                    },
+                                    "lang": {
+                                        "description": "Specify language",
+                                        "type": "string",
+                                        "format": "lang"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Object has been reserved",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Object has been reserved"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "You need to be verified",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "You need to be verified"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Object not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Object not found"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/booking/calculateBookingPrice": {
+            "post": {
+                "tags": [
+                    "Bookings"
+                ],
+                "summary": "Reserve booking object for future booking",
+                "operationId": "ad233168a9788ef3bceb2890acb58c02",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "object_id": {
+                                        "description": "ID of the object we want to book",
+                                        "type": "integer"
+                                    },
+                                    "booked_from": {
+                                        "description": "Booking start date",
+                                        "type": "string",
+                                        "format": "date"
+                                    },
+                                    "booked_to": {
+                                        "description": "booking end date",
+                                        "type": "string",
+                                        "format": "date"
+                                    },
+                                    "is_child": {
+                                        "description": "Should the price be calculated for the child",
+                                        "type": "boolean"
+                                    },
+                                    "lang": {
+                                        "description": "Specify language",
+                                        "type": "string",
+                                        "format": "lang"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful price calculation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "price": {
+                                            "type": "decimal",
+                                            "example": "999.99"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/booking/cancelOrder": {
+            "post": {
+                "tags": [
+                    "Bookings"
+                ],
+                "summary": "Cancel all bookings in order",
+                "operationId": "e153840b930488d9d550a43491db3e98",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "order_id": {
+                                        "description": "Order ID",
+                                        "type": "string"
+                                    },
+                                    "lang": {
+                                        "description": "Specify language",
+                                        "type": "string",
+                                        "format": "lang"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Order has been canceled succesful",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Order has been canceled"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/objects/getOrder": {
+            "post": {
+                "tags": [
+                    "Bookings"
+                ],
+                "summary": "Get bookings by order ID",
+                "operationId": "42ecd39beb704de555ef546369e93906",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "order_id": {
+                                        "description": "Order ID",
+                                        "type": "string"
+                                    },
+                                    "lang": {
+                                        "description": "Specify language",
+                                        "type": "string",
+                                        "format": "lang"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "bookings": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "id": {
+                                                        "description": "Unique identifier for the booking",
+                                                        "type": "integer"
+                                                    },
+                                                    "user_id": {
+                                                        "description": "User id",
+                                                        "type": "integer"
+                                                    },
+                                                    "object_id": {
+                                                        "description": "Object id",
+                                                        "type": "integer"
+                                                    },
+                                                    "reserved_from": {
+                                                        "description": "Reserved from",
+                                                        "type": "string"
+                                                    },
+                                                    "reserved_to": {
+                                                        "description": "Reserved to",
+                                                        "type": "string"
+                                                    },
+                                                    "booked_from": {
+                                                        "description": "Booked from",
+                                                        "type": "string"
+                                                    },
+                                                    "booked_to": {
+                                                        "description": "Booked to",
+                                                        "type": "string"
+                                                    },
+                                                    "payment_status": {
+                                                        "description": "Payment status",
+                                                        "type": "boolean"
+                                                    },
+                                                    "canceled": {
+                                                        "description": "Is the reservation cancelled",
+                                                        "type": "boolean"
+                                                    },
+                                                    "order_id": {
+                                                        "description": "Order ID",
+                                                        "type": "string"
+                                                    },
+                                                    "description": {
+                                                        "description": "Description",
+                                                        "type": "string"
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        },
+                                        "total_price": {
+                                            "description": "Total price of the order",
+                                            "type": "number",
+                                            "format": "float"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "No bookings found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "No bookings found"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/booking/admin/bookObjects": {
+            "post": {
+                "tags": [
+                    "Bookings"
+                ],
+                "summary": "Make a booking using the permission of the administrator. It is possible to book without payment on the website",
+                "operationId": "9305e1c9b8126148e76c2c7aac8f9f25",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "object_id": {
+                                        "description": "Object ID",
+                                        "type": "integer"
+                                    },
+                                    "booked_from": {
+                                        "description": "Booked from date",
+                                        "type": "string",
+                                        "format": "date"
+                                    },
+                                    "booked_to": {
+                                        "description": "Booked to date",
+                                        "type": "string",
+                                        "format": "date"
+                                    },
+                                    "user_id": {
+                                        "description": "User ID",
+                                        "type": "integer"
+                                    },
+                                    "payment_status": {
+                                        "description": "Payment status (0 - if not paid, 1 - if paid)",
+                                        "type": "boolean"
+                                    },
+                                    "description": {
+                                        "description": "Description",
+                                        "type": "string",
+                                        "nullable": true
+                                    },
+                                    "is_child": {
+                                        "description": "Should the price be calculated for the child",
+                                        "type": "boolean"
+                                    },
+                                    "lang": {
+                                        "description": "Specify language",
+                                        "type": "string",
+                                        "format": "lang"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Objects have been booked successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Objects have been booked successfully"
+                                        },
+                                        "bookings": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "id": {
+                                                        "description": "Unique identifier for the booking",
+                                                        "type": "integer"
+                                                    },
+                                                    "user_id": {
+                                                        "description": "User id",
+                                                        "type": "integer"
+                                                    },
+                                                    "object_id": {
+                                                        "description": "Object id",
+                                                        "type": "integer"
+                                                    },
+                                                    "reserved_from": {
+                                                        "description": "Reserved from",
+                                                        "type": "string"
+                                                    },
+                                                    "reserved_to": {
+                                                        "description": "Reserved to",
+                                                        "type": "string"
+                                                    },
+                                                    "booked_from": {
+                                                        "description": "Booked from",
+                                                        "type": "string"
+                                                    },
+                                                    "booked_to": {
+                                                        "description": "Booked to",
+                                                        "type": "string"
+                                                    },
+                                                    "payment_status": {
+                                                        "description": "Payment status",
+                                                        "type": "boolean"
+                                                    },
+                                                    "canceled": {
+                                                        "description": "Is the reservation cancelled",
+                                                        "type": "boolean"
+                                                    },
+                                                    "order_id": {
+                                                        "description": "Order ID",
+                                                        "type": "string"
+                                                    },
+                                                    "description": {
+                                                        "description": "Description",
+                                                        "type": "string"
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/api/objects/{id}/getBookingsByObjectId": {
             "get": {
                 "tags": [
@@ -322,6 +835,18 @@
                                             "payment_status": {
                                                 "description": "Payment status",
                                                 "type": "boolean"
+                                            },
+                                            "canceled": {
+                                                "description": "Is the reservation cancelled",
+                                                "type": "boolean"
+                                            },
+                                            "order_id": {
+                                                "description": "Order ID",
+                                                "type": "string"
+                                            },
+                                            "description": {
+                                                "description": "Description",
+                                                "type": "string"
                                             }
                                         },
                                         "type": "object"
@@ -349,13 +874,39 @@
                 }
             }
         },
-        "/api/objects": {
-            "get": {
+        "/api/objects/showAll": {
+            "post": {
                 "tags": [
                     "Objects"
                 ],
                 "summary": "Get all booking objects",
-                "operationId": "2196cb81e8dc2947ce385a8e25bccb43",
+                "operationId": "bf8c3b6db81e5d7cfda53b550e4e3bfe",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "zone": {
+                                        "description": "Zone of the booking objects (bungalow, pool, cottages)",
+                                        "type": "string",
+                                        "example": "pool"
+                                    },
+                                    "type": {
+                                        "description": "Type of the booking objects (sunbed, bed, bungalow, second bungalow, little cottage, big cottage)",
+                                        "type": "string",
+                                        "example": "sunbed"
+                                    },
+                                    "lang": {
+                                        "description": "Response language (en || ua)",
+                                        "type": "string",
+                                        "example": "en"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
                 "responses": {
                     "200": {
                         "description": "Successful response",
@@ -379,19 +930,114 @@
                                             },
                                             "price": {
                                                 "description": "Price of the booking object",
-                                                "type": "integer"
+                                                "type": "number"
+                                            },
+                                            "weekend_price": {
+                                                "description": "Weekend price of the booking object",
+                                                "type": "number"
+                                            },
+                                            "childrens_price": {
+                                                "description": "Price of the booking object for children",
+                                                "type": "number"
+                                            },
+                                            "childrens_weekend_price": {
+                                                "description": "Weekend price of the booking object for children",
+                                                "type": "number"
+                                            },
+                                            "discount": {
+                                                "description": "Discount of the booking object",
+                                                "type": "number"
+                                            },
+                                            "discount_start_date": {
+                                                "description": "Discount start date of the booking object",
+                                                "type": "string",
+                                                "format": "date"
+                                            },
+                                            "discount_end_date": {
+                                                "description": "Discount end date of the booking object",
+                                                "type": "string",
+                                                "format": "date"
                                             },
                                             "photos": {
                                                 "description": "Photos for the booking object",
                                                 "type": "string"
                                             },
+                                            "zone": {
+                                                "description": "Zone of the booking object",
+                                                "type": "string",
+                                                "enum": [
+                                                    "bungalow",
+                                                    "pool",
+                                                    "cottages"
+                                                ]
+                                            },
+                                            "status": {
+                                                "description": "Status of the booking object",
+                                                "type": "string",
+                                                "enum": [
+                                                    "free",
+                                                    "reserved",
+                                                    "booked"
+                                                ]
+                                            },
+                                            "type": {
+                                                "description": "Type of the booking object",
+                                                "type": "string",
+                                                "enum": [
+                                                    "sunbed",
+                                                    "bed",
+                                                    "bungalow",
+                                                    "second bungalow",
+                                                    "little cottage",
+                                                    "big cottage"
+                                                ]
+                                            },
                                             "preview_photo": {
                                                 "description": "Preview photo of the booking object",
                                                 "type": "string"
+                                            },
+                                            "max_persons": {
+                                                "description": "Max persons of the booking object",
+                                                "type": "integer"
+                                            },
+                                            "location": {
+                                                "description": "The name of the location within the zone in which the object is located",
+                                                "type": "string"
+                                            },
+                                            "position": {
+                                                "description": "The position of the object in the location",
+                                                "type": "integer"
+                                            },
+                                            "created_at": {
+                                                "description": "Creation date of the booking object",
+                                                "type": "string",
+                                                "format": "date-time"
+                                            },
+                                            "updated_at": {
+                                                "description": "Update date of the booking object",
+                                                "type": "string",
+                                                "format": "date-time"
                                             }
                                         },
                                         "type": "object"
                                     }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Object not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "description": "No booking objects found",
+                                            "type": "string",
+                                            "example": "No booking objects found"
+                                        }
+                                    },
+                                    "type": "object"
                                 }
                             }
                         }
@@ -407,30 +1053,109 @@
                 "summary": "Create a new object",
                 "operationId": "94e6f2648da81d8cd6e1bbec0bf4ccfc",
                 "requestBody": {
+                    "description": "Object details",
                     "required": true,
                     "content": {
                         "application/json": {
                             "schema": {
                                 "properties": {
-                                    "name": {
-                                        "description": "Name of the booking object",
+                                    "id": {
+                                        "description": "ID of the created object",
+                                        "type": "integer"
+                                    },
+                                    "name_ua": {
+                                        "description": "Name of the booking object in Ukrainian",
                                         "type": "string"
                                     },
-                                    "description": {
-                                        "description": "Description of the booking object",
+                                    "name_en": {
+                                        "description": "Name of the booking object in English",
+                                        "type": "string"
+                                    },
+                                    "description_ua": {
+                                        "description": "Description of the booking object in Ukrainian",
+                                        "type": "string"
+                                    },
+                                    "description_en": {
+                                        "description": "Description of the booking object in English",
                                         "type": "string"
                                     },
                                     "price": {
                                         "description": "Price of the booking object",
-                                        "type": "integer"
+                                        "type": "number",
+                                        "format": "float"
                                     },
-                                    "photos": {
-                                        "description": "Photos for the booking object",
+                                    "weekend_price": {
+                                        "description": "Price of the booking object on weekends",
+                                        "type": "number",
+                                        "format": "float"
+                                    },
+                                    "childrens_price": {
+                                        "description": "Price of the booking object for children",
+                                        "type": "number",
+                                        "format": "float"
+                                    },
+                                    "childrens_weekend_price": {
+                                        "description": "Price of the booking object on weekends for children",
+                                        "type": "number",
+                                        "format": "float"
+                                    },
+                                    "discount": {
+                                        "description": "Discount percentage for the booking object",
+                                        "type": "number",
+                                        "format": "float"
+                                    },
+                                    "discount_start_date": {
+                                        "description": "Start date of the discount period",
+                                        "type": "string",
+                                        "format": "date"
+                                    },
+                                    "discount_end_date": {
+                                        "description": "End date of the discount period",
+                                        "type": "string",
+                                        "format": "date"
+                                    },
+                                    "zone": {
+                                        "description": "Zone of the booking object (bungalow, pool, cottages)",
+                                        "type": "string"
+                                    },
+                                    "status": {
+                                        "description": "Status of the booking object (free, reserved, booked)",
+                                        "type": "string"
+                                    },
+                                    "type": {
+                                        "description": "Type of the booking object (sunbed, bed, bungalow, second bungalow, little cottage, big cottage)",
                                         "type": "string"
                                     },
                                     "preview_photo": {
-                                        "description": "Preview photo of the object",
+                                        "description": "Preview photo of the object (base64 encoded image)",
+                                        "type": "string",
+                                        "format": "binary"
+                                    },
+                                    "photos": {
+                                        "description": "Array of photos for the booking object",
+                                        "type": "array",
+                                        "items": {
+                                            "description": "Photos for the booking object (base64 encoded image)",
+                                            "type": "string",
+                                            "format": "binary"
+                                        }
+                                    },
+                                    "max_persons": {
+                                        "description": "Maximum number of persons allowed for the booking object",
+                                        "type": "integer"
+                                    },
+                                    "location": {
+                                        "description": "The name of the location within the zone in which the object is located",
                                         "type": "string"
+                                    },
+                                    "position": {
+                                        "description": "The position of the object in the location",
+                                        "type": "integer"
+                                    },
+                                    "lang": {
+                                        "description": "Specify language",
+                                        "type": "string",
+                                        "format": "lang"
                                     }
                                 },
                                 "type": "object"
@@ -440,12 +1165,36 @@
                 },
                 "responses": {
                     "201": {
-                        "description": "Object created successfully"
+                        "description": "Object created successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Object created successfully"
+                                        },
+                                        "object": {
+                                            "$ref": "#/components/schemas/BookingObjectForAdmin"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     },
                     "400": {
                         "description": "Bad request"
+                    },
+                    "403": {
+                        "description": "Permission denied"
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             }
         },
         "/api/objects/{id}": {
@@ -487,15 +1236,98 @@
                                         },
                                         "price": {
                                             "description": "Price of the booking object",
-                                            "type": "integer"
+                                            "type": "number"
+                                        },
+                                        "weekend_price": {
+                                            "description": "Weekend price of the booking object",
+                                            "type": "number"
+                                        },
+                                        "childrens_price": {
+                                            "description": "Price of the booking object for childrens",
+                                            "type": "number"
+                                        },
+                                        "childrens_weekend_price": {
+                                            "description": "Weekend price of the booking object for children",
+                                            "type": "number"
+                                        },
+                                        "discount": {
+                                            "description": "Discount of the booking object",
+                                            "type": "number"
+                                        },
+                                        "discount_start_date": {
+                                            "description": "Discount start date of the booking object",
+                                            "type": "string",
+                                            "format": "date"
+                                        },
+                                        "discount_end_date": {
+                                            "description": "Discount end date of the booking object",
+                                            "type": "string",
+                                            "format": "date"
                                         },
                                         "photos": {
                                             "description": "Photos for the booking object",
                                             "type": "string"
                                         },
+                                        "zone": {
+                                            "description": "Zone of the booking object",
+                                            "type": "string",
+                                            "enum": [
+                                                "bungalow",
+                                                "pool",
+                                                "cottages"
+                                            ]
+                                        },
+                                        "status": {
+                                            "description": "Status of the booking object",
+                                            "type": "string",
+                                            "enum": [
+                                                "free",
+                                                "reserved",
+                                                "booked"
+                                            ]
+                                        },
+                                        "type": {
+                                            "description": "Type of the booking object",
+                                            "type": "string",
+                                            "enum": [
+                                                "sunbed",
+                                                "bed",
+                                                "bungalow",
+                                                "second bungalow",
+                                                "little cottage",
+                                                "big cottage"
+                                            ]
+                                        },
                                         "preview_photo": {
                                             "description": "Preview photo of the booking object",
                                             "type": "string"
+                                        },
+                                        "max_persons": {
+                                            "description": "Maximum person of the booking object",
+                                            "type": "integer"
+                                        },
+                                        "location": {
+                                            "description": "The name of the location within the zone in which the object is located",
+                                            "type": "string"
+                                        },
+                                        "position": {
+                                            "description": "The position of the object in the location",
+                                            "type": "integer"
+                                        },
+                                        "created_at": {
+                                            "description": "Creation date of the booking object",
+                                            "type": "string",
+                                            "format": "date-time"
+                                        },
+                                        "updated_at": {
+                                            "description": "Update date of the booking object",
+                                            "type": "string",
+                                            "format": "date-time"
+                                        },
+                                        "lang": {
+                                            "description": "Specify language",
+                                            "type": "string",
+                                            "format": "lang"
                                         }
                                     },
                                     "type": "object"
@@ -507,13 +1339,171 @@
                         "description": "Object not found"
                     }
                 }
+            }
+        },
+        "/api/admin/objects/{id}": {
+            "post": {
+                "tags": [
+                    "Objects"
+                ],
+                "summary": "Update a booking object by ID",
+                "operationId": "cabc416eccaaee79544ee751bd8d1c81",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the booking object",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "description": "Object details",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "name_ua": {
+                                        "description": "Name of the booking object in Ukrainian",
+                                        "type": "string"
+                                    },
+                                    "name_en": {
+                                        "description": "Name of the booking object in English",
+                                        "type": "string"
+                                    },
+                                    "description_ua": {
+                                        "description": "Description of the booking object in Ukrainian",
+                                        "type": "string"
+                                    },
+                                    "description_en": {
+                                        "description": "Description of the booking object in English",
+                                        "type": "string"
+                                    },
+                                    "price": {
+                                        "description": "Price of the booking object",
+                                        "type": "number",
+                                        "format": "float"
+                                    },
+                                    "weekend_price": {
+                                        "description": "Weekend price of the booking object",
+                                        "type": "number",
+                                        "format": "float"
+                                    },
+                                    "childrens_price": {
+                                        "description": "Price of the booking object for children",
+                                        "type": "number",
+                                        "format": "float"
+                                    },
+                                    "childrens_weekend_price": {
+                                        "description": "Weekend price of the booking object for children",
+                                        "type": "number",
+                                        "format": "float"
+                                    },
+                                    "discount": {
+                                        "description": "Discount percentage for the booking object",
+                                        "type": "number",
+                                        "format": "float"
+                                    },
+                                    "discount_start_date": {
+                                        "description": "Start date of the discount period",
+                                        "type": "string",
+                                        "format": "date"
+                                    },
+                                    "discount_end_date": {
+                                        "description": "End date of the discount period",
+                                        "type": "string",
+                                        "format": "date"
+                                    },
+                                    "zone": {
+                                        "description": "Zone of the booking object (bungalow, pool, cottages)",
+                                        "type": "string"
+                                    },
+                                    "status": {
+                                        "description": "Status of the booking object",
+                                        "type": "string",
+                                        "enum": [
+                                            "free",
+                                            "reserved",
+                                            "booked"
+                                        ]
+                                    },
+                                    "type": {
+                                        "description": "Type of the booking object (sunbed, bed, bungalow, second bungalow, little cottage, big cottage)",
+                                        "type": "string"
+                                    },
+                                    "preview_photo": {
+                                        "description": "Preview photo of the object (base64 encoded image)",
+                                        "type": "string",
+                                        "format": "binary"
+                                    },
+                                    "max_persons": {
+                                        "description": "Maximum number of persons allowed for the booking object",
+                                        "type": "integer"
+                                    },
+                                    "location": {
+                                        "description": "The name of the location within the zone in which the object is located",
+                                        "type": "string"
+                                    },
+                                    "position": {
+                                        "description": "The position of the object in the location",
+                                        "type": "integer"
+                                    },
+                                    "lang": {
+                                        "description": "Specify language",
+                                        "type": "string",
+                                        "format": "lang"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Object updated successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "description": "Success message",
+                                            "type": "string"
+                                        },
+                                        "object": {
+                                            "$ref": "#/components/schemas/BookingObjectForAdmin"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request"
+                    },
+                    "403": {
+                        "description": "Permission denied"
+                    },
+                    "404": {
+                        "description": "Object not found"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             },
             "delete": {
                 "tags": [
                     "Objects"
                 ],
                 "summary": "Delete a booking object by ID",
-                "operationId": "1ebad6cbad824a3c8bd016fbfabb9960",
+                "operationId": "0e4d0a3331ca388681920e249b5bfe24",
                 "parameters": [
                     {
                         "name": "id",
@@ -548,16 +1538,430 @@
                 }
             }
         },
-        "/api/admin/objects/{id}": {
-            "put": {
+        "/api/objects/getAvailableObjectsByDate": {
+            "post": {
                 "tags": [
                     "Objects"
                 ],
-                "summary": "Update a booking object by ID",
-                "operationId": "3ba0ca7cd0b581fbf6d7ae57c1aa9434",
+                "summary": "Get all available objects",
+                "description": "Get all available objects",
+                "operationId": "a93769cc16ae69344053621e46d7e38d",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "date": {
+                                        "description": "Date of the booking",
+                                        "type": "string",
+                                        "format": "date"
+                                    },
+                                    "lang": {
+                                        "description": "Specify language",
+                                        "type": "string",
+                                        "format": "lang"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "properties": {
+                                            "id": {
+                                                "description": "Unique identifier for the booking object",
+                                                "type": "integer"
+                                            },
+                                            "name": {
+                                                "description": "Name of the booking object",
+                                                "type": "string"
+                                            },
+                                            "description": {
+                                                "description": "Description of the booking object",
+                                                "type": "string"
+                                            },
+                                            "price": {
+                                                "description": "Price of the booking object",
+                                                "type": "number"
+                                            },
+                                            "weekend_price": {
+                                                "description": "Weekend price of the booking object",
+                                                "type": "number"
+                                            },
+                                            "childrens_price": {
+                                                "description": "Price of the booking object for children",
+                                                "type": "number"
+                                            },
+                                            "childrens_weekend_price": {
+                                                "description": "Weekend price of the booking object for children",
+                                                "type": "number"
+                                            },
+                                            "discount": {
+                                                "description": "Discount of the booking object",
+                                                "type": "number"
+                                            },
+                                            "discount_start_date": {
+                                                "description": "Discount start date of the booking object",
+                                                "type": "string",
+                                                "format": "date"
+                                            },
+                                            "discount_end_date": {
+                                                "description": "Discount end date of the booking object",
+                                                "type": "string",
+                                                "format": "date"
+                                            },
+                                            "photos": {
+                                                "description": "Photos for the booking object",
+                                                "type": "string"
+                                            },
+                                            "zone": {
+                                                "description": "Zone of the booking object",
+                                                "type": "string",
+                                                "enum": [
+                                                    "bungalow",
+                                                    "pool",
+                                                    "cottages"
+                                                ]
+                                            },
+                                            "status": {
+                                                "description": "Status of the booking object",
+                                                "type": "string",
+                                                "enum": [
+                                                    "free",
+                                                    "reserved",
+                                                    "booked"
+                                                ]
+                                            },
+                                            "type": {
+                                                "description": "Type of the booking object",
+                                                "type": "string",
+                                                "enum": [
+                                                    "sunbed",
+                                                    "bed",
+                                                    "bungalow",
+                                                    "second bungalow",
+                                                    "little cottage",
+                                                    "big cottage"
+                                                ]
+                                            },
+                                            "preview_photo": {
+                                                "description": "Preview photo of the booking object",
+                                                "type": "string",
+                                                "format": "binary"
+                                            },
+                                            "max_persons": {
+                                                "description": "Max persons of the booking object",
+                                                "type": "integer"
+                                            },
+                                            "location": {
+                                                "description": "The name of the location within the zone in which the object is located",
+                                                "type": "string"
+                                            },
+                                            "position": {
+                                                "description": "The position of the object in the location",
+                                                "type": "integer"
+                                            },
+                                            "created_at": {
+                                                "description": "Creation date of the booking object",
+                                                "type": "string",
+                                                "format": "date-time"
+                                            },
+                                            "updated_at": {
+                                                "description": "Update date of the booking object",
+                                                "type": "string",
+                                                "format": "date-time"
+                                            }
+                                        },
+                                        "type": "object"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/admin/objects/{id}/addObjectPhotos": {
+            "post": {
+                "tags": [
+                    "Objects"
+                ],
+                "summary": "Add photos to a booking object",
+                "operationId": "e1ddae7d253501aea64859a6132278d6",
                 "parameters": [
                     {
                         "name": "id",
+                        "in": "path",
+                        "description": "ID of the booking object",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "description": "Photos to be added",
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "properties": {
+                                    "photos": {
+                                        "description": "Array of photos to be added",
+                                        "type": "array",
+                                        "items": {
+                                            "description": "Photo file (max size: 2MB)",
+                                            "type": "string",
+                                            "format": "binary"
+                                        }
+                                    },
+                                    "lang": {
+                                        "description": "Specify language",
+                                        "type": "string",
+                                        "format": "lang"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Photos added successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "object": {
+                                            "$ref": "#/components/schemas/BookingObject"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request"
+                    },
+                    "403": {
+                        "description": "Permission denied"
+                    },
+                    "404": {
+                        "description": "Object not found"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/admin/objects/{id}/deletePhotosByName": {
+            "post": {
+                "tags": [
+                    "Objects"
+                ],
+                "summary": "Delete photos from a booking object by name",
+                "operationId": "e202633c6c8fb53c8a739b80ed0ae944",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the booking object",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "description": "Photos to be deleted",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "photos": {
+                                        "description": "Array of photo names to be deleted",
+                                        "type": "array",
+                                        "items": {
+                                            "description": "Name of the photo to be deleted",
+                                            "type": "string"
+                                        }
+                                    },
+                                    "lang": {
+                                        "description": "Specify language",
+                                        "type": "string",
+                                        "format": "lang"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Photos deleted successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "object": {
+                                            "$ref": "#/components/schemas/BookingObject"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request"
+                    },
+                    "403": {
+                        "description": "Permission denied"
+                    },
+                    "404": {
+                        "description": "Object not found"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/admin/objectDetails": {
+            "get": {
+                "tags": [
+                    "ObjectDetails"
+                ],
+                "summary": "Get all object details",
+                "description": "Returns all object details",
+                "operationId": "73fc0c8c5435f9c072a52a692b5769ec",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/ObjectDetails"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Permission denied",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "description": "Message",
+                                            "type": "string",
+                                            "example": "Permission denied"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Resource Not Found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "description": "Message",
+                                            "type": "string",
+                                            "example": "No objects details found"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "ObjectDetails"
+                ],
+                "summary": "Create object details",
+                "description": "Create object details",
+                "operationId": "0fec3f1cb7250eb628d2e5e869a4b688",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/ObjectDetails"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ObjectDetails"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Permission denied",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "description": "Message",
+                                            "type": "string",
+                                            "example": "Permission denied"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/objects/{objectId}/details/showAllByObjectId": {
+            "post": {
+                "tags": [
+                    "ObjectDetails"
+                ],
+                "summary": "Get all object details by object ID",
+                "description": "Returns all object details by object ID",
+                "operationId": "67041eb2f122ded0d941be3b9b3a74fc",
+                "parameters": [
+                    {
+                        "name": "objectId",
                         "in": "path",
                         "description": "ID of the booking object",
                         "required": true,
@@ -572,35 +1976,10 @@
                         "application/json": {
                             "schema": {
                                 "properties": {
-                                    "name": {
-                                        "description": "Name of the booking object",
-                                        "type": "string"
-                                    },
-                                    "description": {
-                                        "description": "Description of the booking object",
-                                        "type": "string"
-                                    },
-                                    "price": {
-                                        "description": "Price of the booking object",
-                                        "type": "integer"
-                                    },
-                                    "photos": {
-                                        "description": "Photos for the booking object",
-                                        "type": "string"
-                                    },
-                                    "status": {
-                                        "description": "Status of the booking object",
+                                    "lang": {
+                                        "description": "Language",
                                         "type": "string",
-                                        "enum": [
-                                            "free",
-                                            "reserved",
-                                            "booked"
-                                        ]
-                                    },
-                                    "preview_photo": {
-                                        "description": "Preview photo of the booking object",
-                                        "type": "string",
-                                        "format": "binary"
+                                        "example": "ua"
                                     }
                                 },
                                 "type": "object"
@@ -610,21 +1989,1178 @@
                 },
                 "responses": {
                     "200": {
-                        "description": "Object updated successfully",
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/ObjectDetailsForUsers"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Resource Not Found",
                         "content": {
                             "application/json": {
                                 "schema": {
                                     "properties": {
                                         "message": {
-                                            "description": "Success message",
+                                            "description": "Message",
+                                            "type": "string",
+                                            "example": "No objects details found"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/admin/objectDetails/{id}": {
+            "get": {
+                "tags": [
+                    "ObjectDetails"
+                ],
+                "summary": "Get object details by ID",
+                "description": "Returns object details by ID",
+                "operationId": "8106875d2e26a1ec31d25696691304d9",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the object details",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/ObjectDetails"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Permission denied",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "description": "Message",
+                                            "type": "string",
+                                            "example": "Permission denied"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Resource Not Found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "description": "Message",
+                                            "type": "string",
+                                            "example": "Object detail not found"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "ObjectDetails"
+                ],
+                "summary": "Update object details",
+                "description": "Update object details",
+                "operationId": "bdb65a16b6c8469b0e028c20b4e9378f",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the object details",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/ObjectDetails"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ObjectDetails"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Permission denied",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "description": "Message",
+                                            "type": "string",
+                                            "example": "Permission denied"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "ObjectDetails"
+                ],
+                "summary": "Delete object details",
+                "description": "Delete object details",
+                "operationId": "21aadfb023121a3cb4a00f8212bf3651",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the object details",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "description": "Message",
+                                            "type": "string",
+                                            "example": "Object detail deleted successfully"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Permission denied",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "description": "Message",
+                                            "type": "string",
+                                            "example": "Permission denied"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Resource Not Found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "description": "Message",
+                                            "type": "string",
+                                            "example": "Object detail not found"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/onec/objects": {
+            "get": {
+                "tags": [
+                    "1C"
+                ],
+                "summary": "Get all booking objects",
+                "operationId": "8b0ea73b0b7fdb605fa9b58ca11efe0e",
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "properties": {
+                                            "id": {
+                                                "description": "Unique identifier for the booking object",
+                                                "type": "integer"
+                                            },
+                                            "name": {
+                                                "description": "Name of the booking object",
+                                                "type": "string"
+                                            },
+                                            "price": {
+                                                "description": "Price of the booking object",
+                                                "type": "number",
+                                                "format": "float"
+                                            },
+                                            "weekend_price": {
+                                                "description": "Weekend price of the booking object",
+                                                "type": "number",
+                                                "format": "float"
+                                            },
+                                            "childrens_price": {
+                                                "description": "Price of the booking object for children",
+                                                "type": "number",
+                                                "format": "float"
+                                            },
+                                            "childrens_weekend_price": {
+                                                "description": "Weekend price of the booking object for children",
+                                                "type": "number",
+                                                "format": "float"
+                                            },
+                                            "discount": {
+                                                "description": "Discount of the booking object",
+                                                "type": "number",
+                                                "format": "float"
+                                            },
+                                            "discount_start_date": {
+                                                "description": "Discount start date of the booking object",
+                                                "type": "string",
+                                                "format": "date-time"
+                                            },
+                                            "discount_end_date": {
+                                                "description": "Discount end date of the booking object",
+                                                "type": "string",
+                                                "format": "date-time"
+                                            },
+                                            "status": {
+                                                "description": "Status of the booking object",
+                                                "type": "string"
+                                            },
+                                            "type": {
+                                                "description": "Type of the booking object",
+                                                "type": "string"
+                                            },
+                                            "max_persons": {
+                                                "description": "Maximum number of persons for the booking object",
+                                                "type": "integer"
+                                            },
+                                            "lang": {
+                                                "description": "Specify language",
+                                                "type": "string",
+                                                "format": "lang"
+                                            }
+                                        },
+                                        "type": "object"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "No booking objects found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "description": "Error message",
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/onec/objects/updateObject/{id}": {
+            "post": {
+                "tags": [
+                    "1C"
+                ],
+                "summary": "Update booking object",
+                "operationId": "bc0b4b28cdf68b9a8db464016e477c55",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the booking object to update",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "price": {
+                                        "description": "Price of the booking object",
+                                        "type": "number",
+                                        "format": "float"
+                                    },
+                                    "weekend_price": {
+                                        "description": "Weekend price of the booking object",
+                                        "type": "number",
+                                        "format": "float"
+                                    },
+                                    "childrens_price": {
+                                        "description": "Price of the booking object for children",
+                                        "type": "number",
+                                        "format": "float"
+                                    },
+                                    "childrens_weekend_price": {
+                                        "description": "Weekend price of the booking object for children",
+                                        "type": "number",
+                                        "format": "float"
+                                    },
+                                    "discount": {
+                                        "description": "Discount of the booking object",
+                                        "type": "number",
+                                        "format": "float"
+                                    },
+                                    "discount_start_date": {
+                                        "description": "Discount start date of the booking object",
+                                        "type": "string",
+                                        "format": "date-time",
+                                        "example": "2024-04-08"
+                                    },
+                                    "discount_end_date": {
+                                        "description": "Discount end date of the booking object",
+                                        "type": "string",
+                                        "format": "date-time",
+                                        "example": "2024-04-08"
+                                    },
+                                    "lang": {
+                                        "description": "Specify language",
+                                        "type": "string",
+                                        "format": "lang"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "id": {
+                                            "description": "Unique identifier for the booking object",
+                                            "type": "integer"
+                                        },
+                                        "name": {
+                                            "description": "Name of the booking object",
                                             "type": "string"
                                         },
-                                        "object": {
-                                            "description": "Updated booking object details",
+                                        "price": {
+                                            "description": "Price of the booking object",
+                                            "type": "number",
+                                            "format": "float"
+                                        },
+                                        "weekend_price": {
+                                            "description": "Weekend price of the booking object",
+                                            "type": "number",
+                                            "format": "float"
+                                        },
+                                        "childrens_price": {
+                                            "description": "Price of the booking object for children",
+                                            "type": "number",
+                                            "format": "float"
+                                        },
+                                        "childrens_weekend_price": {
+                                            "description": "Weekend price of the booking object for children",
+                                            "type": "number",
+                                            "format": "float"
+                                        },
+                                        "discount": {
+                                            "description": "Discount of the booking object",
+                                            "type": "number",
+                                            "format": "float"
+                                        },
+                                        "discount_start_date": {
+                                            "description": "Discount start date of the booking object",
+                                            "type": "string",
+                                            "format": "date-time"
+                                        },
+                                        "discount_end_date": {
+                                            "description": "Discount end date of the booking object",
+                                            "type": "string",
+                                            "format": "date-time"
+                                        },
+                                        "status": {
+                                            "description": "Status of the booking object",
+                                            "type": "string"
+                                        },
+                                        "type": {
+                                            "description": "Type of the booking object",
+                                            "type": "string"
+                                        },
+                                        "max_persons": {
+                                            "description": "Maximum number of persons for the booking object",
+                                            "type": "integer"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "No booking object found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "description": "Error message",
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/onec/objects/updateAllByType": {
+            "post": {
+                "tags": [
+                    "1C"
+                ],
+                "summary": "Update all booking objects by type",
+                "operationId": "e348c8fc1bebdf521a78d1b88bd13d7e",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "type"
+                                ],
+                                "properties": {
+                                    "type": {
+                                        "description": "Type of the booking object",
+                                        "type": "string",
+                                        "example": "sunbed"
+                                    },
+                                    "price": {
+                                        "description": "Price of the booking object",
+                                        "type": "number",
+                                        "format": "float",
+                                        "example": 100
+                                    },
+                                    "weekend_price": {
+                                        "description": "Weekend price of the booking object",
+                                        "type": "number",
+                                        "format": "float",
+                                        "example": 120
+                                    },
+                                    "childrens_price": {
+                                        "description": "Price of the booking object for children",
+                                        "type": "number",
+                                        "format": "float",
+                                        "example": 100
+                                    },
+                                    "childrens_weekend_price": {
+                                        "description": "Weekend price of the booking object for children",
+                                        "type": "number",
+                                        "format": "float",
+                                        "example": 120
+                                    },
+                                    "discount": {
+                                        "description": "Discount of the booking object",
+                                        "type": "number",
+                                        "format": "float",
+                                        "example": 10
+                                    },
+                                    "discount_start_date": {
+                                        "description": "Discount start date of the booking object",
+                                        "type": "string",
+                                        "format": "date-time",
+                                        "example": "2024-04-08"
+                                    },
+                                    "discount_end_date": {
+                                        "description": "Discount end date of the booking object",
+                                        "type": "string",
+                                        "format": "date-time",
+                                        "example": "2024-05-08"
+                                    },
+                                    "lang": {
+                                        "description": "Specify language",
+                                        "type": "string",
+                                        "format": "lang"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "properties": {
+                                            "id": {
+                                                "description": "Booking object ID",
+                                                "type": "integer"
+                                            },
+                                            "name_ua": {
+                                                "description": "Booking object name in Ukrainian",
+                                                "type": "string"
+                                            },
+                                            "name_en": {
+                                                "description": "Booking object name in English",
+                                                "type": "string"
+                                            },
+                                            "price": {
+                                                "description": "Booking object price",
+                                                "type": "number",
+                                                "format": "float"
+                                            },
+                                            "weekend_price": {
+                                                "description": "Booking object weekend price",
+                                                "type": "number",
+                                                "format": "float"
+                                            },
+                                            "childrens_price": {
+                                                "description": "Booking object price for children",
+                                                "type": "number",
+                                                "format": "float"
+                                            },
+                                            "childrens_weekend_price": {
+                                                "description": "Booking object weekend price for children",
+                                                "type": "number",
+                                                "format": "float"
+                                            },
+                                            "discount": {
+                                                "description": "Booking object discount",
+                                                "type": "number",
+                                                "format": "float"
+                                            },
+                                            "discount_start_date": {
+                                                "description": "Booking object discount start date",
+                                                "type": "string",
+                                                "format": "date-time"
+                                            },
+                                            "discount_end_date": {
+                                                "description": "Booking object discount end date",
+                                                "type": "string",
+                                                "format": "date-time"
+                                            },
+                                            "zone": {
+                                                "description": "Booking object zone",
+                                                "type": "string"
+                                            },
+                                            "status": {
+                                                "description": "Booking object status",
+                                                "type": "string"
+                                            },
+                                            "type": {
+                                                "description": "Booking object type",
+                                                "type": "string"
+                                            },
+                                            "max_persons": {
+                                                "description": "Maximum persons allowed in the booking object",
+                                                "type": "integer"
+                                            }
+                                        },
+                                        "type": "object"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/payment/preparePaymentData": {
+            "post": {
+                "tags": [
+                    "Payment"
+                ],
+                "summary": "Prepare payment data",
+                "description": "Prepare payment data",
+                "operationId": "preparePaymentData",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "amount": {
+                                        "description": "Amount of payment",
+                                        "type": "number"
+                                    },
+                                    "products": {
+                                        "type": "array",
+                                        "items": {
+                                            "properties": {
+                                                "name": {
+                                                    "description": "Name of product",
+                                                    "type": "string"
+                                                },
+                                                "count": {
+                                                    "description": "Count of product",
+                                                    "type": "number"
+                                                },
+                                                "price": {
+                                                    "description": "Price of product",
+                                                    "type": "number"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "lang": {
+                                        "description": "Specify language",
+                                        "type": "string",
+                                        "format": "lang"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "merchantSignature": {
+                                            "description": "Merchant signature",
+                                            "type": "string"
+                                        },
+                                        "merchantAccount": {
+                                            "description": "Merchant account",
+                                            "type": "string"
+                                        },
+                                        "merchantDomainName": {
+                                            "description": "Merchant domain name",
+                                            "type": "string"
+                                        },
+                                        "orderReference": {
+                                            "description": "Order reference",
+                                            "type": "string"
+                                        },
+                                        "orderDate": {
+                                            "description": "Order date",
+                                            "type": "number"
+                                        },
+                                        "currency": {
+                                            "description": "Currency",
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/payment/createOrder": {
+            "post": {
+                "tags": [
+                    "Payment"
+                ],
+                "summary": "Create an order",
+                "description": "Create an order with the given details",
+                "operationId": "createOrder",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "order_id": {
+                                        "description": "Order ID",
+                                        "type": "integer"
+                                    },
+                                    "amount": {
+                                        "description": "Amount",
+                                        "type": "number"
+                                    },
+                                    "fee": {
+                                        "description": "Fee",
+                                        "type": "number"
+                                    },
+                                    "issuer_bank_name": {
+                                        "description": "Issuer Bank Name",
+                                        "type": "string"
+                                    },
+                                    "card": {
+                                        "description": "Card",
+                                        "type": "string"
+                                    },
+                                    "transaction_status": {
+                                        "description": "Transaction Status",
+                                        "type": "boolean"
+                                    },
+                                    "objects": {
+                                        "type": "array",
+                                        "items": {
+                                            "properties": {
+                                                "object_id": {
+                                                    "description": "Object ID",
+                                                    "type": "integer"
+                                                },
+                                                "booked_from": {
+                                                    "description": "Booked From",
+                                                    "type": "string",
+                                                    "format": "date"
+                                                },
+                                                "booked_to": {
+                                                    "description": "Booked To",
+                                                    "type": "string",
+                                                    "format": "date"
+                                                },
+                                                "user_id": {
+                                                    "description": "User ID",
+                                                    "type": "integer"
+                                                },
+                                                "payment_status": {
+                                                    "description": "Payment Status",
+                                                    "type": "boolean"
+                                                },
+                                                "description": {
+                                                    "description": "Description",
+                                                    "type": "string"
+                                                },
+                                                "is_child": {
+                                                    "description": "Is Child",
+                                                    "type": "boolean"
+                                                },
+                                                "lang": {
+                                                    "description": "Language",
+                                                    "type": "string"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Order created successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "bookings": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "user_id": {
+                                                        "description": "User ID",
+                                                        "type": "integer"
+                                                    },
+                                                    "object_id": {
+                                                        "description": "Object ID",
+                                                        "type": "integer"
+                                                    },
+                                                    "reserved_from": {
+                                                        "description": "Reserved From",
+                                                        "type": "string",
+                                                        "format": "date-time"
+                                                    },
+                                                    "reserved_to": {
+                                                        "description": "Reserved To",
+                                                        "type": "string",
+                                                        "format": "date-time"
+                                                    },
+                                                    "booked_from": {
+                                                        "description": "Booked From",
+                                                        "type": "string",
+                                                        "format": "date-time"
+                                                    },
+                                                    "booked_to": {
+                                                        "description": "Booked To",
+                                                        "type": "string",
+                                                        "format": "date-time"
+                                                    },
+                                                    "payment_status": {
+                                                        "description": "Payment Status",
+                                                        "type": "boolean"
+                                                    },
+                                                    "description": {
+                                                        "description": "Description",
+                                                        "type": "string"
+                                                    },
+                                                    "order_id": {
+                                                        "description": "Order ID",
+                                                        "type": "string"
+                                                    },
+                                                    "price": {
+                                                        "description": "Price",
+                                                        "type": "number"
+                                                    },
+                                                    "updated_at": {
+                                                        "description": "Updated At",
+                                                        "type": "string",
+                                                        "format": "date-time"
+                                                    },
+                                                    "created_at": {
+                                                        "description": "Created At",
+                                                        "type": "string",
+                                                        "format": "date-time"
+                                                    },
+                                                    "id": {
+                                                        "description": "Booking ID",
+                                                        "type": "integer"
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        },
+                                        "transaction": {
+                                            "properties": {
+                                                "order_id": {
+                                                    "description": "Order ID",
+                                                    "type": "string"
+                                                },
+                                                "amount": {
+                                                    "description": "Amount",
+                                                    "type": "number"
+                                                },
+                                                "fee": {
+                                                    "description": "Fee",
+                                                    "type": "number"
+                                                },
+                                                "issuer_bank_name": {
+                                                    "description": "Issuer Bank Name",
+                                                    "type": "string"
+                                                },
+                                                "card": {
+                                                    "description": "Card",
+                                                    "type": "string"
+                                                },
+                                                "transaction_status": {
+                                                    "description": "Transaction Status",
+                                                    "type": "boolean"
+                                                },
+                                                "updated_at": {
+                                                    "description": "Updated At",
+                                                    "type": "string",
+                                                    "format": "date-time"
+                                                },
+                                                "created_at": {
+                                                    "description": "Created At",
+                                                    "type": "string",
+                                                    "format": "date-time"
+                                                },
+                                                "id": {
+                                                    "description": "Transaction ID",
+                                                    "type": "integer"
+                                                }
+                                            },
                                             "type": "object"
                                         }
                                     },
                                     "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/reviews": {
+            "get": {
+                "tags": [
+                    "Reviews"
+                ],
+                "summary": "Get all reviews",
+                "operationId": "438856901f1931ca1e60aed5774eee9d",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "properties": {
+                                            "id": {
+                                                "description": "Unique identifier for the review",
+                                                "type": "integer"
+                                            },
+                                            "user_id": {
+                                                "description": "User id",
+                                                "type": "integer"
+                                            },
+                                            "object_id": {
+                                                "description": "Object id",
+                                                "type": "integer"
+                                            },
+                                            "object_type": {
+                                                "description": "Object type",
+                                                "type": "string"
+                                            },
+                                            "text": {
+                                                "description": "Text of the review",
+                                                "type": "string"
+                                            },
+                                            "rating": {
+                                                "description": "Rating of the review from 1 to 5",
+                                                "type": "integer"
+                                            },
+                                            "created_at": {
+                                                "description": "Created at",
+                                                "type": "string",
+                                                "format": "date-time"
+                                            },
+                                            "updated_at": {
+                                                "description": "Updated at",
+                                                "type": "string",
+                                                "format": "date-time"
+                                            }
+                                        },
+                                        "type": "object"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "No reviews found"
+                    }
+                }
+            }
+        },
+        "/api/objects/{id}/reviews": {
+            "post": {
+                "tags": [
+                    "Reviews"
+                ],
+                "summary": "Create a review",
+                "operationId": "780fe78b29c993d8efbebb46f562a7ec",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "text": {
+                                        "description": "Text of the review",
+                                        "type": "string"
+                                    },
+                                    "lang": {
+                                        "description": "Specify language",
+                                        "type": "string",
+                                        "format": "lang"
+                                    },
+                                    "rating": {
+                                        "description": "Rating of the review from 1 to 5",
+                                        "type": "integer"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "user_id": {
+                                            "description": "User id",
+                                            "type": "integer"
+                                        },
+                                        "object_id": {
+                                            "description": "Object id",
+                                            "type": "integer"
+                                        },
+                                        "object_type": {
+                                            "description": "Object type",
+                                            "type": "string"
+                                        },
+                                        "text": {
+                                            "description": "Text of the review",
+                                            "type": "string"
+                                        },
+                                        "rating": {
+                                            "description": "Rating of the review from 1 to 5",
+                                            "type": "integer"
+                                        },
+                                        "created_at": {
+                                            "description": "Created at",
+                                            "type": "string",
+                                            "format": "date-time"
+                                        },
+                                        "updated_at": {
+                                            "description": "Updated at",
+                                            "type": "string",
+                                            "format": "date-time"
+                                        },
+                                        "id": {
+                                            "description": "Unique identifier for the review",
+                                            "type": "integer"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Object not found"
+                    }
+                }
+            }
+        },
+        "/api/objects/{id}/reviews/showAllByObjectId": {
+            "get": {
+                "tags": [
+                    "Reviews"
+                ],
+                "summary": "Get all reviews for a specific object",
+                "description": "Get all reviews by object id or by type of object(bed or sunbed)",
+                "operationId": "9af037840d0054d34e21e1a95f8abdf3",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the object",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "properties": {
+                                            "id": {
+                                                "description": "Unique identifier for the review",
+                                                "type": "integer"
+                                            },
+                                            "user_id": {
+                                                "description": "User id",
+                                                "type": "integer"
+                                            },
+                                            "object_id": {
+                                                "description": "Object id",
+                                                "type": "integer"
+                                            },
+                                            "object_type": {
+                                                "description": "Object type",
+                                                "type": "string"
+                                            },
+                                            "text": {
+                                                "description": "Text of the review",
+                                                "type": "string"
+                                            },
+                                            "rating": {
+                                                "description": "Rating of the review from 1 to 5",
+                                                "type": "integer"
+                                            },
+                                            "created_at": {
+                                                "description": "Created at",
+                                                "type": "string",
+                                                "format": "date-time"
+                                            },
+                                            "updated_at": {
+                                                "description": "Updated at",
+                                                "type": "string",
+                                                "format": "date-time"
+                                            },
+                                            "user_name": {
+                                                "description": "Name of the user who wrote the review",
+                                                "type": "string"
+                                            },
+                                            "user_last_name": {
+                                                "description": "Last name of the user who wrote the review",
+                                                "type": "string"
+                                            },
+                                            "user_photo": {
+                                                "description": "URL to the photo of the user who wrote the review",
+                                                "type": "string"
+                                            }
+                                        },
+                                        "type": "object"
+                                    }
                                 }
                             }
                         }
@@ -649,6 +3185,14 @@
                             "application/json": {
                                 "schema": {
                                     "properties": {
+                                        "id": {
+                                            "description": "User's ID",
+                                            "type": "integer"
+                                        },
+                                        "phone": {
+                                            "description": "User's phone",
+                                            "type": "integer"
+                                        },
                                         "name": {
                                             "description": "User's name",
                                             "type": "string"
@@ -668,6 +3212,10 @@
                                         "photo": {
                                             "description": "User's photo URL",
                                             "type": "string"
+                                        },
+                                        "role_id": {
+                                            "description": "User role ID",
+                                            "type": "integer"
                                         }
                                     },
                                     "type": "object"
@@ -726,6 +3274,11 @@
                                     "new_password": {
                                         "description": "New password",
                                         "type": "string"
+                                    },
+                                    "lang": {
+                                        "description": "Specify language",
+                                        "type": "string",
+                                        "format": "lang"
                                     }
                                 },
                                 "type": "object"
@@ -755,6 +3308,176 @@
                     },
                     "401": {
                         "description": "Unauthorized"
+                    }
+                }
+            }
+        },
+        "/api/user/getUserBookings": {
+            "get": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Get user bookings",
+                "operationId": "91d19b8af127a6f131d334d67a0d911e",
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "bookings": {
+                                            "type": "object",
+                                            "additionalProperties": {
+                                                "type": "array",
+                                                "items": {
+                                                    "properties": {
+                                                        "id": {
+                                                            "description": "Unique identifier for the booking",
+                                                            "type": "integer"
+                                                        },
+                                                        "user_id": {
+                                                            "description": "User id",
+                                                            "type": "integer"
+                                                        },
+                                                        "object_id": {
+                                                            "description": "Object id",
+                                                            "type": "integer"
+                                                        },
+                                                        "booked_from": {
+                                                            "description": "Booked from",
+                                                            "type": "string",
+                                                            "format": "date-time"
+                                                        },
+                                                        "booked_to": {
+                                                            "description": "Booked to",
+                                                            "type": "string",
+                                                            "format": "date-time"
+                                                        },
+                                                        "payment_status": {
+                                                            "description": "Payment status",
+                                                            "type": "boolean"
+                                                        },
+                                                        "canceled": {
+                                                            "description": "Is booking canceled",
+                                                            "type": "boolean"
+                                                        },
+                                                        "description": {
+                                                            "description": "Description",
+                                                            "type": "string"
+                                                        },
+                                                        "price": {
+                                                            "description": "Price",
+                                                            "type": "string"
+                                                        }
+                                                    },
+                                                    "type": "object"
+                                                },
+                                                "property": null
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "No bookings found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "No bookings found"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/user/resetPassword": {
+            "post": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "To set a new password, users must undergo re-verification. This process should be completed within 5 minutes",
+                "operationId": "1c49f19a50b0d6fbd7172111dc9bcd66",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "new_password": {
+                                        "description": "New password",
+                                        "type": "string"
+                                    },
+                                    "lang": {
+                                        "description": "Specify language",
+                                        "type": "string",
+                                        "format": "lang"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Password changed successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "description": "Password changed successfully",
+                                            "type": "string",
+                                            "example": "Password changed successfully"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unauthorized"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "You need to confirm your phone number",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "You need to confirm your phone number"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -796,6 +3519,64 @@
                                         "description": "User's photo",
                                         "type": "string",
                                         "format": "binary"
+                                    },
+                                    "role_id": {
+                                        "description": "User's role ID",
+                                        "type": "integer"
+                                    },
+                                    "lang": {
+                                        "description": "Specify language",
+                                        "type": "string",
+                                        "format": "lang"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Profile updated successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "description": "Success message",
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Validation error"
+                    },
+                    "403": {
+                        "description": "Permission denied"
+                    }
+                }
+            }
+        },
+        "/api/admin/adminBlockUser": {
+            "post": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Block user (Admin)",
+                "operationId": "d1a6b8aa0a794d333cf23dc9be86ce80",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "user_id": {
+                                        "description": "User ID",
+                                        "type": "integer"
                                     }
                                 },
                                 "type": "object"
@@ -1011,70 +3792,138 @@
                 }
             }
         },
-        "/api/user/getUserBookings": {
-            "get": {
+        "/api/admin/getUserByPhone": {
+            "post": {
                 "tags": [
                     "Users"
                 ],
-                "summary": "Get bookings for the authenticated user",
-                "operationId": "91d19b8af127a6f131d334d67a0d911e",
+                "summary": "Get user by phone number (Admin)",
+                "operationId": "a6575c7ccbcb4edf66ad1b7b2c808bcd",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "phone": {
+                                        "description": "Phone number",
+                                        "type": "integer"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
                 "responses": {
                     "200": {
-                        "description": "List of bookings for the user",
+                        "description": "User",
                         "content": {
                             "application/json": {
                                 "schema": {
                                     "properties": {
-                                        "bookings": {
+                                        "user": {
+                                            "properties": {
+                                                "id": {
+                                                    "description": "User ID",
+                                                    "type": "integer",
+                                                    "format": "int64"
+                                                },
+                                                "name": {
+                                                    "description": "User's first name",
+                                                    "type": "string"
+                                                },
+                                                "last_name": {
+                                                    "description": "User's last name",
+                                                    "type": "string"
+                                                },
+                                                "phone": {
+                                                    "description": "User's phone number",
+                                                    "type": "string"
+                                                },
+                                                "phone_verified_at": {
+                                                    "description": "Timestamp when the user's phone number was verified",
+                                                    "type": "string",
+                                                    "format": "date-time"
+                                                },
+                                                "role_id": {
+                                                    "description": "User's role ID",
+                                                    "type": "integer",
+                                                    "format": "int32"
+                                                },
+                                                "email": {
+                                                    "description": "User's email address",
+                                                    "type": "string"
+                                                },
+                                                "date_of_birth": {
+                                                    "description": "User's date of birth",
+                                                    "type": "string"
+                                                },
+                                                "photo": {
+                                                    "description": "User's photo URL",
+                                                    "type": "string"
+                                                },
+                                                "created_at": {
+                                                    "description": "Timestamp when the user was created",
+                                                    "type": "string",
+                                                    "format": "date-time"
+                                                },
+                                                "updated_at": {
+                                                    "description": "Timestamp when the user was last updated",
+                                                    "type": "string",
+                                                    "format": "date-time"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Permission denied"
+                    },
+                    "404": {
+                        "description": "User not found"
+                    }
+                }
+            }
+        },
+        "/api/admin/getRoles": {
+            "get": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Get all roles (Admin)",
+                "operationId": "7c24ae19292919c840432013d565e593",
+                "responses": {
+                    "200": {
+                        "description": "List of roles",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "roles": {
                                             "type": "array",
                                             "items": {
                                                 "properties": {
                                                     "id": {
-                                                        "description": "Booking ID",
+                                                        "description": "Role ID",
                                                         "type": "integer",
                                                         "format": "int64"
                                                     },
-                                                    "user_id": {
-                                                        "description": "User ID",
-                                                        "type": "integer",
-                                                        "format": "int64"
-                                                    },
-                                                    "object_id": {
-                                                        "description": "Object ID",
-                                                        "type": "integer",
-                                                        "format": "int64"
-                                                    },
-                                                    "reserved_from": {
-                                                        "description": "Timestamp when the booking was reserved",
-                                                        "type": "string",
-                                                        "format": "date-time"
-                                                    },
-                                                    "reserved_to": {
-                                                        "description": "Timestamp when the booking was reserved",
-                                                        "type": "string",
-                                                        "format": "date-time"
-                                                    },
-                                                    "booked_from": {
-                                                        "description": "Timestamp when the booking was booked",
-                                                        "type": "string",
-                                                        "format": "date-time"
-                                                    },
-                                                    "booked_to": {
-                                                        "description": "Timestamp when the booking was booked",
-                                                        "type": "string",
-                                                        "format": "date-time"
-                                                    },
-                                                    "peyment_status": {
-                                                        "description": "Booking status",
-                                                        "type": "boolean"
+                                                    "name": {
+                                                        "description": "Role name",
+                                                        "type": "string"
                                                     },
                                                     "created_at": {
-                                                        "description": "Timestamp when the booking was created",
+                                                        "description": "Timestamp when the role was created",
                                                         "type": "string",
                                                         "format": "date-time"
                                                     },
                                                     "updated_at": {
-                                                        "description": "Timestamp when the booking was last updated",
+                                                        "description": "Timestamp when the role was last updated",
                                                         "type": "string",
                                                         "format": "date-time"
                                                     }
@@ -1088,15 +3937,370 @@
                             }
                         }
                     },
-                    "404": {
-                        "description": "No bookings found"
+                    "403": {
+                        "description": "Permission denied"
+                    }
+                }
+            }
+        },
+        "/api/admin/getUserBookings": {
+            "post": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Get users bookings (Admin)",
+                "operationId": "6a9cda45dc713372462995acfd33de9f",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "phone": {
+                                        "description": "Phone number",
+                                        "type": "integer"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
                     }
                 },
-                "security": [
-                    {
-                        "bearerAuth": []
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "bookings": {
+                                            "type": "object",
+                                            "additionalProperties": {
+                                                "type": "array",
+                                                "items": {
+                                                    "properties": {
+                                                        "id": {
+                                                            "description": "Unique identifier for the booking",
+                                                            "type": "integer"
+                                                        },
+                                                        "user_id": {
+                                                            "description": "User id",
+                                                            "type": "integer"
+                                                        },
+                                                        "object_id": {
+                                                            "description": "Object id",
+                                                            "type": "integer"
+                                                        },
+                                                        "booked_from": {
+                                                            "description": "Booked from",
+                                                            "type": "string",
+                                                            "format": "date-time"
+                                                        },
+                                                        "booked_to": {
+                                                            "description": "Booked to",
+                                                            "type": "string",
+                                                            "format": "date-time"
+                                                        },
+                                                        "payment_status": {
+                                                            "description": "Payment status",
+                                                            "type": "boolean"
+                                                        },
+                                                        "canceled": {
+                                                            "description": "Is booking canceled",
+                                                            "type": "boolean"
+                                                        },
+                                                        "description": {
+                                                            "description": "Description",
+                                                            "type": "string"
+                                                        },
+                                                        "price": {
+                                                            "description": "Price",
+                                                            "type": "string"
+                                                        },
+                                                        "created_at": {
+                                                            "description": "Created order at",
+                                                            "type": "string",
+                                                            "format": "date"
+                                                        }
+                                                    },
+                                                    "type": "object"
+                                                },
+                                                "property": null
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Permission denied"
+                    },
+                    "404": {
+                        "description": "User not found"
                     }
-                ]
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "BookingObject": {
+                "required": [
+                    "name",
+                    "price"
+                ],
+                "properties": {
+                    "name": {
+                        "description": "Name of the booking object",
+                        "type": "string"
+                    },
+                    "description": {
+                        "description": "Description of the booking object",
+                        "type": "string"
+                    },
+                    "price": {
+                        "description": "Price of the booking object",
+                        "type": "number",
+                        "format": "float"
+                    },
+                    "weekend_price": {
+                        "description": "Price of the booking object on weekends",
+                        "type": "number",
+                        "format": "float"
+                    },
+                    "childrens_price": {
+                        "description": "Price of the booking object for children",
+                        "type": "number",
+                        "format": "float"
+                    },
+                    "childrens_weekend_price": {
+                        "description": "Price of the booking object on weekends for children",
+                        "type": "number",
+                        "format": "float"
+                    },
+                    "discount": {
+                        "description": "Discount percentage for the booking object",
+                        "type": "number",
+                        "format": "float"
+                    },
+                    "discount_start_date": {
+                        "description": "Start date of the discount period",
+                        "type": "string",
+                        "format": "date"
+                    },
+                    "discount_end_date": {
+                        "description": "End date of the discount period",
+                        "type": "string",
+                        "format": "date"
+                    },
+                    "zone": {
+                        "description": "Zone of the booking object (bungalow, pool, cottages)",
+                        "type": "string"
+                    },
+                    "status": {
+                        "description": "Status of the booking object (free, reserved, booked)",
+                        "type": "string"
+                    },
+                    "type": {
+                        "description": "Type of the booking object (sunbed, bed, bungalow, second bungalow, little cottage, big cottage)",
+                        "type": "string"
+                    },
+                    "preview_photo": {
+                        "description": "Preview photo of the object (base64 encoded image)",
+                        "type": "string",
+                        "format": "binary"
+                    },
+                    "photos": {
+                        "description": "Array of photos for the booking object",
+                        "type": "array",
+                        "items": {
+                            "description": "Photos for the booking object (base64 encoded image)",
+                            "type": "string",
+                            "format": "binary"
+                        }
+                    },
+                    "max_persons": {
+                        "description": "Maximum number of persons allowed for the booking object",
+                        "type": "integer"
+                    },
+                    "location": {
+                        "description": "The name of the location within the zone in which the object is located",
+                        "type": "string"
+                    },
+                    "position": {
+                        "description": "The position of the object in the location",
+                        "type": "integer"
+                    }
+                },
+                "type": "object"
+            },
+            "BookingObjectForAdmin": {
+                "description": "Booking object for admin",
+                "required": [
+                    "name_ua",
+                    "name_en",
+                    "price"
+                ],
+                "properties": {
+                    "name_ua": {
+                        "description": "Name of the booking object in Ukrainian",
+                        "type": "string"
+                    },
+                    "name_en": {
+                        "description": "Name of the booking object in English",
+                        "type": "string"
+                    },
+                    "description_ua": {
+                        "description": "Description of the booking object in Ukrainian",
+                        "type": "string"
+                    },
+                    "description_en": {
+                        "description": "Description of the booking object in English",
+                        "type": "string"
+                    },
+                    "price": {
+                        "description": "Price of the booking object",
+                        "type": "number",
+                        "format": "float"
+                    },
+                    "weekend_price": {
+                        "description": "Price of the booking object on weekends",
+                        "type": "number",
+                        "format": "float"
+                    },
+                    "childrens_price": {
+                        "description": "Price of the booking object for children",
+                        "type": "number",
+                        "format": "float"
+                    },
+                    "childrens_weekend_price": {
+                        "description": "Price of the booking object on weekends for children",
+                        "type": "number",
+                        "format": "float"
+                    },
+                    "discount": {
+                        "description": "Discount percentage for the booking object",
+                        "type": "number",
+                        "format": "float"
+                    },
+                    "discount_start_date": {
+                        "description": "Start date of the discount period",
+                        "type": "string",
+                        "format": "date"
+                    },
+                    "discount_end_date": {
+                        "description": "End date of the discount period",
+                        "type": "string",
+                        "format": "date"
+                    },
+                    "zone": {
+                        "description": "Zone of the booking object (bungalow, pool, cottages)",
+                        "type": "string"
+                    },
+                    "status": {
+                        "description": "Status of the booking object (free, reserved, booked)",
+                        "type": "string"
+                    },
+                    "type": {
+                        "description": "Type of the booking object (sunbed, bed, bungalow, second bungalow, little cottage, big cottage)",
+                        "type": "string"
+                    },
+                    "preview_photo": {
+                        "description": "Preview photo of the object (base64 encoded image)",
+                        "type": "string",
+                        "format": "binary"
+                    },
+                    "photos": {
+                        "description": "Array of photos for the booking object",
+                        "type": "array",
+                        "items": {
+                            "description": "Photos for the booking object (base64 encoded image)",
+                            "type": "string",
+                            "format": "binary"
+                        }
+                    },
+                    "max_persons": {
+                        "description": "Maximum number of persons allowed for the booking object",
+                        "type": "integer"
+                    },
+                    "location": {
+                        "description": "The name of the location within the zone in which the object is located",
+                        "type": "string"
+                    },
+                    "position": {
+                        "description": "The position of the object in the location",
+                        "type": "integer"
+                    },
+                    "created_at": {
+                        "description": "Date and time when the booking object was created",
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "updated_at": {
+                        "description": "Date and time when the booking object was last updated",
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                },
+                "type": "object"
+            },
+            "ObjectDetails": {
+                "required": [
+                    "booking_object_id",
+                    "title_ua",
+                    "title_en",
+                    "description_ua",
+                    "description_en"
+                ],
+                "properties": {
+                    "booking_object_id": {
+                        "description": "ID of the booking object",
+                        "type": "integer"
+                    },
+                    "title_ua": {
+                        "description": "Title of the object in Ukrainian",
+                        "type": "string"
+                    },
+                    "title_en": {
+                        "description": "Title of the object in English",
+                        "type": "string"
+                    },
+                    "description_ua": {
+                        "description": "Description of the object in Ukrainian",
+                        "type": "string"
+                    },
+                    "description_en": {
+                        "description": "Description of the object in English",
+                        "type": "string"
+                    },
+                    "img": {
+                        "description": "URL of the image of the object",
+                        "type": "string"
+                    }
+                },
+                "type": "object"
+            },
+            "ObjectDetailsForUsers": {
+                "properties": {
+                    "id": {
+                        "description": "ID of the booking object details",
+                        "type": "integer"
+                    },
+                    "title": {
+                        "description": "Title of the object",
+                        "type": "string"
+                    },
+                    "description": {
+                        "description": "Description of the object",
+                        "type": "string"
+                    },
+                    "img": {
+                        "description": "URL of the image of the object",
+                        "type": "string"
+                    }
+                },
+                "type": "object"
             }
         }
     },
@@ -1112,6 +4316,22 @@
         {
             "name": "Objects",
             "description": "API for managing objects"
+        },
+        {
+            "name": "ObjectDetails",
+            "description": "API for managing objects"
+        },
+        {
+            "name": "1C",
+            "description": "API for 1C"
+        },
+        {
+            "name": "Payment",
+            "description": "API for payment"
+        },
+        {
+            "name": "Reviews",
+            "description": "API for reviews"
         },
         {
             "name": "Users",

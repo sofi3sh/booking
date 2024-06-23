@@ -8,30 +8,16 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\Hash;
 use App\Models\User;
 use App\Models\VerificationCode;
-use Vonage\Client;
+// use Vonage\Client;
 use Vonage\SMS\Message\SMS;
 use Vonage\Client\Credentials\Basic;
 
+use GuzzleHttp\Client;
+
 class AuthController extends Controller
 {
-    private function sendSms($to, $verificationCode)
-    {
-        $basic  = new Basic(env('VONAGE_API_KEY'), env('VONAGE_API_SECRET_KEY'));
-        $client = new Client($basic);
 
-        $message = "Hello!\n\n" . 
-           "Your verification code is: $verificationCode. \n\n" . 
-           "Please use this code to complete the verification process. \n\n" . 
-           "Have a great day!";
-        
-        $response = $client->sms()->send(
-            new SMS($to, 'brand', $message)
-        );
-
-        $message = $response->current();
-    }
-
-    public function sendVerificationCode($userPhone)
+    private function createAndSendVerificationCode($userPhone)
     {
         $verificationCode = mt_rand(1000, 9999);
 
@@ -43,9 +29,18 @@ class AuthController extends Controller
             'expires_at' => Carbon::now()->addMinutes(5),
         ]);
 
-        // $this->sendSms($userPhone, $verificationCode); // Uncomment after setup Vonage service
+        $this->sendSms($userPhone, $verificationCode);
+    }
 
-        return response()->json(['message' => 'Verification code sent successfully'], 200);
+    public function sendVerificationCode (Request $request)
+    {
+        $request->validate([
+            'phone' => 'required|integer',
+        ]);
+
+        $this->createAndSendVerificationCode($request->phone);
+
+        return response()->json(['message' => __('verification_code_sent_successfully')], 200);
     }
 
     public function register(Request $request)
@@ -67,9 +62,9 @@ class AuthController extends Controller
 
         $user->save();
 
-        $this->sendVerificationCode($user->phone);
+        $this->createAndSendVerificationCode($user->phone);
 
-        return response()->json(['message' => 'User registered successfully'], 201);
+        return response()->json(['message' => __('user_registered_successfully')], 201);
     }
 
     public function login(Request $request)
@@ -81,29 +76,35 @@ class AuthController extends Controller
         ]);
 
         if ($request->password == "") {
-            return response()->json(['message' => 'Unauthorized'], 401);
+            return response()->json(['message' => __('unauthorized')], 401);
         }
 
         if (Auth::attempt($credentials)) {
             $user = Auth::user();
+
+            if ($user->is_blocked) {
+                return response()->json(['message' => __('permission_denied')], 403);
+            }
+
             $accessToken = $user->createToken('authToken')->accessToken;
 
-            $minutes = 30 * 24 * 60 * 60; // 30 days in minutes
+            $minutes = 30 * 24 * 60; // 30 days in minutes
 
-            return response()->json(['message' => 'Authorization successful'], 200)
-                ->cookie('access_token', $accessToken, $minutes);
+            // To see required params
+            // cookie($name = null, $value = null, $minutes = 0, $path = null, $domain = null, $secure = null, $httpOnly = true, $raw = false, $sameSite = null)
+
+            return response()->json(['message' => __('authorization_successful')], 200)
+                ->cookie('access_token', $accessToken, $minutes, '/', '.booking.siteweb.org.ua', true, false, false, 'Strict');
         }
 
-        return response()->json(['message' => 'Unauthorized'], 401);
+        return response()->json(['message' => __('unauthorized')], 401);
     }
 
-    public function logout(Request $request)
+    public function logout()
     {
-        $accessToken = $request->user()->token();
+        Auth::user()->token()->revoke();
 
-        $accessToken->revoke();
-
-        return response()->json(['message' => 'Logged out successfully'], 200);
+        return response()->json(['message' => __('logged_out_successfully')], 200);
     }
 
     public function verify(Request $request)
@@ -118,17 +119,17 @@ class AuthController extends Controller
             ->first();
 
         if (!$verificationCode) {
-            return response()->json(['error' => 'Invalid verification code'], 422);
+            return response()->json(['error' => __('invalid_verification_code')], 422);
         }
 
         if (Carbon::now()->gt($verificationCode->expires_at)) {
-            return response()->json(['error' => 'Verification code has expired'], 422);
+            return response()->json(['error' => __('expired_verification_code')], 422);
         }
 
         $user = User::where('phone', $request->phone)->first();
 
         if (!$user) {
-            return response()->json(['error' => 'User not found'], 404);
+            return response()->json(['error' => __('user_not_found')], 404);
         }
 
         $user->phone_verified_at = now();
@@ -136,6 +137,84 @@ class AuthController extends Controller
 
         $verificationCode->delete();
 
-        return response()->json(['message' => 'Phone number verified successfully'], 200);
+        return response()->json(['message' => __('success_verification_code')], 200);
+    }
+
+    public function sendSms($to, $verificationCode)
+    {
+        $baseUrl = 'https://a2p.vodafone.ua';
+        $username = '380956139029';
+        $password = 'STRe456892-=wr';
+
+        $message = __('verification_code') . ' ' . $verificationCode;
+
+        $client = new \GuzzleHttp\Client();
+
+        try {
+
+
+            $response = $client->post("{$baseUrl}/uaa/oauth/token", [
+                'form_params' => [
+                    'grant_type' => 'password',
+                    'username' => $username,
+                    'password' => $password,
+                ],
+                'headers' => [
+                    'Authorization' => 'Basic aW50ZXJuYWw6aW50ZXJuYWw=',
+                    'Content-Type' => 'application/x-www-form-urlencoded',
+                ],
+            ]);
+
+            $body = $response->getBody();
+            $data = json_decode($body, true);
+
+            $accessToken = $data['access_token'];
+            $refreshToken = $data['refresh_token'];
+
+
+            $response = $client->post("{$baseUrl}/communication-event/api/communicationManagement/v2/communicationMessage/send", [
+                'json' => [
+                    'content' => $message,
+                    'type' => 'SMS',
+                    'receiver' => [
+                        [
+                            'id' => 0,
+                            'phoneNumber' => $to
+                        ]
+                    ],
+                    'sender' => [
+                        'id' => 'Pool Beach',
+                        'name' => 'Pool Beach',
+                        'phoneNumber' => '380956139029'
+                    ],
+                    'characteristic' => [
+                        [
+                            'name' => 'DISTRIBUTION.ID',
+                            'value' => '5840964'
+                        ],
+                        [
+                            'name' => 'VALIDITY.PERIOD',
+                            'value' => '000000000900000R'
+                        ]
+                    ]
+                ],
+                'headers' => [
+                    'Authorization' => "Bearer {$accessToken}",
+                    'Content-Type' => 'application/json',
+                ],
+            ]);
+            
+        } catch (\GuzzleHttp\Exception\ClientException $e) {
+            $response = $e->getResponse();
+            $responseBodyAsString = $response->getBody()->getContents();
+
+            return response()->json([
+                'error' => $responseBodyAsString,
+            ], $response->getStatusCode());
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => $e->getMessage(),
+            ], 500);
+        }
     }
 }

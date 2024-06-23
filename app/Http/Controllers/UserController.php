@@ -22,11 +22,14 @@ class UserController extends Controller
         $user = auth()->user();
 
         return response()->json([
+            'id' => $user->id,
+            'phone' => $user->phone,
             'name' => $user->name,
             'last_name' => $user->last_name,
             'email' => $user->email,
             'date_of_birth' => $user->date_of_birth,
             'photo' => $user->photo,
+            'role_id' => $user->role_id,
         ]);
     }
 
@@ -34,7 +37,7 @@ class UserController extends Controller
     {
         $request->validate([
             'name' => 'sometimes|required|string',
-            'phone' => 'sometimes|required|integer|unique:users,phone,' . auth()->user()->id,
+            'phone' => 'sometimes|required|string|unique:users,phone,' . auth()->user()->id,
             'last_name' => 'sometimes|required|string',
             'email' => 'sometimes|required|email|unique:users,email,' . auth()->user()->id,
             'date_of_birth' => 'sometimes|required|date',
@@ -75,13 +78,13 @@ class UserController extends Controller
             if (Hash::make($request->password) == $user->password) {
                 $user->password = Hash::make($request->new_password);
             } else {
-                return response()->json(['message' => 'Incorrect password'], 200);
+                return response()->json(['message' => __('incorrect_password')], 200);
             }
         }
 
         $user->save();
 
-        return response()->json(['message' => 'Profile updated successfully'], 200);
+        return response()->json(['message' => __('profile_updated_successfully')], 200);
     }
 
     public function adminGetUsers ()
@@ -89,7 +92,7 @@ class UserController extends Controller
         $user = auth()->user();
 
         if (!$this->userIsAdmin($user)) {
-            return response()->json(['message' => 'permission denied'], 403);
+            return response()->json(['message' => __('permission_denied')], 403);
         }
 
         $allUsers = User::all()->where('role_id', 3);
@@ -97,12 +100,31 @@ class UserController extends Controller
         return response()->json(['users' => $allUsers], 200);
     }
 
+    public function adminGetUserByPhone (Request $request)
+    {
+        $request->validate([
+            'phone' => 'required|string',
+        ]);
+
+        $user = auth()->user();
+
+        if (!$this->userIsAdmin($user)) {
+            return response()->json(['message' => __('permission_denied')], 403);
+        }
+
+        if(!User::where('phone', $request->phone)->get()->first()) {
+            return response()->json(['message' => __('user_not_found')], 404);
+        }
+
+        return response()->json(['user' => User::where('phone', $request->phone)->get()->first()], 200);
+    }
+
     public function adminGetBookingAgents ()
     {
         $user = auth()->user();
 
         if (!$this->userIsAdmin($user)) {
-            return response()->json(['message' => 'permission denied'], 403);
+            return response()->json(['message' => __('permission_denied')], 403);
         }
 
         $allUsers = User::all()->where('role_id', 2);
@@ -112,7 +134,6 @@ class UserController extends Controller
 
     public function adminEditUser (Request $request)
     {
-
         $request->validate([
             'user_id' => 'required|integer',
             'name' => 'sometimes|required|string',
@@ -120,14 +141,15 @@ class UserController extends Controller
             'email' => 'sometimes|required|email|unique:users,email,' . $request->user_id,
             'date_of_birth' => 'sometimes|required|date',
             'photo' => 'sometimes|required|image|max:2048', // Max size: 2MB
+            'role_id' => 'sometimes|required|integer',
         ]);
 
         $user = auth()->user();
 
         if (!$this->userIsAdmin($user)) {
-            return response()->json(['message' => 'permission denied'], 403);
+            return response()->json(['message' => __('permission_denied')], 403);
         }
-
+        
         $targetUser = User::where('id', $request->user_id)->get()->first();
 
         if ($request->has('name')) {
@@ -156,38 +178,128 @@ class UserController extends Controller
             $targetUser->photo = $photoPath;
         }
 
+        if ($request->has('role_id')) {
+            $targetUser->role_id = $request->role_id;
+        }
+
         $targetUser->save();
 
-        return response()->json(['message' => 'Profile updated successfully'], 200);
+        return response()->json(['message' => __('profile_updated_successfully')], 200);
     }
 
     public function getUserBookings ()
     {
         $user = auth()->user();
 
-        $booking = Booking::where('user_id', $user->id)->get();
+        $bookingsOrderIds = Booking::select('order_id')
+            ->where('user_id', $user->id)
+            ->whereNotNull('order_id')
+            ->groupBy('order_id')
+            ->get();
 
-        if (!$booking) {
-            return response()->json(['message' => 'No bookings found'], 404);
+        $orderBookingObjectIds = [];
+
+        foreach ($bookingsOrderIds as $orderId) {
+            $bookingsInOrder = Booking::select('id', 'user_id', 'object_id', 'booked_from', 'booked_to', 'payment_status', 'canceled', 'description', 'price')
+                ->where('order_id', $orderId->order_id)
+                ->get();
+
+            $orderBookingObjectIds[$orderId->order_id] = $bookingsInOrder;
+        };
+
+        if (!$orderBookingObjectIds) {
+            return response()->json(['message' => __('no_bookings_found')], 404);
         }
 
-        return response()->json(['bookings' => $booking], 200);
+        return response()->json(['bookings' => $orderBookingObjectIds], 200);
     }
 
     public function resetPassword (Request $request)
     {
         $request->validate([
-            'new_password' => 'required|integer',
+            'new_password' => 'required|string',
         ]);
 
         $user = auth()->user();
 
-        if ($user->phone_verified_at > Carbon::now()->subMinutes(5)) {
-            $user->password = Hash::make($request->new_password);
+        if (!($user->phone_verified_at > Carbon::now()->subMinutes(5))) {
+            return response()->json(['message' => __('confirm_phone')], 403);
         }
 
+        $user->password = Hash::make($request->new_password);
         $user->save();
 
-        return response()->json(['message' => 'Password changed successfully'], 200);
+        return response()->json(['message' => __('password_changed_successfully')], 200);
+    }
+
+    public function adminBlockUser (Request $request)
+    {
+        $request->validate([
+            'user_id' => 'required|integer',
+        ]);
+
+        $user = auth()->user();
+
+        if (!$this->userIsAdmin($user)) {
+            return response()->json(['message' => __('permission_denied')], 403);
+        }
+
+        $targetUser = User::where('id', $request->user_id)->first();
+
+        if(!$targetUser) {
+            return response()->json(['message' => __('user_not_found')], 404);
+        }
+
+        $userTokens = $targetUser->tokens;
+
+        foreach ($userTokens as $userToken) {
+            $userToken->revoke();
+        }
+        
+        $targetUser->is_blocked = 1;
+        $targetUser->save();
+
+        return response()->json(['message' => __('profile_updated_successfully')], 200);
+    }
+
+    public function adminGetUserBookings (Request $request)
+    {
+        $request->validate([
+            'phone' => 'required|integer'
+        ]);
+
+        $user = auth()->user();
+
+        if (!$this->userIsAdmin($user)) {
+            return response()->json(['message' => __('permission_denied')], 403);
+        }
+
+        $targetUser = User::where('phone', $request->phone)->get()->first();
+
+        if (!$targetUser) {
+            return response()->json(['message' => __('user_not_found')], 404);
+        }
+
+        $bookingsOrderIds = Booking::select('order_id')
+            ->where('user_id', $targetUser->id)
+            ->whereNotNull('order_id')
+            ->groupBy('order_id')
+            ->get();
+
+        $orderBookingObjectIds = [];
+
+        foreach ($bookingsOrderIds as $orderId) {
+            $bookingsInOrder = Booking::select('id', 'user_id', 'object_id', 'booked_from', 'booked_to', 'payment_status', 'canceled', 'description', 'price', 'created_at')
+                ->where('order_id', $orderId->order_id)
+                ->get();
+
+            $orderBookingObjectIds[$orderId->order_id] = $bookingsInOrder;
+        };
+
+        if (!$orderBookingObjectIds) {
+            return response()->json(['message' => __('no_bookings_found')], 404);
+        }
+
+        return response()->json(['bookings' => $orderBookingObjectIds], 200);
     }
 }

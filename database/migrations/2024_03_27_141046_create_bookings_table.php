@@ -21,6 +21,9 @@ return new class extends Migration
             $table->dateTime('booked_to')->nullable();
             $table->boolean('payment_status');
             $table->boolean('canceled')->default(0);
+            $table->string('order_id')->nullable();
+            $table->string('description')->nullable();
+            $table->decimal('price', 9, 2)->default(0);
             $table->timestamps();
         });
     }
