@@ -217,10 +217,15 @@ class UserController extends Controller
     public function resetPassword (Request $request)
     {
         $request->validate([
+            'phone' => 'required|integer',
             'new_password' => 'required|string',
         ]);
 
-        $user = auth()->user();
+        $user = User::where('phone', $request->phone)->first();
+
+        if(!$user) {
+            return response()->json(['message' => __('user_not_found')], 404);
+        }
 
         if (!($user->phone_verified_at > Carbon::now()->subMinutes(5))) {
             return response()->json(['message' => __('confirm_phone')], 403);
