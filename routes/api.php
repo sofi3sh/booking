@@ -27,14 +27,19 @@ Route::prefix('auth')
         Route::middleware('auth:api')->post('/logout', 'logout');
     });
 
-Route::prefix('user')
+    Route::prefix('user')
     ->middleware('auth:api')
     ->controller(UserController::class)
     ->group(function () {
         Route::get('/getProfile', 'getProfile');
         Route::post('/updateProfile', 'updateProfile');
-        Route::post('/resetPassword', 'resetPassword');
         Route::get('/getUserBookings', 'getUserBookings');
+    });
+
+    Route::prefix('user')
+    ->controller(UserController::class)
+    ->group(function () {
+        Route::post('/resetPassword', 'resetPassword');
     });
 
 Route::resource('objects', BookingObjectController::class)->only(['show']);
