@@ -19,9 +19,24 @@ class OneCController extends Controller
             return response()->json(['message' => __('no_objects_found')], 404);
         }
 
-        $filteredBookingObjects = $bookingObjects->map(function ($bookingObject) {
-            return $bookingObject->only(['id', 'name_' . app()->getLocale() . ' as name', 'price', 'weekend_price', 'discount', 'childrens_price', 'childrens_weekend_price', 'discount_start_date', 'discount_end_date', 'zone', 'status', 'type', 'max_persons']);
-        });
+        $locale = app()->getLocale();
+        $filteredBookingObjects = $bookingObjects->map(function ($bookingObject) use ($locale) {
+            return [
+                'id' => $bookingObject->id,
+                'name' => $bookingObject->{'name_' . $locale},
+                'price' => $bookingObject->price,
+                'weekend_price' => $bookingObject->weekend_price,
+                'discount' => $bookingObject->discount,
+                'childrens_price' => $bookingObject->childrens_price,
+                'childrens_weekend_price' => $bookingObject->childrens_weekend_price,
+                'discount_start_date' => $bookingObject->discount_start_date,
+                'discount_end_date' => $bookingObject->discount_end_date,
+                'zone' => $bookingObject->zone,
+                'status' => $bookingObject->status,
+                'type' => $bookingObject->type,
+                'max_persons' => $bookingObject->max_persons,
+            ];
+});
 
         return response()->json($filteredBookingObjects, 200);
     }
