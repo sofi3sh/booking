@@ -307,4 +307,21 @@ class UserController extends Controller
 
         return response()->json(['bookings' => $orderBookingObjectIds], 200);
     }
+
+    public function testDeleteUserByPhone (Request $request)
+    {
+        $request->validate([
+            'phone' => 'required|integer'
+        ]);
+
+        $targetUser = User::where('phone', $request->phone)->get()->first();
+
+        if (!$targetUser) {
+            return response()->json(['message' => __('user_not_found')], 404);
+        }
+        
+        $targetUser->delete();
+
+        return response()->json(['message' => __('user deleted successfully')], 200);
+    }
 }
