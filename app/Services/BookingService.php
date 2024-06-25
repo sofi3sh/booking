@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use App\Models\Booking;
 use App\Models\BookingObject;
 use App\Enums\ObjectStatus;
+use Illuminate\Support\Facades\Event;
 
 class BookingService
 {
@@ -86,8 +87,10 @@ class BookingService
         
             if ($bookedFrom < Carbon::now()) {
                 $bookingObject->update(['status' => ObjectStatus::BOOKED->value]);
+                event(new BookingObjectStatusUpdated($bookingObject->id, ObjectStatus::BOOKED->value));
             } else {
                 $bookingObject->update(['status' => ObjectStatus::FREE->value]);
+                event(new BookingObjectStatusUpdated($bookingObject->id, ObjectStatus::FREE->value));
             }
     
             $bookings[] = $booking;
@@ -135,8 +138,10 @@ class BookingService
         
             if ($bookedFrom < Carbon::now()) {
                 $bookingObject->update(['status' => ObjectStatus::BOOKED->value]);
+                event(new BookingObjectStatusUpdated($bookingObject->id, ObjectStatus::BOOKED->value));
             } else {
                 $bookingObject->update(['status' => ObjectStatus::FREE->value]);
+                event(new BookingObjectStatusUpdated($bookingObject->id, ObjectStatus::FREE->value));
             }
     
             $bookings[] = $booking;

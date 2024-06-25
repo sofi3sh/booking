@@ -49,10 +49,10 @@ class BookingController extends Controller
      */
     public static function updateExpiresBookedBookingObjectStatus()
     {
-        $expiredBookingObjects = Booking::where('booked_to', '<', Carbon::now())
+        $expiredBookingObjectsIds = Booking::where('booked_to', '<', Carbon::now())
             ->pluck('object_id');
 
-        BookingObject::whereIn('id', $expiredBookingObjects)
+        BookingObject::whereIn('id', $expiredBookingObjectsIds)
             ->update(['status' => ObjectStatus::FREE->value]);
         
         foreach ($expiredBookingObjectsIds as $objectId) {
@@ -87,23 +87,25 @@ class BookingController extends Controller
      */
     public static function sendNotificationWhenManyBookings ()
     {
-        if (!$this->isBookingNotificationRequired()) {
+        if (!self::isBookingNotificationRequired()) {
             return;
         }
 
-        $to = env('ADMIN_PHONE_NUMBER');
-        $basic  = new Basic(env('VONAGE_API_KEY'), env('VONAGE_API_SECRET_KEY'));
-        $client = new Client($basic);
+        // TODO: Add vodafone 
 
-        $message = "!ALERT!\n\n" . 
-           "90% of objects are booked today!";
+        // $to = env('ADMIN_PHONE_NUMBER');
+        // $basic  = new Basic(env('VONAGE_API_KEY'), env('VONAGE_API_SECRET_KEY'));
+        // $client = new Client($basic);
+
+        // $message = "!ALERT!\n\n" . 
+        //    "90% of objects are booked today!";
         
-        $client->sms()->send(
-            new SMS($to, 'brand', $message)
-        );
+        // $client->sms()->send(
+        //     new SMS($to, 'brand', $message)
+        // );
     }
 
-    private function isBookingNotificationRequired ()
+    private static function isBookingNotificationRequired ()
     {
         $currentDate = Carbon::now()->toDateString();
     
@@ -128,6 +130,8 @@ class BookingController extends Controller
         $request->validate([
             'object_id' => 'required|integer',
         ]);
+
+        $this->updateBookedObjectsStatus();
 
         $user = auth()->user();
 
@@ -156,6 +160,7 @@ class BookingController extends Controller
         ]);
 
         $bookingObject->update(['status' => ObjectStatus::RESERVED->value]);
+        event(new BookingObjectStatusUpdated($bookingObject->id, ObjectStatus::RESERVED->value));
 
         $newBooking->save();
         
