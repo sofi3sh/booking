@@ -128,3 +128,6 @@ Route::prefix('payment')
         Route::post('/preparePaymentData', 'preparePaymentData');
         Route::post('/createOrder', 'createOrder');
     });
+
+
+Route::delete('test/deleteUserByPhone', [UserController::class, 'testDeleteUserByPhone']);
