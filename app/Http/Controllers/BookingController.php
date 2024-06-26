@@ -10,9 +10,7 @@ use Carbon\Carbon;
 use App\Events\BookingObjectStatusUpdated;
 use Illuminate\Support\Facades\Event;
 use App\Services\BookingService;
-use Vonage\Client;
-use Vonage\SMS\Message\SMS;
-use Vonage\Client\Credentials\Basic;
+use GuzzleHttp\Client;
 
 class BookingController extends Controller
 {
@@ -91,18 +89,82 @@ class BookingController extends Controller
             return;
         }
 
-        // TODO: Add vodafone 
+        $baseUrl = 'https://a2p.vodafone.ua';
+        $username = '380956139029';
+        $password = 'STRe456892-=wr';
+        $to = env('ADMIN_PHONE_NUMBER');
 
-        // $to = env('ADMIN_PHONE_NUMBER');
-        // $basic  = new Basic(env('VONAGE_API_KEY'), env('VONAGE_API_SECRET_KEY'));
-        // $client = new Client($basic);
+        $message = "!ALERT!\n\n" . 
+            "90% of objects are booked today!";
 
-        // $message = "!ALERT!\n\n" . 
-        //    "90% of objects are booked today!";
-        
-        // $client->sms()->send(
-        //     new SMS($to, 'brand', $message)
-        // );
+        $client = new \GuzzleHttp\Client();
+
+        try {
+
+
+            $response = $client->post("{$baseUrl}/uaa/oauth/token", [
+                'form_params' => [
+                    'grant_type' => 'password',
+                    'username' => $username,
+                    'password' => $password,
+                ],
+                'headers' => [
+                    'Authorization' => 'Basic aW50ZXJuYWw6aW50ZXJuYWw=',
+                    'Content-Type' => 'application/x-www-form-urlencoded',
+                ],
+            ]);
+
+            $body = $response->getBody();
+            $data = json_decode($body, true);
+
+            $accessToken = $data['access_token'];
+            $refreshToken = $data['refresh_token'];
+
+
+            $response = $client->post("{$baseUrl}/communication-event/api/communicationManagement/v2/communicationMessage/send", [
+                'json' => [
+                    'content' => $message,
+                    'type' => 'SMS',
+                    'receiver' => [
+                        [
+                            'id' => 0,
+                            'phoneNumber' => $to
+                        ]
+                    ],
+                    'sender' => [
+                        'id' => 'Pool Beach',
+                        'name' => 'Pool Beach',
+                        'phoneNumber' => '380956139029'
+                    ],
+                    'characteristic' => [
+                        [
+                            'name' => 'DISTRIBUTION.ID',
+                            'value' => '5840964'
+                        ],
+                        [
+                            'name' => 'VALIDITY.PERIOD',
+                            'value' => '000000000900000R'
+                        ]
+                    ]
+                ],
+                'headers' => [
+                    'Authorization' => "Bearer {$accessToken}",
+                    'Content-Type' => 'application/json',
+                ],
+            ]);
+            
+        } catch (\GuzzleHttp\Exception\ClientException $e) {
+            $response = $e->getResponse();
+            $responseBodyAsString = $response->getBody()->getContents();
+
+            return response()->json([
+                'error' => $responseBodyAsString,
+            ], $response->getStatusCode());
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => $e->getMessage(),
+            ], 500);
+        }
     }
 
     private static function isBookingNotificationRequired ()
