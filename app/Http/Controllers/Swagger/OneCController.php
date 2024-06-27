@@ -384,4 +384,137 @@ class OneCController extends Controller
     {
         //
     }
+
+    /**
+     * @OA\Get(
+     *     path="/api/onec/additionalObjects/getAdditionalObjects",
+     *     summary="Get all additional objects",
+     *     description="Get all additional objects",
+     *     tags={"1C"},
+     *     @OA\Response(
+     *         response=200,
+     *         description="Successful operation",
+     *         @OA\JsonContent(
+     *             type="array",
+     *             @OA\Items(
+     *                 type="object",
+     *                 @OA\Property(property="id", type="integer", description="Additional object ID"),
+     *                 @OA\Property(property="name", type="string", description="Additional object name"),
+     *                 @OA\Property(property="price", type="number", format="float", description="Additional object price"),
+     *                 @OA\Property(property="weekend_price", type="number", format="float", description="Additional object weekend price"),
+     *                 @OA\Property(property="childrens_price", type="number", format="float", description="Additional object price for children"),
+     *                 @OA\Property(property="childrens_weekend_price", type="number", format="float", description="Additional object weekend price for children"),
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Not found",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(
+     *                 property="message",
+     *                 type="string",
+     *                 description="Error message",
+     *                 example="Not found"
+     *             )
+     *         )
+     *     )
+     * )
+     */
+    public function getAdditionalObjects (Request $request) 
+    {
+        //
+    }
+
+
+    /**
+     * @OA\Post(
+     *     path="/api/onec/additionalObjects/updateAdditionalObjectById/{id}",
+     *     summary="Update additional object by ID",
+     *     description="Update additional object by ID",
+     *     tags={"1C"},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         description="Additional object ID",
+     *         required=true,
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="price", type="number", format="float", description="Additional object price"),
+     *             @OA\Property(property="weekend_price", type="number", format="float", description="Additional object weekend price"),
+     *             @OA\Property(property="childrens_price", type="number", format="float", description="Additional object price for children"),
+     *             @OA\Property(property="childrens_weekend_price", type="number", format="float", description="Additional object weekend price for children")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Successful operation",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(
+     *                 property="id",
+     *                 type="integer",
+     *                 description="Additional object ID",
+     *                 example=1
+     *             ),
+     *             @OA\Property(
+     *                 property="name_ua",
+     *                 type="string",
+     *                 description="Additional object name",
+     *                 example="Additional object name"
+     *             ),
+     *             @OA\Property(
+     *                 property="price",
+     *                 type="number",
+     *                 format="float",
+     *                 description="Additional object price",
+     *                 example=100.0
+     *             ),
+     *             @OA\Property(
+     *                 property="weekend_price",
+     *                 type="number",
+     *                 format="float",
+     *                 description="Additional object weekend price",
+     *                 example=100.0
+     *             ),
+     *             @OA\Property(
+     *                 property="childrens_price",
+     *                 type="number",
+     *                 format="float",
+     *                 description="Additional object price for children",
+     *                 example=100.0
+     *             ),
+     *             @OA\Property(
+     *                 property="childrens_weekend_price",
+     *                 type="number",
+     *                 format="float",
+     *                 description="Additional object weekend price for children",
+     *                 example=100.0
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Not found",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(
+     *                 property="message",
+     *                 type="string",
+     *                 description="Error message",
+     *                 example="Not found"
+     *             )
+     *         )
+     *     )
+     * )
+     */
+    public function updateAdditionalObjectById (Request $request) 
+    {
+        //
+    }
 }

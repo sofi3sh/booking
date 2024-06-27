@@ -19,7 +19,8 @@ return new class extends Migration
             $table->text('description_en')->nullable();
             $table->decimal('price', 10, 2)->default(0);
             $table->decimal('weekend_price', 10, 2)->default(0);
-            $table->decimal('discount', 5, 2)->default(0);
+            $table->decimal('childrens_price', 10, 2)->default(0);
+            $table->decimal('childrens_weekend_price', 10, 2)->default(0);
             $table->enum('is_available', ['yes', 'no'])->default('yes');           
             $table->timestamps();
         });
