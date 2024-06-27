@@ -2638,6 +2638,196 @@
                 }
             }
         },
+        "/api/onec/additionalObjects/getAdditionalObjects": {
+            "get": {
+                "tags": [
+                    "1C"
+                ],
+                "summary": "Get all additional objects",
+                "description": "Get all additional objects",
+                "operationId": "efb6d35a3b53a3893480782803c6f803",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "properties": {
+                                            "id": {
+                                                "description": "Additional object ID",
+                                                "type": "integer"
+                                            },
+                                            "name": {
+                                                "description": "Additional object name",
+                                                "type": "string"
+                                            },
+                                            "price": {
+                                                "description": "Additional object price",
+                                                "type": "number",
+                                                "format": "float"
+                                            },
+                                            "weekend_price": {
+                                                "description": "Additional object weekend price",
+                                                "type": "number",
+                                                "format": "float"
+                                            },
+                                            "childrens_price": {
+                                                "description": "Additional object price for children",
+                                                "type": "number",
+                                                "format": "float"
+                                            },
+                                            "childrens_weekend_price": {
+                                                "description": "Additional object weekend price for children",
+                                                "type": "number",
+                                                "format": "float"
+                                            }
+                                        },
+                                        "type": "object"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "description": "Error message",
+                                            "type": "string",
+                                            "example": "Not found"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/onec/additionalObjects/updateAdditionalObjectById/{id}": {
+            "post": {
+                "tags": [
+                    "1C"
+                ],
+                "summary": "Update additional object by ID",
+                "description": "Update additional object by ID",
+                "operationId": "ba891aff9216064020db78a98c5fb95b",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Additional object ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "price": {
+                                        "description": "Additional object price",
+                                        "type": "number",
+                                        "format": "float"
+                                    },
+                                    "weekend_price": {
+                                        "description": "Additional object weekend price",
+                                        "type": "number",
+                                        "format": "float"
+                                    },
+                                    "childrens_price": {
+                                        "description": "Additional object price for children",
+                                        "type": "number",
+                                        "format": "float"
+                                    },
+                                    "childrens_weekend_price": {
+                                        "description": "Additional object weekend price for children",
+                                        "type": "number",
+                                        "format": "float"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "id": {
+                                            "description": "Additional object ID",
+                                            "type": "integer",
+                                            "example": 1
+                                        },
+                                        "name_ua": {
+                                            "description": "Additional object name",
+                                            "type": "string",
+                                            "example": "Additional object name"
+                                        },
+                                        "price": {
+                                            "description": "Additional object price",
+                                            "type": "number",
+                                            "format": "float",
+                                            "example": 100
+                                        },
+                                        "weekend_price": {
+                                            "description": "Additional object weekend price",
+                                            "type": "number",
+                                            "format": "float",
+                                            "example": 100
+                                        },
+                                        "childrens_price": {
+                                            "description": "Additional object price for children",
+                                            "type": "number",
+                                            "format": "float",
+                                            "example": 100
+                                        },
+                                        "childrens_weekend_price": {
+                                            "description": "Additional object weekend price for children",
+                                            "type": "number",
+                                            "format": "float",
+                                            "example": 100
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "description": "Error message",
+                                            "type": "string",
+                                            "example": "Not found"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/api/payment/preparePaymentData": {
             "post": {
                 "tags": [

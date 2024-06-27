@@ -119,6 +119,11 @@ Route::prefix('onec')->group(function () {
         Route::post('/getLastOrdersByDays', 'getLastOrdersByDays');
         Route::post('/getLastTransactionsByDays', 'getLastTransactionsByDays');
     });
+
+    Route::prefix('additionalObjects')->controller(OneCController::class)->group(function () {
+        Route::get('/getAdditionalObjects', 'getAdditionalObjects');
+        Route::post('/updateAdditionalObjectById/{id}', 'updateAdditionalObjectById');
+    });
 });
 
 Route::prefix('payment')
