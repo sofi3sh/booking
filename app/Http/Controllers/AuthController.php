@@ -94,7 +94,7 @@ class AuthController extends Controller
             // cookie($name = null, $value = null, $minutes = 0, $path = null, $domain = null, $secure = null, $httpOnly = true, $raw = false, $sameSite = null)
 
             return response()->json(['message' => __('authorization_successful')], 200)
-                ->cookie('access_token', $accessToken, $minutes, '/', '.booking.siteweb.org.ua', true, false, false, 'None'); 
+                ->cookie('access_token', $accessToken, $minutes, '/', null, false, false, false, 'None'); 
         }
 
         return response()->json(['message' => __('unauthorized')], 401);
