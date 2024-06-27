@@ -61,10 +61,37 @@ class AdditionalObjectController extends Controller
             'is_available' => $request->is_available,
         ]);
 
+        $newObject->save();
+
         return response()->json(['message' => __('object_created_successfully'), 'object' => AdditionalObject::get()->last()], 201);
     }
 
-    public function editAdditionalObject (Request $request)
+    public function editAdditionalObject(Request $request)
+    {
+        $user = auth()->user();
+    
+        if (!$this->userIsAdmin($user)) {
+            return response()->json(['message' => __('permission_denied')], 403);
+        }
+    
+        $validatedData = $request->validate([
+            'id' => 'required|integer|exists:additional_objects,id',
+            'name_ua' => 'sometimes|required|string',
+            'name_en' => 'sometimes|required|string',
+            'description_ua' => 'sometimes|required|string',
+            'description_en' => 'sometimes|required|string',
+            'price' => 'sometimes|required|numeric',
+            'weekend_price' => 'sometimes|required|numeric',
+            'is_available' => 'sometimes|required|boolean',
+        ]);
+    
+        $additionalObject = AdditionalObject::findOrFail($validatedData['id']);
+        $additionalObject->update($validatedData);
+    
+        return response()->json(['message' => __('object_updated_successfully')], 200);
+    }
+
+    public function deleteAdditionalObject (Request $request)
     {
         $user = auth()->user();
 
@@ -73,31 +100,10 @@ class AdditionalObjectController extends Controller
         }
 
         $request->validate([
-            'id' => 'required|integer|exists:additional_objects,id',
-            'name_ua' => 'required|string',
-            'name_en' => 'required|string',
-            'description_ua' => 'required|string',
-            'description_en' => 'required|string',
-            'price' => 'required|numeric',
-            'weekend_price' => 'required|numeric',
-            'is_available' => 'required|boolean',
+            'id' => 'required|integer',
         ]);
 
-        $additionalObject = AdditionalObject::findOrFail($validatedData['id']);
-        $additionalObject->update($validatedData);
-
-        return response()->json(['message' => __('object_updated_successfully')], 200);
-    }
-
-    public function deleteAdditionalObject ()
-    {
-        $user = auth()->user();
-
-        if (!$this->userIsAdmin($user)) {
-            return response()->json(['message' => __('permission_denied')], 403);
-        }
-
-        $additionalObject = AdditionalObject::find($id);
+        $additionalObject = AdditionalObject::find($request->id);
 
         if (!$additionalObject) {
             return response()->json(['error' => __('object_not_found')], 404);
@@ -107,5 +113,4 @@ class AdditionalObjectController extends Controller
 
         return response()->json(['message' => __('object_deleted_successfully')], 200);
     }
-
 }
