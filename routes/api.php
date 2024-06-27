@@ -12,6 +12,7 @@ use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ObjectDetailsController;
 use App\Http\Controllers\RoleController;
+use App\Http\Controllers\AdditionalObjectController;
 
 
 Route::get('sendSMSVodafone', [AuthController::class, 'sendSMSVodafone']);
@@ -129,5 +130,14 @@ Route::prefix('payment')
         Route::post('/createOrder', 'createOrder');
     });
 
+Route::prefix('additionalObjects')
+    ->middleware('auth:api')
+    ->controller(AdditionalObjectController::class)
+    ->group(function () {
+        Route::get('/getAdditionalObjects', 'getAdditionalObjects');
+        Route::post('/addAdditionalObject', 'addAdditionalObject');
+        Route::post('/editAdditionalObject', 'editAdditionalObject');
+        Route::post('/deleteAdditionalObject', 'deleteAdditionalObject');
+    });
 
 Route::delete('test/deleteUserByPhone', [UserController::class, 'testDeleteUserByPhone']);
