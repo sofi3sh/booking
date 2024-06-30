@@ -29,13 +29,25 @@ class BookingController extends Controller
     public static function updateExpiredReservedNotPaidBookingObjectStatus()
     {
         $expiredBookingObjectsIds = Booking::where('reserved_to', '<', Carbon::now())
-            ->where('payment_status', 0)
-            ->pluck('object_id');
+            ->whereNull('order_id')
+            ->whereHas('object', function ($query) {
+                $query->where('status', ObjectStatus::RESERVED->value);
+            })
+            ->pluck('object_id')
+            ->unique();
 
-        BookingObject::whereIn('id', $expiredBookingObjectsIds)
+        $filteredObjectIds = $expiredBookingObjectsIds->filter(function ($objectId) {
+            $activeReservationsCount = Booking::where('object_id', $objectId)
+                ->where('reserved_to', '>=', Carbon::now())
+                ->count();
+        
+            return $activeReservationsCount === 0;
+        });
+
+        BookingObject::whereIn('id', $filteredObjectIds)
             ->update(['status' => ObjectStatus::FREE->value]);
 
-        foreach ($expiredBookingObjectsIds as $objectId) {
+        foreach ($filteredObjectIds as $objectId) {
             event(new BookingObjectStatusUpdated($objectId, ObjectStatus::FREE->value));
         }
     }
@@ -48,6 +60,10 @@ class BookingController extends Controller
     public static function updateExpiresBookedBookingObjectStatus()
     {
         $expiredBookingObjectsIds = Booking::where('booked_to', '<', Carbon::now())
+            ->whereHas('object', function ($query) {
+                $query->where('status', ObjectStatus::BOOKED->value);
+            })
+            ->distinct()
             ->pluck('object_id');
 
         BookingObject::whereIn('id', $expiredBookingObjectsIds)
@@ -68,6 +84,10 @@ class BookingController extends Controller
         $bookedObjects = Booking::where('booked_to', '>', Carbon::now())
             ->where('booked_from', '<', Carbon::now())
             ->where('canceled', 0)
+            ->whereHas('object', function ($query) {
+                $query->where('status', ObjectStatus::BOOKED->value);
+            })
+            ->distinct()
             ->pluck('object_id');
 
         BookingObject::whereIn('id', $bookedObjects)
@@ -100,8 +120,6 @@ class BookingController extends Controller
         $client = new \GuzzleHttp\Client();
 
         try {
-
-
             $response = $client->post("{$baseUrl}/uaa/oauth/token", [
                 'form_params' => [
                     'grant_type' => 'password',
@@ -192,8 +210,6 @@ class BookingController extends Controller
         $request->validate([
             'object_id' => 'required|integer',
         ]);
-
-        $this->updateBookedObjectsStatus();
 
         $user = auth()->user();
 
