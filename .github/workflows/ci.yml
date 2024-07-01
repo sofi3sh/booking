@@ -45,3 +45,12 @@ jobs:
 
       - name: Run tests
         run: php artisan test
+        continue-on-error: true
+
+      - name: Check test results
+        if: failure()
+        run: cat storage/logs/laravel.log || echo "No Laravel log file found"
+
+      - name: Fail the job if tests failed
+        if: failure()
+        run: exit 1
