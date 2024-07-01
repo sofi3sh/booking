@@ -4,33 +4,37 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\BookingObject;
+use App\Models\AdditionalObject;
 use App\Enums\ObjectStatus;
 use App\Enums\ObjectType;
+use App\Events\AdditionalObjectStatusUpdated;
 
 class AdditionalBookingController extends Controller
 {
-        /**
-     * Automatically change the objects status of expired reserved bookings.
+    /**
+     * Automatically updates the availability status of additional objects based on the status of all 
+     * sunbed and bed bookings
      *
      * @return void
      */
-    public static function updateExpiredReservedNotPaidBookingObjectStatus()
+    public static function updateAdditionalObjectAvailable()
     {
-        $bookedSunbedAndBedObjects = BookingObject::where(function ($query) {
-            $query->where('type', ObjectType::SUNBED->value)
-                  ->orWhere('type', ObjectType::BED->value);
-            })
+        $types = [ObjectType::SUNBED->value, ObjectType::BED->value];
+
+        $bookedSunbedAndBedObjects = BookingObject::whereIn('type', $types)
             ->where('status', '!=', ObjectStatus::FREE->value)
             ->count();
-                
-        $allSunbedAndBedObjects = BookingObject::where(function ($query) {
-            $query->where('type', ObjectType::SUNBED->value)
-                  ->orWhere('type', ObjectType::BED->value);
-            })
+
+        $allSunbedAndBedObjects = BookingObject::whereIn('type', $types)
             ->count();
-        
-        if ($bookedSunbedAndBedObjects == $allSunbedAndBedObjects) {
-            // TODO
+
+        $isAvailable = $bookedSunbedAndBedObjects === $allSunbedAndBedObjects ? 1 : 0;
+        AdditionalObject::query()->update(['is_available' => $isAvailable]);
+
+        $additionalObjectIds = AdditionalObject::select('id')->get();
+
+        foreach ($additionalObjectIds as $additionalObjectId) {
+            event(new AdditionalObjectStatusUpdated($additionalObjectId, $isAvailable));
         }
     }
 }
