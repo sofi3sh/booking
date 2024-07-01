@@ -92,6 +92,11 @@ class PaymentController extends Controller
      *                 property="currency",
      *                 type="string",
      *                 description="Currency"
+     *             ),
+     *             @OA\Property(
+     *                 property="serveiceUrl",
+     *                 type="string",
+     *                 description="Service URL"
      *             )
      *         )
      *     )
