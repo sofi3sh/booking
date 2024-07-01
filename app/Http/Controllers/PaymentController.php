@@ -67,6 +67,8 @@ class PaymentController extends Controller
 
         $merchantSignature = hash_hmac('md5', $data, $key);
 
+        $baseUrl = env('APP_URL');
+
         return response()->json([
             'merchantSignature' => $merchantSignature,
             'merchantAccount' => $merchantAccount,
@@ -74,7 +76,7 @@ class PaymentController extends Controller
             'orderReference' => $orderReference,
             'orderDate' => $orderDate,
             'currency' => $currency,
-            'serveiceUrl' => 'https://poolandbeach.zp.ua/api/payment/proccessPayment',
+            'serveiceUrl' => '' . $baseUrl . '/api/payment/proccessPayment',
         ], 200);
     }
 
