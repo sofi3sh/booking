@@ -2930,6 +2930,11 @@
                                                 "description": "Updated at",
                                                 "type": "string",
                                                 "example": "2020-01-01 00:00:00"
+                                            },
+                                            "is_child": {
+                                                "description": "Is child",
+                                                "type": "number",
+                                                "example": 0
                                             }
                                         },
                                         "type": "object"
@@ -3131,6 +3136,11 @@
                                                 "description": "Updated at",
                                                 "type": "string",
                                                 "example": "2020-01-01 00:00:00"
+                                            },
+                                            "is_child": {
+                                                "description": "Is child",
+                                                "type": "integer",
+                                                "example": 0
                                             }
                                         },
                                         "type": "object"

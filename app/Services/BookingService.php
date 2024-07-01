@@ -19,7 +19,7 @@ class BookingService
         $this->additionalBookingService = $additionalBookingService;
     }
 
-    private function createBooking ($userId, $objectId, $dateFrom, $dateTo, $paymentStatus, $description, $orderId, $price)
+    private function createBooking ($userId, $objectId, $dateFrom, $dateTo, $paymentStatus, $description, $orderId, $price, $is_child)
     {
         return new Booking([
             'user_id' => $userId,
@@ -32,6 +32,7 @@ class BookingService
             'description' => $description,
             'order_id' => $orderId,
             'price' => $price,
+            'is_child' => $is_child
         ]);
     }
 
@@ -87,7 +88,7 @@ class BookingService
             return ['message' => 'Object ' . $bookingObject->name . ' is not available for booking during the specified dates'];
         }
 
-        $booking = $this->createBooking($userId, $objectId, $dateFromInStartDay, $dateToInEndDay, $bookingData['payment_status'], $description, $orderId, $price);
+        $booking = $this->createBooking($userId, $objectId, $dateFromInStartDay, $dateToInEndDay, $bookingData['payment_status'], $description, $orderId, $price, $bookingData['is_child']);
         $booking->save();
 
         $this->updateBookingObjectStatus($bookingObject, $bookedFrom);
@@ -130,7 +131,7 @@ class BookingService
             $this->updateExistingBooking($existingBooking, $bookedFrom, $bookedTo, $description, $orderId, $price);
             $booking = $existingBooking;
         } else {
-            $booking = $this->createBooking($user->id, $objectId, $bookedFrom, $bookedTo, 1, $description, $orderId, $price);
+            $booking = $this->createBooking($user->id, $objectId, $bookedFrom, $bookedTo, 1, $description, $orderId, $price, $bookingData['is_child']);
             $booking->save();
         }
 
