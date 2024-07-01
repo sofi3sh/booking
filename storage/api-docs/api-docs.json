@@ -3029,6 +3029,136 @@
                 }
             }
         },
+        "/api/onec/booking/getBookingsByOrderId": {
+            "post": {
+                "tags": [
+                    "1C"
+                ],
+                "summary": "Get bookings by order id",
+                "operationId": "85d024b0680826de05cb0a6ae63e4900",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "order_id": {
+                                        "description": "Order ID",
+                                        "type": "string",
+                                        "example": "123456789"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "properties": {
+                                            "id": {
+                                                "description": "Order ID",
+                                                "type": "integer",
+                                                "example": 1
+                                            },
+                                            "user_id": {
+                                                "description": "User ID",
+                                                "type": "integer",
+                                                "example": 1
+                                            },
+                                            "object_id": {
+                                                "description": "Object ID",
+                                                "type": "integer",
+                                                "example": 1
+                                            },
+                                            "reserved_from": {
+                                                "description": "Reserved from",
+                                                "type": "string",
+                                                "example": "2020-01-01 00:00:00"
+                                            },
+                                            "reserved_to": {
+                                                "description": "Reserved to",
+                                                "type": "string",
+                                                "example": "2020-01-01 00:00:00"
+                                            },
+                                            "booked_from": {
+                                                "description": "Booked from",
+                                                "type": "string",
+                                                "example": "2020-01-01 00:00:00"
+                                            },
+                                            "booked_to": {
+                                                "description": "Booked to",
+                                                "type": "string",
+                                                "example": "2020-01-01 00:00:00"
+                                            },
+                                            "payment_status": {
+                                                "description": "Payment status",
+                                                "type": "integer",
+                                                "example": 0
+                                            },
+                                            "canceled": {
+                                                "description": "Canceled",
+                                                "type": "integer",
+                                                "example": 0
+                                            },
+                                            "order_id": {
+                                                "description": "Order ID",
+                                                "type": "string",
+                                                "example": "123456789"
+                                            },
+                                            "description": {
+                                                "description": "Description",
+                                                "type": "string",
+                                                "example": "Description"
+                                            },
+                                            "price": {
+                                                "description": "Price",
+                                                "type": "number",
+                                                "example": 0
+                                            },
+                                            "created_at": {
+                                                "description": "Created at",
+                                                "type": "string",
+                                                "example": "2020-01-01 00:00:00"
+                                            },
+                                            "updated_at": {
+                                                "description": "Updated at",
+                                                "type": "string",
+                                                "example": "2020-01-01 00:00:00"
+                                            }
+                                        },
+                                        "type": "object"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "No bookings found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "description": "Error message",
+                                            "type": "string",
+                                            "example": "No bookings found"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/api/payment/preparePaymentData": {
             "post": {
                 "tags": [

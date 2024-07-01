@@ -723,4 +723,136 @@ class OneCController extends Controller
     {
         //
     }
+
+
+    /**
+     * @OA\Post(
+     *     path="/api/onec/booking/getBookingsByOrderId",
+     *     summary="Get bookings by order id",
+     *     tags={"1C"},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(
+     *                 property="order_id",
+     *                 type="string",
+     *                 description="Order ID",
+     *                 example="123456789"
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Successful operation",
+     *         @OA\JsonContent(
+     *             type="array",
+     *             @OA\Items(
+     *                 type="object",
+     *                 @OA\Property(
+     *                     property="id",
+     *                     type="integer",
+     *                     description="Order ID",
+     *                     example=1
+     *                 ),
+     *                 @OA\Property(
+     *                     property="user_id",
+     *                     type="integer",
+     *                     description="User ID",
+     *                     example=1
+     *                 ),
+     *                 @OA\Property(
+     *                     property="object_id",
+     *                     type="integer",
+     *                     description="Object ID",
+     *                     example=1
+     *                 ),
+     *                 @OA\Property(
+     *                     property="reserved_from",
+     *                     type="string",
+     *                     description="Reserved from", 
+     *                     example="2020-01-01 00:00:00"     
+     *                 ),
+     *                 @OA\Property(
+     *                     property="reserved_to",
+     *                     type="string",
+     *                     description="Reserved to", 
+     *                     example="2020-01-01 00:00:00"     
+     *                 ),
+     *                 @OA\Property(
+     *                     property="booked_from",
+     *                     type="string",
+     *                     description="Booked from", 
+     *                     example="2020-01-01 00:00:00"     
+     *                 ),
+     *                 @OA\Property(
+     *                     property="booked_to",
+     *                     type="string",
+     *                     description="Booked to", 
+     *                     example="2020-01-01 00:00:00"     
+     *                 ),
+     *                 @OA\Property(
+     *                     property="payment_status",
+     *                     type="integer",
+     *                     description="Payment status",
+     *                     example=0
+     *                 ),
+     *                 @OA\Property(
+     *                     property="canceled",
+     *                     type="integer",
+     *                     description="Canceled",
+     *                     example=0
+     *                 ),
+     *                 @OA\Property(
+     *                     property="order_id",
+     *                     type="string",
+     *                     description="Order ID",
+     *                     example="123456789"
+     *                 ),
+     *                 @OA\Property(
+     *                     property="description",  
+     *                     type="string",
+     *                     description="Description",
+     *                     example="Description"
+     *                 ),
+     *                 @OA\Property(
+     *                     property="price",
+     *                     type="number",
+     *                     description="Price",
+     *                     example=0
+     *                 ),
+     *                 @OA\Property(
+     *                     property="created_at",
+     *                     type="string",
+     *                     description="Created at",
+     *                     example="2020-01-01 00:00:00"
+     *                 ),
+     *                 @OA\Property(
+     *                     property="updated_at",
+     *                     type="string",
+     *                     description="Updated at",
+     *                     example="2020-01-01 00:00:00"
+     *                 )
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="No bookings found",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(
+     *                 property="message",
+     *                 type="string",
+     *                 description="Error message",
+     *                 example="No bookings found"
+     *             )
+     *         )
+     *     )
+     * )
+     */
+    public function getBookingsByOrderId (Request $request)
+    {
+        //
+    }
 }

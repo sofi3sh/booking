@@ -119,6 +119,7 @@ Route::prefix('onec')->group(function () {
     Route::prefix('booking')->controller(OneCController::class)->group(function () {
         Route::post('/getLastOrdersByDays', 'getLastOrdersByDays');
         Route::post('/getLastTransactionsByDays', 'getLastTransactionsByDays');
+        Route::post('/getBookingsByOrderId', 'getBookingsByOrderId');
     });
 
     Route::prefix('additionalObjects')->controller(OneCController::class)->group(function () {

@@ -220,4 +220,19 @@ class OneCController extends Controller
 
         return response()->json($additionalObject->only(['id','name_ua', 'price', 'weekend_price', 'childrens_price', 'childrens_weekend_price']), 200);
     }
+
+    public function getBookingsByOrderId (Request $request)
+    {
+        $request->validate([
+            'order_id' => 'required|string',
+        ]);
+
+        $bookings = Booking::where('order_id', $request->order_id)->get();
+
+        if ($bookings->isEmpty()) {
+            return response()->json(['message' => __('no_bookings_found')], 404);
+        }
+
+        return response()->json($bookings, 200);
+    }
 }
