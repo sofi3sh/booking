@@ -134,6 +134,7 @@ Route::prefix('payment')
     ->group(function () {
         Route::post('/preparePaymentData', 'preparePaymentData');
         Route::post('/createOrder', 'createOrder');
+        Route::post('/proccessPayment', 'proccessPayment');
     });
 
 Route::prefix('additionalObjects')

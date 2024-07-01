@@ -3247,6 +3247,10 @@
                                         "currency": {
                                             "description": "Currency",
                                             "type": "string"
+                                        },
+                                        "serveiceUrl": {
+                                            "description": "Service URL",
+                                            "type": "string"
                                         }
                                     },
                                     "type": "object"
