@@ -19,8 +19,9 @@ class BookingService
         $this->additionalBookingService = $additionalBookingService;
     }
 
-    private function createBooking ($userId, $objectId, $dateFrom, $dateTo, $paymentStatus, $description, $orderId, $price, $is_child)
+    private function createBooking ($userId, $objectId, $dateFrom, $dateTo, $paymentStatus, $description, $orderId, $price, $isChild)
     {
+
         return new Booking([
             'user_id' => $userId,
             'object_id' => $objectId,
@@ -32,7 +33,7 @@ class BookingService
             'description' => $description,
             'order_id' => $orderId,
             'price' => $price,
-            'is_child' => $is_child
+            'is_child' => $isChild
         ]);
     }
 
