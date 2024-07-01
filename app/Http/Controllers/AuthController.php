@@ -69,7 +69,6 @@ class AuthController extends Controller
 
     public function login(Request $request)
     {
-        
         $credentials = $request->validate([
             'phone' => 'required|integer',
             'password' => 'required|string',
@@ -94,7 +93,7 @@ class AuthController extends Controller
             // cookie($name = null, $value = null, $minutes = 0, $path = null, $domain = null, $secure = null, $httpOnly = true, $raw = false, $sameSite = null)
 
             return response()->json(['message' => __('authorization_successful')], 200)
-                ->cookie('access_token', $accessToken, $minutes, '/', '.booking.siteweb.org.ua', true, false, false, 'None'); 
+                ->cookie('access_token', $accessToken, $minutes, env('COOKIE_PATH'), env('COOKIE_DOMAIN'), env('COOKIE_SECURE'), false, false, env('COOKIE_SAMESITE')); 
         }
 
         return response()->json(['message' => __('unauthorized')], 401);
@@ -151,7 +150,6 @@ class AuthController extends Controller
         $client = new \GuzzleHttp\Client();
 
         try {
-
 
             $response = $client->post("{$baseUrl}/uaa/oauth/token", [
                 'form_params' => [

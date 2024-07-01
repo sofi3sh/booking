@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\BookingObject;
+use App\Models\AdditionalObject;
 use App\Models\Booking;
 use App\Models\Transaction;
 use App\Models\Debug;
@@ -44,16 +45,6 @@ class OneCController extends Controller
     public function update(Request $request, $id)
     {
         $bookingObject = BookingObject::find($id);
-
-        $debug = new Debug();
-
-        $debug->key = "request body";
-        $debug->value = json_encode([
-            "request" => $request->all(),
-            "ID" => $id
-        ]);
-        
-        $debug->save();
 
         if (!$bookingObject) {
             return response()->json(['error' => __('object_not_found')], 404);
@@ -160,9 +151,8 @@ class OneCController extends Controller
 
         $timeInterval = Carbon::now()->subDays($request->days);
 
-        return Booking::where('created_at', '>', $timeInterval)->get();
+        return Booking::where('created_at', '>', $timeInterval)->whereNotNull('booked_from')->get();
     }
-
 
     public function getLastTransactionsByDays (Request $request)
     {
@@ -173,5 +163,76 @@ class OneCController extends Controller
         $timeInterval = Carbon::now()->subDays($request->days);
 
         return Transaction::where('created_at', '>', $timeInterval)->get();
+    }
+
+    public function getAdditionalObjects (Request $request) 
+    {
+        $additionalOjects = AdditionalObject::all();
+
+        if($additionalOjects->isEmpty()) {
+            return response()->json(['message' => __('no_objects_found')], 404);
+        }
+
+        $locale = app()->getLocale();
+
+        $filteredAdditionalOjects = $additionalOjects->map(function ($additionalOject) use ($locale) {
+
+            return [
+                'id' => $additionalOject->id,
+                'name' => $additionalOject->translate($locale)->name,
+                'price' => $additionalOject->price,
+                'weekend_price' => $additionalOject->weekend_price,
+                'childrens_price' => $additionalOject->childrens_price,
+                'childrens_weekend_price' => $additionalOject->childrens_weekend_price,
+            ];
+        });
+
+        return response()->json($filteredAdditionalOjects, 200);
+    }
+
+    public function updateAdditionalObjectById(Request $request, $id) {
+
+        $additionalObject = AdditionalObject::find($id);
+
+        $request->validate([
+            'price' => 'required|numeric',
+            'weekend_price' => 'required|numeric',
+            'childrens_price' => 'sometimes|required|numeric',
+            'childrens_weekend_price' => 'sometimes|required|numeric',
+        ]);
+
+        if (!$additionalObject) {
+            return response()->json(['error' => __('object_not_found')], 404);
+        }
+        if($request->has('price')) {
+            $additionalObject->price = $request->input('price');
+        }
+        if($request->has('weekend_price')) {
+            $additionalObject->weekend_price = $request->input('weekend_price');
+        }
+        if($request->has('childrens_price')) {
+            $additionalObject->childrens_price = $request->input('childrens_price');
+        }
+        if($request->has('childrens_weekend_price')) {
+            $additionalObject->childrens_weekend_price = $request->input('childrens_weekend_price');
+        }
+        $additionalObject->save();
+
+        return response()->json($additionalObject->only(['id','name_ua', 'price', 'weekend_price', 'childrens_price', 'childrens_weekend_price']), 200);
+    }
+
+    public function getBookingsByOrderId (Request $request)
+    {
+        $request->validate([
+            'order_id' => 'required|string',
+        ]);
+
+        $bookings = Booking::where('order_id', $request->order_id)->get();
+
+        if ($bookings->isEmpty()) {
+            return response()->json(['message' => __('no_bookings_found')], 404);
+        }
+
+        return response()->json($bookings, 200);
     }
 }

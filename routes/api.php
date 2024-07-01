@@ -12,6 +12,7 @@ use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ObjectDetailsController;
 use App\Http\Controllers\RoleController;
+use App\Http\Controllers\AdditionalObjectController;
 
 
 Route::get('sendSMSVodafone', [AuthController::class, 'sendSMSVodafone']);
@@ -118,6 +119,12 @@ Route::prefix('onec')->group(function () {
     Route::prefix('booking')->controller(OneCController::class)->group(function () {
         Route::post('/getLastOrdersByDays', 'getLastOrdersByDays');
         Route::post('/getLastTransactionsByDays', 'getLastTransactionsByDays');
+        Route::post('/getBookingsByOrderId', 'getBookingsByOrderId');
+    });
+
+    Route::prefix('additionalObjects')->controller(OneCController::class)->group(function () {
+        Route::get('/getAdditionalObjects', 'getAdditionalObjects');
+        Route::post('/updateAdditionalObjectById/{id}', 'updateAdditionalObjectById');
     });
 });
 
@@ -127,7 +134,17 @@ Route::prefix('payment')
     ->group(function () {
         Route::post('/preparePaymentData', 'preparePaymentData');
         Route::post('/createOrder', 'createOrder');
+        Route::post('/proccessPayment', 'proccessPayment');
     });
 
+Route::prefix('additionalObjects')
+    ->middleware('auth:api')
+    ->controller(AdditionalObjectController::class)
+    ->group(function () {
+        Route::get('/getAdditionalObjects', 'getAdditionalObjects');
+        Route::post('/addAdditionalObject', 'addAdditionalObject');
+        Route::post('/editAdditionalObject', 'editAdditionalObject');
+        Route::post('/deleteAdditionalObject', 'deleteAdditionalObject');
+    });
 
 Route::delete('test/deleteUserByPhone', [UserController::class, 'testDeleteUserByPhone']);

@@ -2638,6 +2638,537 @@
                 }
             }
         },
+        "/api/onec/additionalObjects/getAdditionalObjects": {
+            "get": {
+                "tags": [
+                    "1C"
+                ],
+                "summary": "Get all additional objects",
+                "description": "Get all additional objects",
+                "operationId": "efb6d35a3b53a3893480782803c6f803",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "properties": {
+                                            "id": {
+                                                "description": "Additional object ID",
+                                                "type": "integer"
+                                            },
+                                            "name": {
+                                                "description": "Additional object name",
+                                                "type": "string"
+                                            },
+                                            "price": {
+                                                "description": "Additional object price",
+                                                "type": "number",
+                                                "format": "float"
+                                            },
+                                            "weekend_price": {
+                                                "description": "Additional object weekend price",
+                                                "type": "number",
+                                                "format": "float"
+                                            },
+                                            "childrens_price": {
+                                                "description": "Additional object price for children",
+                                                "type": "number",
+                                                "format": "float"
+                                            },
+                                            "childrens_weekend_price": {
+                                                "description": "Additional object weekend price for children",
+                                                "type": "number",
+                                                "format": "float"
+                                            }
+                                        },
+                                        "type": "object"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "description": "Error message",
+                                            "type": "string",
+                                            "example": "Not found"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/onec/additionalObjects/updateAdditionalObjectById/{id}": {
+            "post": {
+                "tags": [
+                    "1C"
+                ],
+                "summary": "Update additional object by ID",
+                "description": "Update additional object by ID",
+                "operationId": "ba891aff9216064020db78a98c5fb95b",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Additional object ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "price": {
+                                        "description": "Additional object price",
+                                        "type": "number",
+                                        "format": "float"
+                                    },
+                                    "weekend_price": {
+                                        "description": "Additional object weekend price",
+                                        "type": "number",
+                                        "format": "float"
+                                    },
+                                    "childrens_price": {
+                                        "description": "Additional object price for children",
+                                        "type": "number",
+                                        "format": "float"
+                                    },
+                                    "childrens_weekend_price": {
+                                        "description": "Additional object weekend price for children",
+                                        "type": "number",
+                                        "format": "float"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "id": {
+                                            "description": "Additional object ID",
+                                            "type": "integer",
+                                            "example": 1
+                                        },
+                                        "name_ua": {
+                                            "description": "Additional object name",
+                                            "type": "string",
+                                            "example": "Additional object name"
+                                        },
+                                        "price": {
+                                            "description": "Additional object price",
+                                            "type": "number",
+                                            "format": "float",
+                                            "example": 100
+                                        },
+                                        "weekend_price": {
+                                            "description": "Additional object weekend price",
+                                            "type": "number",
+                                            "format": "float",
+                                            "example": 100
+                                        },
+                                        "childrens_price": {
+                                            "description": "Additional object price for children",
+                                            "type": "number",
+                                            "format": "float",
+                                            "example": 100
+                                        },
+                                        "childrens_weekend_price": {
+                                            "description": "Additional object weekend price for children",
+                                            "type": "number",
+                                            "format": "float",
+                                            "example": 100
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "description": "Error message",
+                                            "type": "string",
+                                            "example": "Not found"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/onec/booking/getLastOrdersByDays": {
+            "post": {
+                "tags": [
+                    "1C"
+                ],
+                "summary": "Get last orders by days",
+                "operationId": "0599f8301ffc4524b0be6835c4a8008d",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "days": {
+                                        "description": "Number of days",
+                                        "type": "integer",
+                                        "example": 7
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "properties": {
+                                            "id": {
+                                                "description": "Order ID",
+                                                "type": "integer",
+                                                "example": 1
+                                            },
+                                            "user_id": {
+                                                "description": "User ID",
+                                                "type": "integer",
+                                                "example": 1
+                                            },
+                                            "object_id": {
+                                                "description": "Object ID",
+                                                "type": "integer",
+                                                "example": 1
+                                            },
+                                            "reserved_from": {
+                                                "description": "Reserved from",
+                                                "type": "string",
+                                                "example": "2024-06-24 15:09:43"
+                                            },
+                                            "reserved_to": {
+                                                "description": "Reserved to",
+                                                "type": "string",
+                                                "example": "2024-06-24 15:09:43"
+                                            },
+                                            "booked_from": {
+                                                "description": "Booked from",
+                                                "type": "string",
+                                                "example": "2020-01-01 00:00:00"
+                                            },
+                                            "booked_to": {
+                                                "description": "Booked to",
+                                                "type": "string",
+                                                "example": "2020-01-01 00:00:00"
+                                            },
+                                            "payment_status": {
+                                                "description": "Payment status",
+                                                "type": "number",
+                                                "example": 0
+                                            },
+                                            "canceled": {
+                                                "description": "Canceled",
+                                                "type": "number",
+                                                "example": 0
+                                            },
+                                            "order_id": {
+                                                "description": "Order ID",
+                                                "type": "string",
+                                                "example": "123456789"
+                                            },
+                                            "description": {
+                                                "description": "Description",
+                                                "type": "string",
+                                                "example": "Description"
+                                            },
+                                            "price": {
+                                                "description": "Price",
+                                                "type": "number",
+                                                "example": 100
+                                            },
+                                            "created_at": {
+                                                "description": "Created at",
+                                                "type": "string",
+                                                "example": "2020-01-01 00:00:00"
+                                            },
+                                            "updated_at": {
+                                                "description": "Updated at",
+                                                "type": "string",
+                                                "example": "2020-01-01 00:00:00"
+                                            },
+                                            "is_child": {
+                                                "description": "Is child",
+                                                "type": "number",
+                                                "example": 0
+                                            }
+                                        },
+                                        "type": "object"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/onec/booking/getLastTransactionsByDays": {
+            "post": {
+                "tags": [
+                    "1C"
+                ],
+                "summary": "Get last transactions by days",
+                "operationId": "94dfa0fd59faecdfa0e94d586a151f5f",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "days": {
+                                        "description": "Number of days",
+                                        "type": "integer",
+                                        "example": 7
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "properties": {
+                                            "id": {
+                                                "description": "Order ID",
+                                                "type": "integer",
+                                                "example": 1
+                                            },
+                                            "order_id": {
+                                                "description": "Order ID",
+                                                "type": "string",
+                                                "example": "123456789"
+                                            },
+                                            "amount": {
+                                                "description": "Amount",
+                                                "type": "number",
+                                                "example": 100
+                                            },
+                                            "fee": {
+                                                "description": "Fee",
+                                                "type": "number",
+                                                "example": 0
+                                            },
+                                            "issuer_bank_name": {
+                                                "description": "Issuer bank name",
+                                                "type": "string",
+                                                "example": "Issuer bank name"
+                                            },
+                                            "card": {
+                                                "description": "Card",
+                                                "type": "string",
+                                                "example": "53****8970"
+                                            },
+                                            "transaction_status": {
+                                                "description": "Transaction status",
+                                                "type": "number",
+                                                "example": 0
+                                            },
+                                            "created_at": {
+                                                "description": "Created at",
+                                                "type": "string",
+                                                "example": "2020-01-01 00:00:00"
+                                            },
+                                            "updated_at": {
+                                                "description": "Updated at",
+                                                "type": "string",
+                                                "example": "2020-01-01 00:00:00"
+                                            }
+                                        },
+                                        "type": "object"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/onec/booking/getBookingsByOrderId": {
+            "post": {
+                "tags": [
+                    "1C"
+                ],
+                "summary": "Get bookings by order id",
+                "operationId": "85d024b0680826de05cb0a6ae63e4900",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "order_id": {
+                                        "description": "Order ID",
+                                        "type": "string",
+                                        "example": "123456789"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "properties": {
+                                            "id": {
+                                                "description": "Order ID",
+                                                "type": "integer",
+                                                "example": 1
+                                            },
+                                            "user_id": {
+                                                "description": "User ID",
+                                                "type": "integer",
+                                                "example": 1
+                                            },
+                                            "object_id": {
+                                                "description": "Object ID",
+                                                "type": "integer",
+                                                "example": 1
+                                            },
+                                            "reserved_from": {
+                                                "description": "Reserved from",
+                                                "type": "string",
+                                                "example": "2020-01-01 00:00:00"
+                                            },
+                                            "reserved_to": {
+                                                "description": "Reserved to",
+                                                "type": "string",
+                                                "example": "2020-01-01 00:00:00"
+                                            },
+                                            "booked_from": {
+                                                "description": "Booked from",
+                                                "type": "string",
+                                                "example": "2020-01-01 00:00:00"
+                                            },
+                                            "booked_to": {
+                                                "description": "Booked to",
+                                                "type": "string",
+                                                "example": "2020-01-01 00:00:00"
+                                            },
+                                            "payment_status": {
+                                                "description": "Payment status",
+                                                "type": "integer",
+                                                "example": 0
+                                            },
+                                            "canceled": {
+                                                "description": "Canceled",
+                                                "type": "integer",
+                                                "example": 0
+                                            },
+                                            "order_id": {
+                                                "description": "Order ID",
+                                                "type": "string",
+                                                "example": "123456789"
+                                            },
+                                            "description": {
+                                                "description": "Description",
+                                                "type": "string",
+                                                "example": "Description"
+                                            },
+                                            "price": {
+                                                "description": "Price",
+                                                "type": "number",
+                                                "example": 0
+                                            },
+                                            "created_at": {
+                                                "description": "Created at",
+                                                "type": "string",
+                                                "example": "2020-01-01 00:00:00"
+                                            },
+                                            "updated_at": {
+                                                "description": "Updated at",
+                                                "type": "string",
+                                                "example": "2020-01-01 00:00:00"
+                                            },
+                                            "is_child": {
+                                                "description": "Is child",
+                                                "type": "integer",
+                                                "example": 0
+                                            }
+                                        },
+                                        "type": "object"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "No bookings found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "description": "Error message",
+                                            "type": "string",
+                                            "example": "No bookings found"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/api/payment/preparePaymentData": {
             "post": {
                 "tags": [
@@ -2715,6 +3246,10 @@
                                         },
                                         "currency": {
                                             "description": "Currency",
+                                            "type": "string"
+                                        },
+                                        "serveiceUrl": {
+                                            "description": "Service URL",
                                             "type": "string"
                                         }
                                     },

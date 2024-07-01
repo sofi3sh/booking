@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\BookingObject;
 
 class Booking extends Model
 {
@@ -21,7 +22,13 @@ class Booking extends Model
         'description',
         'order_id',
         'price',
+        'is_child'
     ];
 
     protected $table = 'bookings';
+
+    public function object()
+    {
+        return $this->belongsTo(BookingObject::class, 'object_id');
+    }
 }

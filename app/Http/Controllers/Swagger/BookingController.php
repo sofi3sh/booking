@@ -110,6 +110,11 @@ class BookingController extends Controller
      *                 description="Should the price be calculated for the child"
      *             ),
      *             @OA\Property(
+     *                 property="is_additional",
+     *                 type="boolean",
+     *                 description="Should the price be calculated for the additional objects"
+     *             ),
+     *             @OA\Property(
      *                 property="lang",
      *                 type="string",
      *                 description="Specify language",
@@ -337,6 +342,11 @@ class BookingController extends Controller
      *         ),
      *         @OA\Property(
      *             property="is_child",
+     *             type="boolean",
+     *             description="Should the price be calculated for the child"
+     *         ),
+     *         @OA\Property(
+     *             property="is_additional",
      *             type="boolean",
      *             description="Should the price be calculated for the child"
      *         ),

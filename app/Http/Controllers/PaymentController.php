@@ -65,9 +65,9 @@ class PaymentController extends Controller
 
         $key = 'c632cb72916700a3d83ac83794925ab09642bbe7';
 
-
-
         $merchantSignature = hash_hmac('md5', $data, $key);
+
+        $baseUrl = env('APP_URL');
 
         return response()->json([
             'merchantSignature' => $merchantSignature,
@@ -76,6 +76,7 @@ class PaymentController extends Controller
             'orderReference' => $orderReference,
             'orderDate' => $orderDate,
             'currency' => $currency,
+            'serveiceUrl' => '' . $baseUrl . '/api/payment/proccessPayment',
         ], 200);
     }
 
@@ -87,7 +88,7 @@ class PaymentController extends Controller
             'fee' => 'required|numeric',
             'issuer_bank_name' => 'required|string',
             'card' => 'required|string',
-            'transaction_status' => 'required|boolean',
+            'transaction_status' => 'required|string',
             'objects' => 'required|array|min:1',
             'objects.*.object_id' => 'required|integer',
             'objects.*.booked_from' => 'required|date',
@@ -96,6 +97,7 @@ class PaymentController extends Controller
             'objects.*.payment_status' => 'required|boolean',
             'objects.*.description' => 'nullable|string',
             'objects.*.is_clild' => 'nullable|boolean',
+            'objects.*.is_additional' => 'required|boolean',
             'objects.*.lang' => 'sometimes|required|string'
         ]);
 
@@ -111,5 +113,23 @@ class PaymentController extends Controller
         $bookings = $this->bookingService->bookExistingReserve($request->objects, auth()->user(), $request->order_id);
 
         return response()->json(['bookings' => $bookings, 'transaction' => $transaction], 200);
+    }
+
+    public function proccessPayment (Request $request) {
+        $orderId = $request->orderReference;
+
+        Transaction::where('order_id', $orderId)->update([
+            'transaction_status' => $request->transaction_status
+        ]);
+
+        if ($request->transaction_status == 'Expired' || 
+            $request->transaction_status == 'Declined') {
+                $bookings = Booking::where('order_id', $orderId)->update([
+                    'canceled' => true,
+                    'payment_status' => true
+                ]);
+            }
+
+        return response()->json(['transaction' => $transaction], 200);
     }
 }

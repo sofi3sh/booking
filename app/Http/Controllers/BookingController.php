@@ -10,15 +10,18 @@ use Carbon\Carbon;
 use App\Events\BookingObjectStatusUpdated;
 use Illuminate\Support\Facades\Event;
 use App\Services\BookingService;
+use App\Services\AdditionalBookingService;
 use GuzzleHttp\Client;
 
 class BookingController extends Controller
 {
     protected $bookingService;
+    protected $additionalBookingService;
 
-    public function __construct(BookingService $bookingService)
+    public function __construct(BookingService $bookingService, AdditionalBookingService $additionalBookingService)
     {
         $this->bookingService = $bookingService;
+        $this->additionalBookingService = $additionalBookingService;
     }
 
     /**
@@ -29,13 +32,25 @@ class BookingController extends Controller
     public static function updateExpiredReservedNotPaidBookingObjectStatus()
     {
         $expiredBookingObjectsIds = Booking::where('reserved_to', '<', Carbon::now())
-            ->where('payment_status', 0)
-            ->pluck('object_id');
+            ->whereNull('order_id')
+            ->whereHas('object', function ($query) {
+                $query->where('status', ObjectStatus::RESERVED->value);
+            })
+            ->pluck('object_id')
+            ->unique();
 
-        BookingObject::whereIn('id', $expiredBookingObjectsIds)
+        $filteredObjectIds = $expiredBookingObjectsIds->filter(function ($objectId) {
+            $activeReservationsCount = Booking::where('object_id', $objectId)
+                ->where('reserved_to', '>=', Carbon::now())
+                ->count();
+        
+            return $activeReservationsCount === 0;
+        });
+
+        BookingObject::whereIn('id', $filteredObjectIds)
             ->update(['status' => ObjectStatus::FREE->value]);
 
-        foreach ($expiredBookingObjectsIds as $objectId) {
+        foreach ($filteredObjectIds as $objectId) {
             event(new BookingObjectStatusUpdated($objectId, ObjectStatus::FREE->value));
         }
     }
@@ -48,6 +63,10 @@ class BookingController extends Controller
     public static function updateExpiresBookedBookingObjectStatus()
     {
         $expiredBookingObjectsIds = Booking::where('booked_to', '<', Carbon::now())
+            ->whereHas('object', function ($query) {
+                $query->where('status', ObjectStatus::BOOKED->value);
+            })
+            ->distinct()
             ->pluck('object_id');
 
         BookingObject::whereIn('id', $expiredBookingObjectsIds)
@@ -68,6 +87,10 @@ class BookingController extends Controller
         $bookedObjects = Booking::where('booked_to', '>', Carbon::now())
             ->where('booked_from', '<', Carbon::now())
             ->where('canceled', 0)
+            ->whereHas('object', function ($query) {
+                $query->where('status', ObjectStatus::BOOKED->value);
+            })
+            ->distinct()
             ->pluck('object_id');
 
         BookingObject::whereIn('id', $bookedObjects)
@@ -100,8 +123,6 @@ class BookingController extends Controller
         $client = new \GuzzleHttp\Client();
 
         try {
-
-
             $response = $client->post("{$baseUrl}/uaa/oauth/token", [
                 'form_params' => [
                     'grant_type' => 'password',
@@ -187,13 +208,16 @@ class BookingController extends Controller
         return $user->role_id == 1;
     }
 
+    private function getPriceCalculationService($isAdditional)
+    {
+        return $isAdditional ? $this->additionalBookingService : $this->bookingService;
+    }
+
     public function reserveObject (Request $request)
     {
         $request->validate([
             'object_id' => 'required|integer',
         ]);
-
-        $this->updateBookedObjectsStatus();
 
         $user = auth()->user();
 
@@ -217,7 +241,7 @@ class BookingController extends Controller
             'user_id' => $user->id,
             'object_id' => $request->object_id,
             'reserved_from' => Carbon::now(),
-            'reserved_to' => $existReservation->reserved_to ?? Carbon::now()->addMinutes(2), // 2 min for test, replace to 15 in prod
+            'reserved_to' => $existReservation->reserved_to ?? Carbon::now()->addMinutes(3), // 3 min for test, replace to 15 in prod
             'payment_status' => 0,
         ]);
 
@@ -229,7 +253,7 @@ class BookingController extends Controller
         return response()->json(['message' => __('object_reserved')], 200);
     }
 
-    public function adminbookObjects (Request $request)
+    public function adminbookObjects(Request $request)
     {
         $request->validate([
             '*.object_id' => 'required|integer',
@@ -239,19 +263,20 @@ class BookingController extends Controller
             '*.payment_status' => 'required|boolean',
             '*.is_child' => 'required|boolean',
             '*.description' => 'nullable|string',
+            '*.is_additional' => 'required|boolean',
         ]);
     
         $user = auth()->user();
-
+    
         if (!$this->userIsAdmin($user)) {
             return response()->json(['message' => __('permission_denied')], 403);
         }
         
         $bookings = $this->bookingService->createNewBooking($request->all());
-
+    
         return response()->json(['message' => __('objects_have_been_booked'), 'bookings' => $bookings], 200);
     }
-
+    
     public function cancelOrder (Request $request)
     {
         $request->validate([
@@ -275,18 +300,26 @@ class BookingController extends Controller
         return response()->json(['bookings' => $bookings], 200);
     }
 
-    public function calculateBookingPrice (Request $request)
+    public function calculateBookingPrice(Request $request)
     {
         $request->validate([
             'object_id' => 'required|integer',
-            'booked_from' => 'required|date',
-            'booked_to' => 'required|date',
-            'is_child' => 'required|boolean'
+            'booked_from' => 'required|date|after_or_equal:today',
+            'booked_to' => 'required|date|after_or_equal:booked_from',
+            'is_child' => 'required|boolean',
+            'is_additional' => 'required|boolean'
         ]);
 
-        return response()->json(['price' => $this->bookingService->calculatePrice($request->object_id, $request->booked_from, $request->booked_to, $request->isChild)], 200);
+        try {
+            $price = $this->getPriceCalculationService($request->is_additional)
+                ->calculatePrice($request->object_id, $request->booked_from, $request->booked_to, $request->is_child);
+    
+            return response()->json(['price' => $price], 200);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Error calculating price'], 500);
+        }
     }
-
+    
     public function getOrder (Request $request)
     {
         $request->validate([
