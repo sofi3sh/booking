@@ -8,6 +8,8 @@ use Illuminate\Support\Facades\Hash;
 use App\Models\User;
 use Illuminate\Support\Facades\Storage;
 use App\Models\Booking;
+use App\Models\AdditionalObject;
+use App\Models\AdditionalBooking;
 use Carbon\Carbon;
 
 class UserController extends Controller
@@ -204,7 +206,13 @@ class UserController extends Controller
                 ->where('order_id', $orderId->order_id)
                 ->get();
 
-            $orderBookingObjectIds[$orderId->order_id] = $bookingsInOrder;
+            $additionalBookingsInOrder = AdditionalBooking::select('id', 'user_id', 'additional_object_id', 'booked_from', 'booked_to', 'payment_status', 'description', 'price')
+                ->where('order_id', $orderId->order_id)
+                ->get();
+
+            $allBookingsInOrder = $bookingsInOrder->merge($additionalBookingsInOrder);
+
+            $orderBookingObjectIds[$orderId->order_id] = $allBookingsInOrder;
         };
 
         if (!$orderBookingObjectIds) {
@@ -297,8 +305,14 @@ class UserController extends Controller
             $bookingsInOrder = Booking::select('id', 'user_id', 'object_id', 'booked_from', 'booked_to', 'payment_status', 'canceled', 'description', 'price', 'created_at')
                 ->where('order_id', $orderId->order_id)
                 ->get();
+            
+            $additionalBookingsInOrder = AdditionalBooking::select('id', 'user_id', 'additional_object_id', 'booked_from', 'booked_to', 'payment_status', 'description', 'price')
+                ->where('order_id', $orderId->order_id)
+                ->get();
 
-            $orderBookingObjectIds[$orderId->order_id] = $bookingsInOrder;
+            $allBookingsInOrder = $bookingsInOrder->merge($additionalBookingsInOrder);
+
+            $orderBookingObjectIds[$orderId->order_id] = $allBookingsInOrder;
         };
 
         if (!$orderBookingObjectIds) {

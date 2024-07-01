@@ -65,8 +65,6 @@ class PaymentController extends Controller
 
         $key = 'c632cb72916700a3d83ac83794925ab09642bbe7';
 
-
-
         $merchantSignature = hash_hmac('md5', $data, $key);
 
         return response()->json([
@@ -96,6 +94,7 @@ class PaymentController extends Controller
             'objects.*.payment_status' => 'required|boolean',
             'objects.*.description' => 'nullable|string',
             'objects.*.is_clild' => 'nullable|boolean',
+            'objects.*.is_additional' => 'required|boolean',
             'objects.*.lang' => 'sometimes|required|string'
         ]);
 

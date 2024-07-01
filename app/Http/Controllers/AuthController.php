@@ -69,7 +69,6 @@ class AuthController extends Controller
 
     public function login(Request $request)
     {
-        
         $credentials = $request->validate([
             'phone' => 'required|integer',
             'password' => 'required|string',
@@ -151,7 +150,6 @@ class AuthController extends Controller
         $client = new \GuzzleHttp\Client();
 
         try {
-
 
             $response = $client->post("{$baseUrl}/uaa/oauth/token", [
                 'form_params' => [

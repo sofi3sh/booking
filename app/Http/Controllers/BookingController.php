@@ -10,15 +10,18 @@ use Carbon\Carbon;
 use App\Events\BookingObjectStatusUpdated;
 use Illuminate\Support\Facades\Event;
 use App\Services\BookingService;
+use App\Services\AdditionalBookingService;
 use GuzzleHttp\Client;
 
 class BookingController extends Controller
 {
     protected $bookingService;
+    protected $additionalBookingService;
 
-    public function __construct(BookingService $bookingService)
+    public function __construct(BookingService $bookingService, AdditionalBookingService $additionalBookingService)
     {
         $this->bookingService = $bookingService;
+        $this->additionalBookingService = $additionalBookingService;
     }
 
     /**
@@ -187,6 +190,11 @@ class BookingController extends Controller
         return $user->role_id == 1;
     }
 
+    private function getPriceCalculationService($isAdditional)
+    {
+        return $isAdditional ? $this->additionalBookingService : $this->bookingService;
+    }
+
     public function reserveObject (Request $request)
     {
         $request->validate([
@@ -229,7 +237,7 @@ class BookingController extends Controller
         return response()->json(['message' => __('object_reserved')], 200);
     }
 
-    public function adminbookObjects (Request $request)
+    public function adminbookObjects(Request $request)
     {
         $request->validate([
             '*.object_id' => 'required|integer',
@@ -239,19 +247,20 @@ class BookingController extends Controller
             '*.payment_status' => 'required|boolean',
             '*.is_child' => 'required|boolean',
             '*.description' => 'nullable|string',
+            '*.is_additional' => 'required|boolean',
         ]);
     
         $user = auth()->user();
-
+    
         if (!$this->userIsAdmin($user)) {
             return response()->json(['message' => __('permission_denied')], 403);
         }
         
         $bookings = $this->bookingService->createNewBooking($request->all());
-
+    
         return response()->json(['message' => __('objects_have_been_booked'), 'bookings' => $bookings], 200);
     }
-
+    
     public function cancelOrder (Request $request)
     {
         $request->validate([
@@ -275,18 +284,26 @@ class BookingController extends Controller
         return response()->json(['bookings' => $bookings], 200);
     }
 
-    public function calculateBookingPrice (Request $request)
+    public function calculateBookingPrice(Request $request)
     {
         $request->validate([
             'object_id' => 'required|integer',
-            'booked_from' => 'required|date',
-            'booked_to' => 'required|date',
-            'is_child' => 'required|boolean'
+            'booked_from' => 'required|date|after_or_equal:today',
+            'booked_to' => 'required|date|after_or_equal:booked_from',
+            'is_child' => 'required|boolean',
+            'is_additional' => 'required|boolean'
         ]);
-
-        return response()->json(['price' => $this->bookingService->calculatePrice($request->object_id, $request->booked_from, $request->booked_to, $request->isChild)], 200);
+    
+        try {
+            $price = $this->getPriceCalculationService($request->is_additional)
+                ->calculatePrice($request->object_id, $request->booked_from, $request->booked_to, $request->is_child);
+    
+            return response()->json(['price' => $price], 200);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Error calculating price'], 500);
+        }
     }
-
+    
     public function getOrder (Request $request)
     {
         $request->validate([
