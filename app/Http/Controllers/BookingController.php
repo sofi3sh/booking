@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Event;
 use App\Services\BookingService;
 use App\Services\AdditionalBookingService;
 use GuzzleHttp\Client;
+use App\Models\Transaction;
 
 class BookingController extends Controller
 {
@@ -334,10 +335,12 @@ class BookingController extends Controller
             return response()->json(['message' => __('order_not_found')], 404);
         }
 
+        $transactionStatus = Transaction::select('transaction_status')->where('order_id', $request->order_id)->first();
+
         foreach ($bookingsInOrder as $booking) {
             $totalPrice += $booking->price;
         }
 
-        return response()->json(['bookings' => $bookingsInOrder, 'total_price' => $totalPrice], 200);
+        return response()->json(['bookings' => $bookingsInOrder, 'total_price' => $totalPrice, 'transaction_status' => $transactionStatus], 200);
     }
 }

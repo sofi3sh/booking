@@ -126,10 +126,8 @@ class PaymentController extends Controller
             $request->transaction_status == 'Declined') {
                 $bookings = Booking::where('order_id', $orderId)->update([
                     'canceled' => true,
-                    'payment_status' => true
-                ]);
-            }
-
-        return response()->json(['transaction' => $transaction], 200);
+                    'payment_status' => false
+            ]);
+        }
     }
 }
