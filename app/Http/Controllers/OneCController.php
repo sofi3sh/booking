@@ -151,9 +151,8 @@ class OneCController extends Controller
 
         $timeInterval = Carbon::now()->subDays($request->days);
 
-        return Booking::where('created_at', '>', $timeInterval)->get();
+        return Booking::where('created_at', '>', $timeInterval)->notNull('booked_from')->get();
     }
-
 
     public function getLastTransactionsByDays (Request $request)
     {

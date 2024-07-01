@@ -7,9 +7,18 @@ use App\Models\Booking;
 use App\Models\BookingObject;
 use App\Enums\ObjectStatus;
 use Illuminate\Support\Facades\Event;
+use App\Services\AdditionalBookingService;
+use App\Events\BookingObjectStatusUpdated;
 
 class BookingService
 {
+    protected $additionalBookingService;
+
+    public function __construct(AdditionalBookingService $additionalBookingService)
+    {
+        $this->additionalBookingService = $additionalBookingService;
+    }
+
     private function createBooking ($userId, $objectId, $dateFrom, $dateTo, $paymentStatus, $description, $orderId, $price)
     {
         return new Booking([
@@ -48,108 +57,132 @@ class BookingService
         return !$bookingsForObject;
     }
 
-    public function createNewBooking ($bookingsData)
+    private function processBookingData($bookingData, $orderId)
+    {
+        if ($bookingData['is_additional']) {
+            return $this->additionalBookingService->createNewBooking([$bookingData], $orderId);
+        }
+
+        $objectId = $bookingData['object_id'];
+        $bookedFrom = $bookingData['booked_from'];
+        $bookedTo = $bookingData['booked_to'];
+        $userId = $bookingData['user_id'];
+        $description = $bookingData['description'] ?? "";
+        $price = $this->calculatePrice($objectId, $bookedFrom, $bookedTo, $bookingData['is_child']);
+
+        $bookingObject = BookingObject::find($objectId);
+
+        if (!$bookingObject) {
+            return ['message' => __('object_not_found')];
+        }
+
+        if ($bookingObject->is_blocked) {
+            return ['message' => __('object_is_blocked')];
+        }
+
+        $dateFromInStartDay = Carbon::parse($bookedFrom)->startOfDay();
+        $dateToInEndDay = Carbon::parse($bookedTo)->endOfDay();
+
+        if (!$this->isObjectAvailableToBook($objectId, $dateFromInStartDay, $dateToInEndDay)) {
+            return ['message' => 'Object ' . $bookingObject->name . ' is not available for booking during the specified dates'];
+        }
+
+        $booking = $this->createBooking($userId, $objectId, $dateFromInStartDay, $dateToInEndDay, $bookingData['payment_status'], $description, $orderId, $price);
+        $booking->save();
+
+        $this->updateBookingObjectStatus($bookingObject, $bookedFrom);
+
+        return $booking;
+    }
+
+    private function updateBookingObjectStatus($bookingObject, $bookedFrom)
+    {
+        $status = $bookedFrom < Carbon::now() ? ObjectStatus::BOOKED->value : ObjectStatus::FREE->value;
+        $bookingObject->update(['status' => $status]);
+        event(new BookingObjectStatusUpdated($bookingObject->id, $status));
+    }
+
+    private function processBookingForExistingReserve($bookingData, $user, $orderId)
+    {
+        if ($bookingData['is_additional']) {
+            return $this->additionalBookingService->createNewBooking([$bookingData], $orderId);
+        }
+
+        $objectId = $bookingData['object_id'];
+        $bookedFrom = Carbon::parse($bookingData['booked_from'])->startOfDay();
+        $bookedTo = Carbon::parse($bookingData['booked_to'])->endOfDay();
+        $description = $bookingData['description'] ?? "";
+        $price = $this->calculatePrice($objectId, $bookingData['booked_from'], $bookingData['booked_to'], $bookingData['is_child']);
+
+        $bookingObject = BookingObject::find($objectId);
+
+        if (!$bookingObject) {
+            return ['message' => __('object_not_found')];
+        }
+
+        if ($bookingObject->is_blocked) {
+            return ['message' => __('object_is_blocked')];
+        }
+
+        $existingBooking = $this->findExistingBooking($user->id, $objectId);
+
+        if ($existingBooking) {
+            $this->updateExistingBooking($existingBooking, $bookedFrom, $bookedTo, $description, $orderId, $price);
+            $booking = $existingBooking;
+        } else {
+            $booking = $this->createBooking($user->id, $objectId, $bookedFrom, $bookedTo, 1, $description, $orderId, $price);
+            $booking->save();
+        }
+
+        $this->updateBookingObjectStatus($bookingObject, $bookedFrom);
+
+        return $booking;
+    }
+
+    private function findExistingBooking($userId, $objectId)
+    {
+        return Booking::where('user_id', $userId)
+            ->where('object_id', $objectId)
+            ->where('reserved_to', '>', Carbon::now())
+            ->first();
+    }
+
+    private function updateExistingBooking($existingBooking, $bookedFrom, $bookedTo, $description, $orderId, $price)
+    {
+        $existingBooking->booked_from = $bookedFrom;
+        $existingBooking->booked_to = $bookedTo;
+        $existingBooking->payment_status = 1;
+        $existingBooking->description = $description;
+        $existingBooking->order_id = $orderId;
+        $existingBooking->price = $price;
+        $existingBooking->save();
+    }
+
+    public function createNewBooking($bookingsData)
     {
         $bookings = [];
-
         $orderId = strtoupper(uniqid());
 
         foreach ($bookingsData as $bookingData) {
-            $objectId = $bookingData['object_id'];
-            $bookedFrom = $bookingData['booked_from'];
-            $bookedTo = $bookingData['booked_to'];
-            $userId = $bookingData['user_id'];
-            $description = $bookingData['description'] ?? "";
-            $price = $this->calculatePrice($objectId, $bookedFrom, $bookedTo, $bookingData['is_child']);
-
-            $bookingObject = BookingObject::find($objectId);
-
-            if (!$bookingObject) {
-                $bookings[] = ['message' => __('object_not_found')];
-                continue;
-            }
-
-            if ($bookingObject->is_blocked) {
-                $bookings[] = ['message' => __('object_is_blocked')];
-                continue;
-            }
-
-            $dateFromInStartDay = Carbon::parse($bookedFrom)->startOfDay();
-            $dateToInEndDay = Carbon::parse($bookedTo)->endOfDay();
-
-            if (!$this->isObjectAvailableToBook($objectId, $dateFromInStartDay, $dateToInEndDay)) {
-                $bookings[] = ['message' => 'Object ' . $bookingObject->name . ' is not available for booking during the specified dates'];
-                continue;
-            }
-        
-            $booking = $this->createBooking($userId, $objectId, $dateFromInStartDay, $dateToInEndDay, $bookingData['payment_status'], $description, $orderId, $price);
-            $booking->save();
-        
-            if ($bookedFrom < Carbon::now()) {
-                $bookingObject->update(['status' => ObjectStatus::BOOKED->value]);
-                event(new BookingObjectStatusUpdated($bookingObject->id, ObjectStatus::BOOKED->value));
-            } else {
-                $bookingObject->update(['status' => ObjectStatus::FREE->value]);
-                event(new BookingObjectStatusUpdated($bookingObject->id, ObjectStatus::FREE->value));
-            }
-    
-            $bookings[] = $booking;
+            $response = $this->processBookingData($bookingData, $orderId);
+            $bookings[] = $response;
         }
 
         return $bookings;
     }
 
-    public function bookExistingReserve ($bookingsData, $user, $orderId)
+    public function bookExistingReserve($bookingsData, $user, $orderId)
     {
         $bookings = [];
     
         foreach ($bookingsData as $bookingData) {
-            $objectId = $bookingData['object_id'];
-            $bookedFrom = $bookingData['booked_from'];
-            $bookedTo = $bookingData['booked_to'];
-            $userId = $user->id;
-            $description = $bookingData['description'] ?? "";
-            
-            $price = $this->calculatePrice($objectId, $bookedFrom, $bookedTo, $bookingData['is_child']);
-
-            $bookingObject = BookingObject::find($objectId);
-
-            $dateFromInStartDay = Carbon::parse($bookedFrom)->startOfDay();
-            $dateToInEndDay = Carbon::parse($bookedTo)->endOfDay();
-
-            $existingBooking = Booking::where('user_id', $userId)
-                ->where('object_id', $objectId)
-                ->where('reserved_to', '>', Carbon::now())
-                ->first();
-                
-            if (!empty($existingBooking)){
-                $existingBooking->booked_from = $dateFromInStartDay;
-                $existingBooking->booked_to = $dateToInEndDay;
-                $existingBooking->payment_status = 1;
-                $existingBooking->description = $description;
-                $existingBooking->order_id = $orderId;
-                $existingBooking->price = $price;
-                $existingBooking->save();
-                $booking = $existingBooking;
-            } else {
-                $booking = $this->createBooking($userId, $objectId, $dateFromInStartDay, $dateToInEndDay, 1, $description, $orderId, $price);
-                $booking->save();    
-            }
-        
-            if ($bookedFrom < Carbon::now()) {
-                $bookingObject->update(['status' => ObjectStatus::BOOKED->value]);
-                event(new BookingObjectStatusUpdated($bookingObject->id, ObjectStatus::BOOKED->value));
-            } else {
-                $bookingObject->update(['status' => ObjectStatus::FREE->value]);
-                event(new BookingObjectStatusUpdated($bookingObject->id, ObjectStatus::FREE->value));
-            }
-    
-            $bookings[] = $booking;
+            $response = $this->processBookingForExistingReserve($bookingData, $user, $orderId);
+            $bookings[] = $response;
         }
-
+    
         return $bookings;
     }
-
+    
     public function calculatePrice ($objectId, $bookedFrom, $bookedTo, $isChild = false) : Float
     {
         $totalPrice = 0.0;
