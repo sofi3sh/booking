@@ -32,13 +32,25 @@ class BookingController extends Controller
     public static function updateExpiredReservedNotPaidBookingObjectStatus()
     {
         $expiredBookingObjectsIds = Booking::where('reserved_to', '<', Carbon::now())
-            ->where('payment_status', 0)
-            ->pluck('object_id');
+            ->whereNull('order_id')
+            ->whereHas('object', function ($query) {
+                $query->where('status', ObjectStatus::RESERVED->value);
+            })
+            ->pluck('object_id')
+            ->unique();
 
-        BookingObject::whereIn('id', $expiredBookingObjectsIds)
+        $filteredObjectIds = $expiredBookingObjectsIds->filter(function ($objectId) {
+            $activeReservationsCount = Booking::where('object_id', $objectId)
+                ->where('reserved_to', '>=', Carbon::now())
+                ->count();
+        
+            return $activeReservationsCount === 0;
+        });
+
+        BookingObject::whereIn('id', $filteredObjectIds)
             ->update(['status' => ObjectStatus::FREE->value]);
 
-        foreach ($expiredBookingObjectsIds as $objectId) {
+        foreach ($filteredObjectIds as $objectId) {
             event(new BookingObjectStatusUpdated($objectId, ObjectStatus::FREE->value));
         }
     }
@@ -51,6 +63,10 @@ class BookingController extends Controller
     public static function updateExpiresBookedBookingObjectStatus()
     {
         $expiredBookingObjectsIds = Booking::where('booked_to', '<', Carbon::now())
+            ->whereHas('object', function ($query) {
+                $query->where('status', ObjectStatus::BOOKED->value);
+            })
+            ->distinct()
             ->pluck('object_id');
 
         BookingObject::whereIn('id', $expiredBookingObjectsIds)
@@ -71,6 +87,10 @@ class BookingController extends Controller
         $bookedObjects = Booking::where('booked_to', '>', Carbon::now())
             ->where('booked_from', '<', Carbon::now())
             ->where('canceled', 0)
+            ->whereHas('object', function ($query) {
+                $query->where('status', ObjectStatus::BOOKED->value);
+            })
+            ->distinct()
             ->pluck('object_id');
 
         BookingObject::whereIn('id', $bookedObjects)
@@ -103,8 +123,6 @@ class BookingController extends Controller
         $client = new \GuzzleHttp\Client();
 
         try {
-
-
             $response = $client->post("{$baseUrl}/uaa/oauth/token", [
                 'form_params' => [
                     'grant_type' => 'password',
@@ -201,8 +219,6 @@ class BookingController extends Controller
             'object_id' => 'required|integer',
         ]);
 
-        $this->updateBookedObjectsStatus();
-
         $user = auth()->user();
 
         if (!$user->phone_verified_at) {
@@ -225,7 +241,7 @@ class BookingController extends Controller
             'user_id' => $user->id,
             'object_id' => $request->object_id,
             'reserved_from' => Carbon::now(),
-            'reserved_to' => $existReservation->reserved_to ?? Carbon::now()->addMinutes(2), // 2 min for test, replace to 15 in prod
+            'reserved_to' => $existReservation->reserved_to ?? Carbon::now()->addMinutes(3), // 3 min for test, replace to 15 in prod
             'payment_status' => 0,
         ]);
 
@@ -293,7 +309,7 @@ class BookingController extends Controller
             'is_child' => 'required|boolean',
             'is_additional' => 'required|boolean'
         ]);
-    
+
         try {
             $price = $this->getPriceCalculationService($request->is_additional)
                 ->calculatePrice($request->object_id, $request->booked_from, $request->booked_to, $request->is_child);

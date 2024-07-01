@@ -19,6 +19,11 @@ class UserController extends Controller
         return $user->role_id == 1;
     }
 
+    private function userIsBookingAgent($user)
+    {
+        return $user->role_id == 2;
+    }
+
     public function getProfile ()
     {
         $user = auth()->user();
@@ -111,7 +116,9 @@ class UserController extends Controller
         $user = auth()->user();
 
         if (!$this->userIsAdmin($user)) {
-            return response()->json(['message' => __('permission_denied')], 403);
+            if (!$this->userIsBookingAgent($user)) {
+                return response()->json(['message' => __('permission_denied')], 403);
+            }
         }
 
         if(!User::where('phone', $request->phone)->get()->first()) {
@@ -284,7 +291,9 @@ class UserController extends Controller
         $user = auth()->user();
 
         if (!$this->userIsAdmin($user)) {
-            return response()->json(['message' => __('permission_denied')], 403);
+            if (!$this->userIsBookingAgent($user)) {
+                return response()->json(['message' => __('permission_denied')], 403);
+            }
         }
 
         $targetUser = User::where('phone', $request->phone)->get()->first();
