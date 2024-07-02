@@ -21,7 +21,6 @@ class BookingService
 
     private function createBooking ($userId, $objectId, $dateFrom, $dateTo, $paymentStatus, $description, $orderId, $price, $isChild)
     {
-
         return new Booking([
             'user_id' => $userId,
             'object_id' => $objectId,
@@ -97,7 +96,7 @@ class BookingService
         return $booking;
     }
 
-    private function updateBookingObjectStatus($bookingObject, $bookedFrom)
+    public function updateBookingObjectStatus($bookingObject, $bookedFrom)
     {
         $status = $bookedFrom < Carbon::now() ? ObjectStatus::BOOKED->value : ObjectStatus::FREE->value;
         $bookingObject->update(['status' => $status]);
@@ -132,7 +131,7 @@ class BookingService
             $this->updateExistingBooking($existingBooking, $bookedFrom, $bookedTo, $description, $orderId, $price);
             $booking = $existingBooking;
         } else {
-            $booking = $this->createBooking($user->id, $objectId, $bookedFrom, $bookedTo, 1, $description, $orderId, $price, $bookingData['is_child']);
+            $booking = $this->createBooking($user->id, $objectId, $bookedFrom, $bookedTo, 0, $description, $orderId, $price, $bookingData['is_child']);
             $booking->save();
         }
 
