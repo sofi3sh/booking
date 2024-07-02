@@ -21,7 +21,9 @@ class AdditionalObjectController extends Controller
             'name_' . app()->getLocale() . ' as name', 
             'description_' . app()->getLocale() . ' as description', 
             'price', 
-            'weekend_price', 
+            'weekend_price',
+            'childrens_price',
+            'childrens_weekend_price',
             'is_available', 
         )
         ->get();
@@ -48,7 +50,9 @@ class AdditionalObjectController extends Controller
             'description_en' => 'required|string',
             'price' => 'required|numeric',
             'weekend_price' => 'required|numeric',
-            'is_available' => 'required|boolean',
+            'childrens_price' => 'required|numeric',
+            'childrens_weekend_price' => 'required|numeric',
+            'is_available' => 'required|in:yes,no',
         ]);
 
         $newObject = new AdditionalObject([
@@ -58,6 +62,8 @@ class AdditionalObjectController extends Controller
             'description_en' => $request->description_en,
             'price' => $request->price,
             'weekend_price' => $request->weekend_price,
+            'childrens_price' => $request->childrens_price,
+            'childrens_weekend_price' => $request->childrens_weekend_price,
             'is_available' => $request->is_available,
         ]);
 
@@ -82,7 +88,9 @@ class AdditionalObjectController extends Controller
             'description_en' => 'sometimes|required|string',
             'price' => 'sometimes|required|numeric',
             'weekend_price' => 'sometimes|required|numeric',
-            'is_available' => 'sometimes|required|boolean',
+            'childrens_price' => 'sometimes|required|numeric',
+            'childrens_weekend_price' => 'sometimes|required|numeric',
+            'is_available' => 'sometimes|required|in:yes,no',
         ]);
     
         $additionalObject = AdditionalObject::findOrFail($validatedData['id']);
@@ -112,5 +120,36 @@ class AdditionalObjectController extends Controller
         $additionalObject->delete();
 
         return response()->json(['message' => __('object_deleted_successfully')], 200);
+    }
+
+    public function testaddAdditionalObject(Request $request)
+    {
+        $request->validate([
+            'name_ua' => 'required|string',
+            'name_en' => 'required|string',
+            'description_ua' => 'required|string',
+            'description_en' => 'required|string',
+            'price' => 'required|numeric',
+            'weekend_price' => 'required|numeric',
+            'childrens_price' => 'required|numeric',
+            'childrens_weekend_price' => 'required|numeric',
+            'is_available' => 'required|in:yes,no',
+        ]);
+
+        $newObject = new AdditionalObject([
+            'name_ua' => $request->name_ua,
+            'name_en' => $request->name_en,
+            'description_ua' => $request->description_ua,
+            'description_en' => $request->description_en,
+            'price' => $request->price,
+            'weekend_price' => $request->weekend_price,
+            'childrens_price' => $request->childrens_price,
+            'childrens_weekend_price' => $request->childrens_weekend_price,
+            'is_available' => $request->is_available,
+        ]);
+
+        $newObject->save();
+
+        return response()->json(['message' => __('object_created_successfully'), 'object' => AdditionalObject::get()->last()], 201);
     }
 }

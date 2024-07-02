@@ -141,10 +141,13 @@ Route::prefix('additionalObjects')
     ->middleware('auth:api')
     ->controller(AdditionalObjectController::class)
     ->group(function () {
-        Route::get('/getAdditionalObjects', 'getAdditionalObjects');
         Route::post('/addAdditionalObject', 'addAdditionalObject');
         Route::post('/editAdditionalObject', 'editAdditionalObject');
         Route::post('/deleteAdditionalObject', 'deleteAdditionalObject');
     });
 
+Route::get('additionalObjects/getAdditionalObjects', [AdditionalObjectController::class, 'getAdditionalObjects']);
+
 Route::delete('test/deleteUserByPhone', [UserController::class, 'testDeleteUserByPhone']);
+
+Route::post('test/additionalObjects/testaddAdditionalObject', [AdditionalObjectController::class, 'testaddAdditionalObject']);
