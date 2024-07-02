@@ -5,15 +5,10 @@ namespace Tests\Unit;
 use Tests\TestCase;
 use App\Services\AdditionalBookingService;
 use App\Models\AdditionalObject;
-use Illuminate\Foundation\Testing\DatabaseTransactions;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Carbon\Carbon;
 
 class AdditionalBookingServiceTest extends TestCase
 {
-    use DatabaseMigrations;
-    use DatabaseTransactions;
-
     protected function setUp(): void
     {
         parent::setUp();
