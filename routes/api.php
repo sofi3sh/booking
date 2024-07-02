@@ -151,3 +151,7 @@ Route::get('additionalObjects/getAdditionalObjects', [AdditionalObjectController
 Route::delete('test/deleteUserByPhone', [UserController::class, 'testDeleteUserByPhone']);
 
 Route::post('test/additionalObjects/testaddAdditionalObject', [AdditionalObjectController::class, 'testaddAdditionalObject']);
+
+Route::get('/timezone', function () {
+    return date_default_timezone_get();
+});
