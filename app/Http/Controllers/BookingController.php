@@ -89,7 +89,7 @@ class BookingController extends Controller
             ->where('booked_from', '<', Carbon::now())
             ->where('canceled', 0)
             ->whereHas('object', function ($query) {
-                $query->where('status', ObjectStatus::BOOKED->value);
+                $query->where('status', '!=', ObjectStatus::BOOKED->value);
             })
             ->distinct()
             ->pluck('object_id');
@@ -189,14 +189,16 @@ class BookingController extends Controller
         }
     }
 
-    private static function isBookingNotificationRequired ()
-    {
-        $currentDate = Carbon::now()->toDateString();
-    
+    public static function isBookingNotificationRequired ()
+    {    
         $totalObjects = BookingObject::count();
+
+        if ($totalObjects == 0) {
+            return false;
+        }
     
-        $bookedObjectsCount = Booking::whereDate('booked_from', '<=', $currentDate)
-            ->whereDate('booked_to', '>=', $currentDate)
+        $bookedObjectsCount = Booking::where('booked_from', '<=', Carbon::now())
+            ->where('booked_to', '>=', Carbon::now())
             ->count();
     
         $percentageBooked = ($bookedObjectsCount / $totalObjects) * 100;
@@ -305,7 +307,7 @@ class BookingController extends Controller
     {
         $request->validate([
             'object_id' => 'required|integer',
-            'booked_from' => 'required|date|after_or_equal:today',
+            'booked_from' => 'required|date',
             'booked_to' => 'required|date|after_or_equal:booked_from',
             'is_child' => 'required|boolean',
             'is_additional' => 'required|boolean'

@@ -209,11 +209,11 @@ class UserController extends Controller
         $orderBookingObjectIds = [];
 
         foreach ($bookingsOrderIds as $orderId) {
-            $bookingsInOrder = Booking::select('id', 'user_id', 'object_id', 'booked_from', 'booked_to', 'payment_status', 'canceled', 'description', 'price')
+            $bookingsInOrder = Booking::select('id', 'user_id', 'object_id', 'booked_from', 'booked_to', 'payment_status', 'canceled', 'description', 'is_child', 'price')
                 ->where('order_id', $orderId->order_id)
                 ->get();
 
-            $additionalBookingsInOrder = AdditionalBooking::select('id', 'user_id', 'additional_object_id', 'booked_from', 'booked_to', 'payment_status', 'description', 'price')
+            $additionalBookingsInOrder = AdditionalBooking::select('id', 'user_id', 'additional_object_id', 'booked_from', 'booked_to', 'payment_status', 'description', 'is_child', 'price')
                 ->where('order_id', $orderId->order_id)
                 ->get();
 
