@@ -39,7 +39,7 @@ class AdditionalBookingService
             return ['message' => __('object_not_found')];
         }
 
-        if ($bookingObject->is_available) {
+        if (!$bookingObject->is_available) {
             return ['message' => __('object_is_blocked')];
         }
 
