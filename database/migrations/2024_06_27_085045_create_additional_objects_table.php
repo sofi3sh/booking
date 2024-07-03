@@ -21,7 +21,7 @@ return new class extends Migration
             $table->decimal('weekend_price', 10, 2)->default(0);
             $table->decimal('childrens_price', 10, 2)->default(0);
             $table->decimal('childrens_weekend_price', 10, 2)->default(0);
-            $table->enum('is_available', ['yes', 'no'])->default('yes');           
+            $table->enum('is_available', ['yes', 'no'])->default('yes');
             $table->timestamps();
         });
     }
