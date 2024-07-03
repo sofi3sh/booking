@@ -110,7 +110,9 @@ class PaymentController extends Controller
             'transaction_status' => $request->transaction_status,
         ]);
 
-        $bookings = $this->bookingService->bookExistingReserve($request->objects, auth()->user(), $request->order_id);
+        $isAdmin = false;
+
+        $bookings = $this->bookingService->bookExistingReserve($request->objects, auth()->user(), $request->order_id, $isAdmin);
 
         return response()->json(['bookings' => $bookings, 'transaction' => $transaction], 200);
     }

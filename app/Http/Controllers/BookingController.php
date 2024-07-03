@@ -268,6 +268,8 @@ class BookingController extends Controller
             '*.description' => 'nullable|string',
             '*.is_additional' => 'required|boolean',
         ]);
+
+        $isAdmin = true;
     
         $user = auth()->user();
     
@@ -275,7 +277,7 @@ class BookingController extends Controller
             return response()->json(['message' => __('permission_denied')], 403);
         }
         
-        $bookings = $this->bookingService->createNewBooking($request->all());
+        $bookings = $this->bookingService->createNewBooking($request->all(), $isAdmin);
     
         return response()->json(['message' => __('objects_have_been_booked'), 'bookings' => $bookings], 200);
     }

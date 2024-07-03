@@ -22,7 +22,8 @@ class Booking extends Model
         'description',
         'order_id',
         'price',
-        'is_child'
+        'is_child',
+        'is_admin',
     ];
 
     protected $table = 'bookings';

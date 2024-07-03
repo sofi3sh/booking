@@ -19,7 +19,7 @@ class BookingService
         $this->additionalBookingService = $additionalBookingService;
     }
 
-    private function createBooking ($userId, $objectId, $dateFrom, $dateTo, $paymentStatus, $description, $orderId, $price, $isChild)
+    private function createBooking ($userId, $objectId, $dateFrom, $dateTo, $paymentStatus, $description, $orderId, $price, $isChild, $isAdmin)
     {
         return new Booking([
             'user_id' => $userId,
@@ -32,7 +32,8 @@ class BookingService
             'description' => $description,
             'order_id' => $orderId,
             'price' => $price,
-            'is_child' => $isChild
+            'is_child' => $isChild,
+            'is_admin' => $isAdmin
         ]);
     }
 
@@ -58,10 +59,10 @@ class BookingService
         return !$bookingsForObject;
     }
 
-    private function processBookingData($bookingData, $orderId)
+    private function processBookingData($bookingData, $orderId, $isAdmin)
     {
         if ($bookingData['is_additional']) {
-            return $this->additionalBookingService->createNewBooking([$bookingData], $orderId);
+            return $this->additionalBookingService->createNewBooking([$bookingData], $orderId, $isAdmin);
         }
 
         $objectId = $bookingData['object_id'];
@@ -88,7 +89,7 @@ class BookingService
             return ['message' => 'Object ' . $bookingObject->name . ' is not available for booking during the specified dates'];
         }
 
-        $booking = $this->createBooking($userId, $objectId, $dateFromInStartDay, $dateToInEndDay, $bookingData['payment_status'], $description, $orderId, $price, $bookingData['is_child']);
+        $booking = $this->createBooking($userId, $objectId, $dateFromInStartDay, $dateToInEndDay, $bookingData['payment_status'], $description, $orderId, $price, $bookingData['is_child'], $isAdmin);
         $booking->save();
 
         $this->updateBookingObjectStatus($bookingObject, $bookedFrom);
@@ -103,10 +104,10 @@ class BookingService
         event(new BookingObjectStatusUpdated($bookingObject->id, $status));
     }
 
-    private function processBookingForExistingReserve($bookingData, $user, $orderId)
+    private function processBookingForExistingReserve($bookingData, $user, $orderId, $isAdmin)
     {
         if ($bookingData['is_additional']) {
-            return $this->additionalBookingService->createNewBooking([$bookingData], $orderId);
+            return $this->additionalBookingService->createNewBooking([$bookingData], $orderId, $isAdmin);
         }
 
         $objectId = $bookingData['object_id'];
@@ -128,10 +129,10 @@ class BookingService
         $existingBooking = $this->findExistingBooking($user->id, $objectId);
 
         if ($existingBooking) {
-            $this->updateExistingBooking($existingBooking, $bookedFrom, $bookedTo, $description, $orderId, $price);
+            $this->updateExistingBooking($existingBooking, $bookedFrom, $bookedTo, $description, $orderId, $price, $isAdmin);
             $booking = $existingBooking;
         } else {
-            $booking = $this->createBooking($user->id, $objectId, $bookedFrom, $bookedTo, 0, $description, $orderId, $price, $bookingData['is_child']);
+            $booking = $this->createBooking($user->id, $objectId, $bookedFrom, $bookedTo, 0, $description, $orderId, $price, $bookingData['is_child'], $isAdmin);
             $booking->save();
         }
 
@@ -148,7 +149,7 @@ class BookingService
             ->first();
     }
 
-    private function updateExistingBooking($existingBooking, $bookedFrom, $bookedTo, $description, $orderId, $price)
+    private function updateExistingBooking($existingBooking, $bookedFrom, $bookedTo, $description, $orderId, $price, $isAdmin)
     {
         $existingBooking->booked_from = $bookedFrom;
         $existingBooking->booked_to = $bookedTo;
@@ -156,28 +157,29 @@ class BookingService
         $existingBooking->description = $description;
         $existingBooking->order_id = $orderId;
         $existingBooking->price = $price;
+        $existingBooking->is_admin = $isAdmin;
         $existingBooking->save();
     }
 
-    public function createNewBooking($bookingsData)
+    public function createNewBooking($bookingsData, $isAdmin)
     {
         $bookings = [];
         $orderId = strtoupper(uniqid());
 
         foreach ($bookingsData as $bookingData) {
-            $response = $this->processBookingData($bookingData, $orderId);
+            $response = $this->processBookingData($bookingData, $orderId, $isAdmin);
             $bookings[] = $response;
         }
 
         return $bookings;
     }
 
-    public function bookExistingReserve($bookingsData, $user, $orderId)
+    public function bookExistingReserve($bookingsData, $user, $orderId, $isAdmin)
     {
         $bookings = [];
     
         foreach ($bookingsData as $bookingData) {
-            $response = $this->processBookingForExistingReserve($bookingData, $user, $orderId);
+            $response = $this->processBookingForExistingReserve($bookingData, $user, $orderId, $isAdmin);
             $bookings[] = $response;
         }
     

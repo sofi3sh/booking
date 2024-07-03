@@ -8,7 +8,7 @@ use App\Models\AdditionalBooking;
 
 class AdditionalBookingService
 {
-    private function createBooking ($userId, $objectId, $dateFrom, $dateTo, $paymentStatus, $description, $isChild, $orderId, $price)
+    private function createBooking ($userId, $objectId, $dateFrom, $dateTo, $paymentStatus, $description, $isChild, $orderId, $price, $isAdmin)
     {
         return new AdditionalBooking([
             'user_id' => $userId,
@@ -20,10 +20,11 @@ class AdditionalBookingService
             'is_child' => $isChild,
             'order_id' => $orderId,
             'price' => $price,
+            'is_admin' => $isAdmin
         ]);
     }
 
-    private function processBookingData($bookingData, $orderId)
+    private function processBookingData($bookingData, $orderId, $isAdmin)
     {
         $objectId = $bookingData['object_id'];
         $bookedFrom = $bookingData['booked_from'];
@@ -45,7 +46,7 @@ class AdditionalBookingService
         $dateFromInStartDay = Carbon::parse($bookedFrom)->startOfDay();
         $dateToInEndDay = Carbon::parse($bookedTo)->endOfDay();
 
-        $booking = $this->createBooking($userId, $objectId, $dateFromInStartDay, $dateToInEndDay, $bookingData['payment_status'], $description, $bookingData['is_child'], $orderId, $price);
+        $booking = $this->createBooking($userId, $objectId, $dateFromInStartDay, $dateToInEndDay, $bookingData['payment_status'], $description, $bookingData['is_child'], $orderId, $price, $isAdmin);
         $booking->save();
 
         return $booking;
@@ -75,12 +76,12 @@ class AdditionalBookingService
         return $totalPrice;
     }
 
-    public function createNewBooking($additionalBookingsData, $orderId)
+    public function createNewBooking($additionalBookingsData, $orderId, $isAdmin)
     {
         $additionalBookings = [];
 
         foreach ($additionalBookingsData as $bookingData) {
-            $response = $this->processBookingData($bookingData, $orderId);
+            $response = $this->processBookingData($bookingData, $orderId, $isAdmin);
             $bookings[] = $response;
         }
 
