@@ -6,6 +6,7 @@ use App\Models\BookingObject;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use App\Models\Booking;
+use App\Enums\ObjectStatus;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Lang;
 
@@ -84,9 +85,23 @@ class BookingObjectController extends Controller
         ]);
 
         $date = Carbon::parse($request->date)->toDateString();
-        $availableObjects = BookingObject::whereNotIn('id', $this->getAwailableObjectIdsByDate($date))->get();
+        
+        $unavailableObjectIds = $this->getAwailableObjectIdsByDate($date);
 
-        return response()->json($availableObjects, 200);
+        $availableObjects = BookingObject::whereNotIn('id', $unavailableObjectIds)->get();
+        $unavailableObjects = BookingObject::whereIn('id', $unavailableObjectIds)->get();
+
+        foreach ($availableObjects as $object) {
+            $object->status = ObjectStatus::FREE->value;
+        }
+
+        foreach ($unavailableObjects as $object) {
+            $object->status = ObjectStatus::BOOKED->value;
+        }
+
+        $allObjects = $availableObjects->merge($unavailableObjects);
+    
+        return response()->json($allObjects, 200);
     }
 
     /**
