@@ -318,7 +318,7 @@ class UserController extends Controller
                 ->where('order_id', $orderId->order_id)
                 ->get();
             
-            $additionalBookingsInOrder = AdditionalBooking::select('id', 'user_id', 'additional_object_id', 'booked_from', 'booked_to', 'payment_status', 'description', 'price')
+            $additionalBookingsInOrder = AdditionalBooking::select('id', 'user_id', 'additional_object_id', 'booked_from', 'booked_to', 'payment_status', 'description', 'price', 'is_child')
                 ->where('order_id', $orderId->order_id)
                 ->get();
 
