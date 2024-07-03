@@ -631,6 +631,12 @@ class OneCController extends Controller
      *                     type="number",
      *                     description="Is child",
      *                     example=0
+     *                 ),
+     *                 @OA\Property(
+     *                     property="is_admin",
+     *                     type="number",
+     *                     description="Is admin",
+     *                     example=0
      *                 )
      *             )
      *         )
@@ -843,6 +849,12 @@ class OneCController extends Controller
      *                     property="is_child",
      *                     type="integer",
      *                     description="Is child",
+     *                     example=0
+     *                 ),
+     *                 @OA\Property(
+     *                     property="is_admin",
+     *                     type="integer",
+     *                     description="Is admin",
      *                     example=0
      *                 )
      *             )

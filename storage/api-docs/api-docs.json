@@ -125,8 +125,8 @@
                                         "example": "100.00"
                                     },
                                     "is_available": {
-                                        "type": "boolean",
-                                        "example": true
+                                        "type": "string",
+                                        "example": "yes"
                                     }
                                 },
                                 "type": "object"
@@ -184,8 +184,8 @@
                                                     "example": "100.00"
                                                 },
                                                 "is_available": {
-                                                    "type": "boolean",
-                                                    "example": true
+                                                    "type": "string",
+                                                    "example": "yes"
                                                 },
                                                 "created_at": {
                                                     "type": "string",
@@ -295,8 +295,8 @@
                                         "example": "100.00"
                                     },
                                     "is_available": {
-                                        "type": "boolean",
-                                        "example": true
+                                        "type": "string",
+                                        "example": "yes"
                                     }
                                 },
                                 "type": "object"
@@ -3372,6 +3372,11 @@
                                                 "description": "Is child",
                                                 "type": "number",
                                                 "example": 0
+                                            },
+                                            "is_admin": {
+                                                "description": "Is admin",
+                                                "type": "number",
+                                                "example": 0
                                             }
                                         },
                                         "type": "object"
@@ -3576,6 +3581,11 @@
                                             },
                                             "is_child": {
                                                 "description": "Is child",
+                                                "type": "integer",
+                                                "example": 0
+                                            },
+                                            "is_admin": {
+                                                "description": "Is admin",
                                                 "type": "integer",
                                                 "example": 0
                                             }
