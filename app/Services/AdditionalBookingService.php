@@ -57,6 +57,10 @@ class AdditionalBookingService
         $totalPrice = 0.0;
     
         $additionalObject = AdditionalObject::find($additionalObjectId, ['price', 'weekend_price', 'childrens_price', 'childrens_weekend_price']);
+
+        if (!$additionalObject) {
+            return $totalPrice;
+        }
     
         $bookingFrom = Carbon::parse($bookedFrom);
         $bookingTo = Carbon::parse($bookedTo);
