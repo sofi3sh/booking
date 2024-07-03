@@ -21,6 +21,7 @@ class Transaction extends Model
         'issuer_bank_name',
         'card',
         'transaction_status',
+        'phone'
     ];
 
 }

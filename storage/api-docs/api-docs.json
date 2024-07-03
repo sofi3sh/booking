@@ -3465,6 +3465,11 @@
                                                 "description": "Updated at",
                                                 "type": "string",
                                                 "example": "2020-01-01 00:00:00"
+                                            },
+                                            "phone": {
+                                                "description": "Phone",
+                                                "type": "string",
+                                                "example": "380000000000"
                                             }
                                         },
                                         "type": "object"
