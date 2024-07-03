@@ -9,6 +9,7 @@ use App\Models\Transaction;
 use App\Enums\ObjectStatus;
 use Illuminate\Http\Request;
 use App\Services\BookingService;
+use Illuminate\Support\Facades\Log;
 
 class PaymentController extends Controller
 {
@@ -101,6 +102,9 @@ class PaymentController extends Controller
             'objects.*.lang' => 'sometimes|required|string'
         ]);
 
+        Log::info('Це інформаційне повідомлення.');
+        Log::info(auth()->user()->phone);
+
         $transaction = Transaction::create([
             'order_id' => $request->order_id,
             'amount' => $request->amount,
@@ -108,6 +112,7 @@ class PaymentController extends Controller
             'issuer_bank_name' => $request->issuer_bank_name,
             'card' => $request->card,
             'transaction_status' => $request->transaction_status,
+            'phone' => auth()->user()->phone
         ]);
 
         $isAdmin = false;

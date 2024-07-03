@@ -725,6 +725,12 @@ class OneCController extends Controller
      *                     type="string",
      *                     description="Updated at",
      *                     example="2020-01-01 00:00:00"
+     *                 ),
+     *                 @OA\Property(
+     *                     property="phone",
+     *                     type="string",
+     *                     description="Phone",
+     *                     example="380000000000"
      *                 )
      *             )
      *         )
