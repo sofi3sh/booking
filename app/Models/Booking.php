@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\BookingObject;
 
-class Booking extends Model
+class Booking extends BaseModel
 {
     use HasFactory;
 
@@ -22,7 +22,8 @@ class Booking extends Model
         'description',
         'order_id',
         'price',
-        'is_child'
+        'is_child',
+        'is_admin',
     ];
 
     protected $table = 'bookings';

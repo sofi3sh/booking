@@ -631,6 +631,12 @@ class OneCController extends Controller
      *                     type="number",
      *                     description="Is child",
      *                     example=0
+     *                 ),
+     *                 @OA\Property(
+     *                     property="is_admin",
+     *                     type="number",
+     *                     description="Is admin",
+     *                     example=0
      *                 )
      *             )
      *         )
@@ -719,6 +725,12 @@ class OneCController extends Controller
      *                     type="string",
      *                     description="Updated at",
      *                     example="2020-01-01 00:00:00"
+     *                 ),
+     *                 @OA\Property(
+     *                     property="phone",
+     *                     type="string",
+     *                     description="Phone",
+     *                     example="380000000000"
      *                 )
      *             )
      *         )
@@ -843,6 +855,12 @@ class OneCController extends Controller
      *                     property="is_child",
      *                     type="integer",
      *                     description="Is child",
+     *                     example=0
+     *                 ),
+     *                 @OA\Property(
+     *                     property="is_admin",
+     *                     type="integer",
+     *                     description="Is admin",
      *                     example=0
      *                 )
      *             )

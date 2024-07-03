@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Booking;
+use App\Models\AdditionalBooking;
 use App\Models\BookingObject;
 use App\Enums\ObjectStatus;
 use Carbon\Carbon;
@@ -12,6 +13,7 @@ use Illuminate\Support\Facades\Event;
 use App\Services\BookingService;
 use App\Services\AdditionalBookingService;
 use GuzzleHttp\Client;
+use App\Models\Transaction;
 
 class BookingController extends Controller
 {
@@ -88,7 +90,7 @@ class BookingController extends Controller
             ->where('booked_from', '<', Carbon::now())
             ->where('canceled', 0)
             ->whereHas('object', function ($query) {
-                $query->where('status', ObjectStatus::BOOKED->value);
+                $query->where('status', '!=', ObjectStatus::BOOKED->value);
             })
             ->distinct()
             ->pluck('object_id');
@@ -188,14 +190,16 @@ class BookingController extends Controller
         }
     }
 
-    private static function isBookingNotificationRequired ()
-    {
-        $currentDate = Carbon::now()->toDateString();
-    
+    public static function isBookingNotificationRequired ()
+    {    
         $totalObjects = BookingObject::count();
+
+        if ($totalObjects == 0) {
+            return false;
+        }
     
-        $bookedObjectsCount = Booking::whereDate('booked_from', '<=', $currentDate)
-            ->whereDate('booked_to', '>=', $currentDate)
+        $bookedObjectsCount = Booking::where('booked_from', '<=', Carbon::now())
+            ->where('booked_to', '>=', Carbon::now())
             ->count();
     
         $percentageBooked = ($bookedObjectsCount / $totalObjects) * 100;
@@ -265,6 +269,8 @@ class BookingController extends Controller
             '*.description' => 'nullable|string',
             '*.is_additional' => 'required|boolean',
         ]);
+
+        $isAdmin = true;
     
         $user = auth()->user();
     
@@ -272,7 +278,7 @@ class BookingController extends Controller
             return response()->json(['message' => __('permission_denied')], 403);
         }
         
-        $bookings = $this->bookingService->createNewBooking($request->all());
+        $bookings = $this->bookingService->createNewBooking($request->all(), $isAdmin);
     
         return response()->json(['message' => __('objects_have_been_booked'), 'bookings' => $bookings], 200);
     }
@@ -304,7 +310,7 @@ class BookingController extends Controller
     {
         $request->validate([
             'object_id' => 'required|integer',
-            'booked_from' => 'required|date|after_or_equal:today',
+            'booked_from' => 'required|date',
             'booked_to' => 'required|date|after_or_equal:booked_from',
             'is_child' => 'required|boolean',
             'is_additional' => 'required|boolean'
@@ -329,15 +335,20 @@ class BookingController extends Controller
         $totalPrice = 0.0;
 
         $bookingsInOrder = Booking::where('order_id', $request->order_id)->get();
+        $additionalBookingsInOrder = AdditionalBooking::where('order_id', $request->order_id)->get();
+
+        $allBookingsInOrger = $bookingsInOrder->merge($additionalBookingsInOrder);
 
         if ($bookingsInOrder->isEmpty()) {
             return response()->json(['message' => __('order_not_found')], 404);
         }
 
-        foreach ($bookingsInOrder as $booking) {
+        $transactionStatus = Transaction::select('transaction_status')->where('order_id', $request->order_id)->first();
+
+        foreach ($allBookingsInOrger as $booking) {
             $totalPrice += $booking->price;
         }
 
-        return response()->json(['bookings' => $bookingsInOrder, 'total_price' => $totalPrice], 200);
+        return response()->json(['bookings' => $allBookingsInOrger, 'total_price' => $totalPrice, 'transaction_status' => $transactionStatus->transaction_status ?? null], 200);
     }
 }

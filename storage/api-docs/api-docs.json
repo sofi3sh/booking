@@ -6,6 +6,435 @@
     },
     "paths": {
         "/api/": {},
+        "/api/additionalObjects/getAdditionalObjects": {
+            "get": {
+                "tags": [
+                    "AdditionalObject"
+                ],
+                "summary": "Get additional objects",
+                "operationId": "4fb41da84e8940ec6dc2059342878841",
+                "responses": {
+                    "200": {
+                        "description": "Get additional objects successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "properties": {
+                                            "id": {
+                                                "type": "integer",
+                                                "example": 1
+                                            },
+                                            "name": {
+                                                "type": "string",
+                                                "example": "вхід до басейну"
+                                            },
+                                            "description": {
+                                                "type": "string",
+                                                "example": "опис"
+                                            },
+                                            "price": {
+                                                "type": "string",
+                                                "example": "200.00"
+                                            },
+                                            "weekend_price": {
+                                                "type": "string",
+                                                "example": "150.00"
+                                            },
+                                            "childrens_price": {
+                                                "type": "string",
+                                                "example": "100.00"
+                                            },
+                                            "childrens_weekend_price": {
+                                                "type": "string",
+                                                "example": "100.00"
+                                            },
+                                            "is_available": {
+                                                "type": "string",
+                                                "example": "yes"
+                                            }
+                                        },
+                                        "type": "object"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Object not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Object not found"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/additionalObjects/addAdditionalObject": {
+            "post": {
+                "tags": [
+                    "AdditionalObject"
+                ],
+                "summary": "Add additional object",
+                "operationId": "a7c2495dcf76efb6e7dbf1983763164b",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "name_ua": {
+                                        "type": "string",
+                                        "example": "вхід до басейну"
+                                    },
+                                    "name_en": {
+                                        "type": "string",
+                                        "example": "pool entrance"
+                                    },
+                                    "description_ua": {
+                                        "type": "string",
+                                        "example": "опис"
+                                    },
+                                    "description_en": {
+                                        "type": "string",
+                                        "example": "description"
+                                    },
+                                    "price": {
+                                        "type": "string",
+                                        "example": "200.00"
+                                    },
+                                    "weekend_price": {
+                                        "type": "string",
+                                        "example": "150.00"
+                                    },
+                                    "childrens_price": {
+                                        "type": "string",
+                                        "example": "100.00"
+                                    },
+                                    "childrens_weekend_price": {
+                                        "type": "string",
+                                        "example": "100.00"
+                                    },
+                                    "is_available": {
+                                        "type": "string",
+                                        "example": "yes"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Additional object added successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Additional object added successfully"
+                                        },
+                                        "object": {
+                                            "properties": {
+                                                "id": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "name_ua": {
+                                                    "type": "string",
+                                                    "example": "вхід до басейну"
+                                                },
+                                                "name_en": {
+                                                    "type": "string",
+                                                    "example": "pool entrance"
+                                                },
+                                                "description_ua": {
+                                                    "type": "string",
+                                                    "example": "опис"
+                                                },
+                                                "description_en": {
+                                                    "type": "string",
+                                                    "example": "description"
+                                                },
+                                                "price": {
+                                                    "type": "string",
+                                                    "example": "200.00"
+                                                },
+                                                "weekend_price": {
+                                                    "type": "string",
+                                                    "example": "150.00"
+                                                },
+                                                "childrens_price": {
+                                                    "type": "string",
+                                                    "example": "100.00"
+                                                },
+                                                "childrens_weekend_price": {
+                                                    "type": "string",
+                                                    "example": "100.00"
+                                                },
+                                                "is_available": {
+                                                    "type": "string",
+                                                    "example": "yes"
+                                                },
+                                                "created_at": {
+                                                    "type": "string",
+                                                    "format": "date-time",
+                                                    "example": "2024-06-28T12:34:56Z"
+                                                },
+                                                "updated_at": {
+                                                    "type": "string",
+                                                    "format": "date-time",
+                                                    "example": "2024-06-28T12:34:56Z"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Permission denied",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "permission_denied"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "503": {
+                        "description": "Not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unauthenticated."
+                                        },
+                                        "error": {
+                                            "type": "string",
+                                            "example": "Line 102 - /booking/vendor/laravel/framework/src/Illuminate/Auth/Middleware/Authenticate.php"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/additionalObjects/editAdditionalObject": {
+            "post": {
+                "tags": [
+                    "AdditionalObject"
+                ],
+                "summary": "Edit additional object",
+                "operationId": "5b1a8c8fae8666002ae13a4fef1f082a",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "id": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "name_ua": {
+                                        "type": "string",
+                                        "example": "вхід до басейну"
+                                    },
+                                    "name_en": {
+                                        "type": "string",
+                                        "example": "pool entrance"
+                                    },
+                                    "description_ua": {
+                                        "type": "string",
+                                        "example": "опис"
+                                    },
+                                    "description_en": {
+                                        "type": "string",
+                                        "example": "description"
+                                    },
+                                    "price": {
+                                        "type": "string",
+                                        "example": "200.00"
+                                    },
+                                    "weekend_price": {
+                                        "type": "string",
+                                        "example": "150.00"
+                                    },
+                                    "childrens_price": {
+                                        "type": "string",
+                                        "example": "100.00"
+                                    },
+                                    "childrens_weekend_price": {
+                                        "type": "string",
+                                        "example": "100.00"
+                                    },
+                                    "is_available": {
+                                        "type": "string",
+                                        "example": "yes"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Additional object updated successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Additional object updated successfully"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Permission denied",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "permission_denied"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "503": {
+                        "description": "The selected id is invalid.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "The selected id is invalid."
+                                        },
+                                        "error": {
+                                            "type": "string",
+                                            "example": "Line 368 - /booking/vendor/laravel/framework/src/Illuminate/Support/helpers.php"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/additionalObjects/deleteAdditionalObject": {
+            "post": {
+                "tags": [
+                    "AdditionalObject"
+                ],
+                "summary": "Delete additional object",
+                "operationId": "96095c262222862a988f93122e6c4b35",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "id": {
+                                        "type": "integer",
+                                        "example": 1
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Additional object deleted successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Additional object deleted successfully"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Permission denied",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "permission_denied"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "object not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {
+                                            "type": "string",
+                                            "example": "object not found"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/api/auth/register": {
             "post": {
                 "tags": [
@@ -454,6 +883,10 @@
                                         "description": "Should the price be calculated for the child",
                                         "type": "boolean"
                                     },
+                                    "is_additional": {
+                                        "description": "Should the price be calculated for the additional objects",
+                                        "type": "boolean"
+                                    },
                                     "lang": {
                                         "description": "Specify language",
                                         "type": "string",
@@ -691,6 +1124,10 @@
                                         "nullable": true
                                     },
                                     "is_child": {
+                                        "description": "Should the price be calculated for the child",
+                                        "type": "boolean"
+                                    },
+                                    "is_additional": {
                                         "description": "Should the price be calculated for the child",
                                         "type": "boolean"
                                     },
@@ -2935,6 +3372,11 @@
                                                 "description": "Is child",
                                                 "type": "number",
                                                 "example": 0
+                                            },
+                                            "is_admin": {
+                                                "description": "Is admin",
+                                                "type": "number",
+                                                "example": 0
                                             }
                                         },
                                         "type": "object"
@@ -3023,6 +3465,11 @@
                                                 "description": "Updated at",
                                                 "type": "string",
                                                 "example": "2020-01-01 00:00:00"
+                                            },
+                                            "phone": {
+                                                "description": "Phone",
+                                                "type": "string",
+                                                "example": "380000000000"
                                             }
                                         },
                                         "type": "object"
@@ -3139,6 +3586,11 @@
                                             },
                                             "is_child": {
                                                 "description": "Is child",
+                                                "type": "integer",
+                                                "example": 0
+                                            },
+                                            "is_admin": {
+                                                "description": "Is admin",
                                                 "type": "integer",
                                                 "example": 0
                                             }
@@ -4840,6 +5292,10 @@
         }
     },
     "tags": [
+        {
+            "name": "AdditionalObject",
+            "description": "API for additional objects"
+        },
         {
             "name": "Auth",
             "description": "API for authentication"

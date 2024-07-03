@@ -8,7 +8,7 @@ use App\Models\AdditionalBooking;
 
 class AdditionalBookingService
 {
-    private function createBooking ($userId, $objectId, $dateFrom, $dateTo, $paymentStatus, $description, $isChild, $orderId, $price)
+    private function createBooking ($userId, $objectId, $dateFrom, $dateTo, $paymentStatus, $description, $isChild, $orderId, $price, $isAdmin)
     {
         return new AdditionalBooking([
             'user_id' => $userId,
@@ -20,10 +20,11 @@ class AdditionalBookingService
             'is_child' => $isChild,
             'order_id' => $orderId,
             'price' => $price,
+            'is_admin' => $isAdmin
         ]);
     }
 
-    private function processBookingData($bookingData, $orderId)
+    private function processBookingData($bookingData, $orderId, $isAdmin)
     {
         $objectId = $bookingData['object_id'];
         $bookedFrom = $bookingData['booked_from'];
@@ -38,14 +39,14 @@ class AdditionalBookingService
             return ['message' => __('object_not_found')];
         }
 
-        if ($bookingObject->is_available) {
+        if (!$bookingObject->is_available) {
             return ['message' => __('object_is_blocked')];
         }
 
         $dateFromInStartDay = Carbon::parse($bookedFrom)->startOfDay();
         $dateToInEndDay = Carbon::parse($bookedTo)->endOfDay();
 
-        $booking = $this->createBooking($userId, $objectId, $dateFromInStartDay, $dateToInEndDay, $bookingData['payment_status'], $description, $bookingData['is_child'], $orderId, $price);
+        $booking = $this->createBooking($userId, $objectId, $dateFromInStartDay, $dateToInEndDay, $bookingData['payment_status'], $description, $bookingData['is_child'], $orderId, $price, $isAdmin);
         $booking->save();
 
         return $booking;
@@ -56,8 +57,8 @@ class AdditionalBookingService
         $totalPrice = 0.0;
     
         $additionalObject = AdditionalObject::find($additionalObjectId, ['price', 'weekend_price', 'childrens_price', 'childrens_weekend_price']);
-        
-        if (!$additionalObject || !Carbon::hasFormat($bookedFrom, 'Y-m-d') || !Carbon::hasFormat($bookedTo, 'Y-m-d')) {
+
+        if (!$additionalObject) {
             return $totalPrice;
         }
     
@@ -79,12 +80,12 @@ class AdditionalBookingService
         return $totalPrice;
     }
 
-    public function createNewBooking($additionalBookingsData, $orderId)
+    public function createNewBooking($additionalBookingsData, $orderId, $isAdmin)
     {
         $additionalBookings = [];
 
         foreach ($additionalBookingsData as $bookingData) {
-            $response = $this->processBookingData($bookingData, $orderId);
+            $response = $this->processBookingData($bookingData, $orderId, $isAdmin);
             $bookings[] = $response;
         }
 

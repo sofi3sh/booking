@@ -9,6 +9,7 @@ use App\Models\Transaction;
 use App\Enums\ObjectStatus;
 use Illuminate\Http\Request;
 use App\Services\BookingService;
+use Illuminate\Support\Facades\Log;
 
 class PaymentController extends Controller
 {
@@ -19,7 +20,7 @@ class PaymentController extends Controller
         $this->bookingService = $bookingService;
     }
 
-    public function preparePaymentData(Request $request)
+    public function preparePaymentData(Request $request, $orderReference = null)
     {
         $request->validate([
             'amount' => 'required|numeric',
@@ -37,7 +38,7 @@ class PaymentController extends Controller
 
         $merchantAccount = 'poolandbeach_zp_ua';
         $merchantDomainName = 'poolandbeach.zp.ua';
-        $orderReference = strtoupper(uniqid());
+        $orderReference = $orderReference ?? strtoupper(uniqid());
         $orderDate = $currentDate;
         $amount = $request->amount;
         $currency = 'UAH';
@@ -96,10 +97,13 @@ class PaymentController extends Controller
             'objects.*.user_id' => 'required|integer',
             'objects.*.payment_status' => 'required|boolean',
             'objects.*.description' => 'nullable|string',
-            'objects.*.is_clild' => 'nullable|boolean',
+            'objects.*.is_child' => 'nullable|boolean',
             'objects.*.is_additional' => 'required|boolean',
             'objects.*.lang' => 'sometimes|required|string'
         ]);
+
+        Log::info('Це інформаційне повідомлення.');
+        Log::info(auth()->user()->phone);
 
         $transaction = Transaction::create([
             'order_id' => $request->order_id,
@@ -108,9 +112,12 @@ class PaymentController extends Controller
             'issuer_bank_name' => $request->issuer_bank_name,
             'card' => $request->card,
             'transaction_status' => $request->transaction_status,
+            'phone' => auth()->user()->phone
         ]);
 
-        $bookings = $this->bookingService->bookExistingReserve($request->objects, auth()->user(), $request->order_id);
+        $isAdmin = false;
+
+        $bookings = $this->bookingService->bookExistingReserve($request->objects, auth()->user(), $request->order_id, $isAdmin);
 
         return response()->json(['bookings' => $bookings, 'transaction' => $transaction], 200);
     }
@@ -122,14 +129,21 @@ class PaymentController extends Controller
             'transaction_status' => $request->transaction_status
         ]);
 
-        if ($request->transaction_status == 'Expired' || 
-            $request->transaction_status == 'Declined') {
-                $bookings = Booking::where('order_id', $orderId)->update([
-                    'canceled' => true,
-                    'payment_status' => true
-                ]);
-            }
+        if ($request->transaction_status == 'Expired' || $request->transaction_status == 'Declined') {
+            Booking::where('order_id', $orderId)->update([
+                'canceled' => true,
+                'payment_status' => false
+            ]);
+        } else {
+            Booking::where('order_id', $orderId)->update([
+                'payment_status' => true
+            ]);
+        }
 
-        return response()->json(['transaction' => $transaction], 200);
+        $bookingsInOrder = Booking::where('order_id', $orderId)->get();
+
+        foreach ($bookingsInOrder as $booking) {
+            $this->bookingService->updateBookingObjectStatus(BookingObject::find($booking->object_id), $booking->booked_from);
+        }
     }
 }
