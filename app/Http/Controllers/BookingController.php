@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Booking;
+use App\Models\AdditionalBooking;
 use App\Models\BookingObject;
 use App\Enums\ObjectStatus;
 use Carbon\Carbon;
@@ -334,6 +335,9 @@ class BookingController extends Controller
         $totalPrice = 0.0;
 
         $bookingsInOrder = Booking::where('order_id', $request->order_id)->get();
+        $additionalBookingsInOrder = AdditionalBooking::where('order_id', $request->order_id)->get();
+
+        $allBookingsInOrger = $bookingsInOrder->merge($additionalBookingsInOrder);
 
         if ($bookingsInOrder->isEmpty()) {
             return response()->json(['message' => __('order_not_found')], 404);
@@ -341,10 +345,10 @@ class BookingController extends Controller
 
         $transactionStatus = Transaction::select('transaction_status')->where('order_id', $request->order_id)->first();
 
-        foreach ($bookingsInOrder as $booking) {
+        foreach ($allBookingsInOrger as $booking) {
             $totalPrice += $booking->price;
         }
 
-        return response()->json(['bookings' => $bookingsInOrder, 'total_price' => $totalPrice, 'transaction_status' => $transactionStatus], 200);
+        return response()->json(['bookings' => $allBookingsInOrger, 'total_price' => $totalPrice, 'transaction_status' => $transactionStatus->transaction_status ?? null], 200);
     }
 }
