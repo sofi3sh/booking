@@ -88,8 +88,15 @@ class BookingObjectController extends Controller
         
         $unavailableObjectIds = $this->getAwailableObjectIdsByDate($date);
 
-        $availableObjects = BookingObject::whereNotIn('id', $unavailableObjectIds)->get();
-        $unavailableObjects = BookingObject::whereIn('id', $unavailableObjectIds)->get();
+        $availableObjects = BookingObject::whereNotIn('id', $unavailableObjectIds)
+            ->where('status', '!=', ObjectStatus::RESERVED->value)
+            ->get();
+
+        $unavailableObjects = BookingObject::whereIn('id', $unavailableObjectIds)
+            ->where('status', '!=', ObjectStatus::RESERVED->value)
+            ->get();
+
+        $reservedObjects = BookingObject::where('status', ObjectStatus::RESERVED->value)->get();
 
         foreach ($availableObjects as $object) {
             $object->status = ObjectStatus::FREE->value;
@@ -99,7 +106,7 @@ class BookingObjectController extends Controller
             $object->status = ObjectStatus::BOOKED->value;
         }
 
-        $allObjects = $availableObjects->merge($unavailableObjects);
+        $allObjects = $availableObjects->merge($unavailableObjects)->merge($reservedObjects);
     
         return response()->json($allObjects, 200);
     }

@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Storage;
 use App\Models\Booking;
 use App\Models\AdditionalObject;
 use App\Models\AdditionalBooking;
+use App\Models\Transaction;
 use Carbon\Carbon;
 
 class UserController extends Controller

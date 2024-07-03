@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\BookingObject;
 
-class Booking extends Model
+class Booking extends BaseModel
 {
     use HasFactory;
 
