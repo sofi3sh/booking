@@ -16,7 +16,8 @@ Schedule::call(function () {
 
 Schedule::call(function () {
     BookingController::updateBookedObjectsStatus();
-    AdditionalBookingController::updateAdditionalObjectAvailable();
+    // Disabled because there is no possibility on the frontend for all sunbeds to be booked.
+    // AdditionalBookingController::updateAdditionalObjectAvailable();
 })->at('00:01');
 
 Schedule::call(function () {
