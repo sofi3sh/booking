@@ -356,4 +356,40 @@ class BookingController extends Controller
 
         return response()->json(['bookings' => $allBookingsInOrger, 'total_price' => $totalPrice, 'transaction_status' => $transactionStatus->transaction_status ?? null], 200);
     }
+
+    public function deleteOrderById(Request $request) 
+    {
+        $request->validate([
+            'order_id' => 'required|string',
+        ]);
+
+        $user = auth()->user();
+
+        if (!$this->userIsAdmin($user) && !$this->userIsBookingAgent($user)) {
+            return response()->json(['message' => __('permission_denied')], 403);
+        }
+
+        $bookings = Booking::where('order_id', $request->order_id)->get();
+
+        $additionalookings = AdditionalBooking::where('order_id', $request->order_id)->get();
+
+        if ($bookings->isEmpty() && $additionalookings->isEmpty()) {
+            return response()->json(['message' => __('booking_not_found')], 404);
+        }
+
+        foreach ($bookings as $booking) {
+            $bookingObject = BookingObject::find($booking->object_id);
+
+            $booked_from = $booking->booked_from;
+            $booking->delete();
+            $this->bookingService->updateBookingObjectStatus($bookingObject, $booked_from);
+        }
+
+        foreach ($additionalookings as $additionalBooking) {
+            $additionalBooking->delete();
+        }
+
+
+        return response()->json(['message' => __('booking_deleted_successfully')], 200);
+    }
 }

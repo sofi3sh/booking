@@ -535,4 +535,100 @@ class BookingController extends Controller
     {
         //
     }
+
+    /**
+     * @OA\Delete(
+     *     path="/api/booking/admin/deleteOrderById",
+     *     summary="Delete order by id",
+     *     tags={"Bookings"},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(
+     *                 property="order_id",
+     *                 type="string",
+     *                 description="Order ID"
+     *             ),
+     *             @OA\Property(
+     *                 property="lang",
+     *                 type="string",
+     *                 description="Language code",
+     *                 example="en"
+     *             ),
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response="200",
+     *         description="Successful response",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(
+     *                 property="message",
+     *                 type="string",
+     *                 example="booking deleted successfully"
+     *             )
+     *         ),
+     *     ),
+     *     @OA\Response(
+     *         response="404",
+     *         description="Order not found",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(
+     *                 property="message",
+     *                 type="string",
+     *                 example="Booking not found"
+     *             )
+     *         ),
+     *     ),
+     *     @OA\Response(
+     *         response="403",
+     *         description="Permission denied",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(
+     *                 property="message",
+     *                 type="string",
+     *                 example="Permission denied"
+     *             )
+     *         ),
+     *     ),
+     * )
+     */
+    public function deleteOrderById(Request $request) 
+    {
+        $request->validate([
+            'order_id' => 'required|string',
+        ]);
+
+        $user = auth()->user();
+
+        if (!$this->userIsAdmin($user) && !$this->userIsBookingAgent($user)) {
+            return response()->json(['message' => __('permission_denied')], 403);
+        }
+
+        $bookings = Booking::where('order_id', $request->order_id)->get();
+
+        $additionalookings = AdditionalBooking::where('order_id', $request->order_id)->get();
+
+        if ($bookings->isEmpty() && $additionalookings->isEmpty()) {
+            return response()->json(['message' => __('booking_not_found')], 404);
+        }
+
+        foreach ($bookings as $booking) {
+            $bookingObject = BookingObject::find($booking->object_id);
+
+            $booked_from = $booking->booked_from;
+            $booking->delete();
+            $this->bookingService->updateBookingObjectStatus($bookingObject, $booked_from);
+        }
+
+        foreach ($additionalookings as $additionalBooking) {
+            $additionalBooking->delete();
+        }
+
+
+        return response()->json(['message' => __('booking_deleted_successfully')], 200);
+    }
 }

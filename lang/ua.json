@@ -31,6 +31,8 @@
     "object_detail_deleted_successfully": "Деталі об'єкту видалено успішно",
     "object_is_blocked": "Обʼєкт заблоковано для бронювання",
     "verification_code": "Ваш код верифікації: ",
+    "booking_not_found": "Бронювання не знайдено",
+    "booking_deleted_successfully": "Бронювання успішно видалено",
     "booking_objects": {
         "seeders": {
             "bungalo_name": "Бунгало ",
