@@ -211,6 +211,11 @@ class BookingController extends Controller
     {
         return $user->role_id == 1;
     }
+    
+    private function userIsBookingAgent ($user)
+    {
+        return $user->role_id == 2;
+    }
 
     private function getPriceCalculationService($isAdditional)
     {
@@ -274,7 +279,7 @@ class BookingController extends Controller
     
         $user = auth()->user();
     
-        if (!$this->userIsAdmin($user)) {
+        if (!$this->userIsAdmin($user) && !$this->userIsBookingAgent($user)) {
             return response()->json(['message' => __('permission_denied')], 403);
         }
         
