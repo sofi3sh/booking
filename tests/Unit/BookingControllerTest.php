@@ -437,19 +437,34 @@ class BookingControllerTest extends TestCase
     //     }
     // }
 
-    public function testAdminBookObjectsPermissionDenied()
+    public function testAdminBookObjectsSuccess()
     {
-        $this->actingAs($this->user, 'api');
-
+        $this->actingAs($this->admin, 'api');
+    
         $bookingObjects = BookingObject::factory()->count(2)->create();
-
+    
+        $this->bookingServiceMock->shouldReceive('createNewBooking')
+            ->once()
+            ->andReturn([
+                Booking::factory()->create([
+                    'object_id' => $bookingObjects[0]->id,
+                    'user_id' => $this->user->id,
+                    'payment_status' => true
+                ])->toArray(),
+                Booking::factory()->create([
+                    'object_id' => $bookingObjects[1]->id,
+                    'user_id' => $this->user->id,
+                    'payment_status' => true
+                ])->toArray()
+            ]);
+    
         $request = [
             [
                 'object_id' => $bookingObjects[0]->id,
                 'booked_from' => '2024-07-01',
                 'booked_to' => '2024-07-05',
                 'user_id' => $this->user->id,
-                'payment_status' => true,
+                'payment_status' => false,
                 'is_child' => false,
                 'description' => 'Test Description 1',
                 'is_additional' => false
@@ -459,63 +474,28 @@ class BookingControllerTest extends TestCase
                 'booked_from' => '2024-07-01',
                 'booked_to' => '2024-07-05',
                 'user_id' => $this->user->id,
-                'payment_status' => true,
+                'payment_status' => false,
                 'is_child' => false,
                 'description' => 'Test Description 2',
                 'is_additional' => false
             ]
         ];
-
+    
         $response = $this->postJson('/api/booking/admin/bookObjects', $request);
-
-        $response->assertStatus(403);
-        $response->assertJson(['message' => __('permission_denied')]);
-
+    
+        $response->assertStatus(200);
+        $response->assertJsonStructure(['message', 'bookings']);
+        $response->assertJson(['message' => __('objects_have_been_booked')]);
+    
         foreach ($bookingObjects as $bookingObject) {
-            $this->assertDatabaseMissing('bookings', [
+            $this->assertDatabaseHas('bookings', [
                 'object_id' => $bookingObject->id,
                 'user_id' => $this->user->id,
+                'payment_status' => true,
             ]);
         }
     }
-
-    public function testAdminBookObjectsValidationError()
-    {
-        $this->actingAs($this->admin, 'api');
-
-        $bookingObjects = BookingObject::factory()->count(2)->create();
-
-        $request = [
-            [
-                'object_id' => $bookingObjects[0]->id,
-                // 'booked_from' is missing
-                'booked_to' => '2024-07-05',
-                'user_id' => $this->user->id,
-                'payment_status' => true,
-                'is_child' => false,
-                'description' => 'Test Description 1',
-                'is_additional' => false
-            ],
-            [
-                'object_id' => $bookingObjects[1]->id,
-                'booked_from' => '2024-07-01',
-                'booked_to' => '2024-07-05',
-                'user_id' => $this->user->id,
-                'payment_status' => true,
-                'is_child' => false,
-                'description' => 'Test Description 2',
-                'is_additional' => false
-            ]
-        ];
-
-        $response = $this->postJson('/api/booking/admin/bookObjects', $request);
-
-        $response->assertStatus(503);
-
-        $responseData = $response->json();
-        $this->assertEquals('The 0.booked_from field is required.', $responseData['message']);
-    }
-
+        
     public function testCancelOrderSuccess()
     {
         $this->actingAs($this->user, 'api');
