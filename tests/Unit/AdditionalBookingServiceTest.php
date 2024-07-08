@@ -30,7 +30,7 @@ class AdditionalBookingServiceTest extends TestCase
 
         $price = $this->additionalBookingService->calculatePrice($additionalObject->id, $bookedFrom, $bookedTo, false);
 
-        $expectedPrice = (3 * 100) + (2 * 150); // 3 weekdays and 2 weekend days
+        $expectedPrice = (2 * 100) + (3 * 150); // 2 weekdays and 3 weekend days
 
         $this->assertEquals($expectedPrice, $price);
     }
@@ -45,11 +45,11 @@ class AdditionalBookingServiceTest extends TestCase
         ]);
 
         $bookedFrom = '2024-07-01';
-        $bookedTo = '2024-07-05'; // 5 weekdays
+        $bookedTo = '2024-07-04'; // 4 weekdays
 
         $price = $this->additionalBookingService->calculatePrice($additionalObject->id, $bookedFrom, $bookedTo, true);
 
-        $expectedPrice = (5 * 50); // 5 weekdays
+        $expectedPrice = (4 * 50); // 4 weekdays
 
         $this->assertEquals($expectedPrice, $price);
     }
