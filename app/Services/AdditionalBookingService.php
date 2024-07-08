@@ -73,7 +73,8 @@ class AdditionalBookingService
         $weekendPrice = $isChild ? $additionalObject->childrens_weekend_price : $additionalObject->weekend_price;
     
         for ($currentDay = $bookingFrom; $currentDay <= $bookingTo; $currentDay->addDay()) {
-            $dailyPrice = $currentDay->isWeekend() ? $weekendPrice : $regularPrice;
+            $isWeekend = $currentDay->isWeekend() || $currentDay->isFriday();
+            $dailyPrice = $isWeekend ? $weekendPrice : $regularPrice;
             $totalPrice += $dailyPrice;
         }
     

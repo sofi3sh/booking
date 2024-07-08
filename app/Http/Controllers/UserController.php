@@ -25,6 +25,49 @@ class UserController extends Controller
         return $user->role_id == 2;
     }
 
+    private function getUserBookingsByUserId ($userId)
+    {
+        $bookingOrderIds = Booking::select('order_id')
+            ->where('user_id', $userId)
+            ->whereNotNull('order_id')
+            ->groupBy('order_id')
+            ->pluck('order_id')
+            ->toArray();
+
+        $additionalBookingOrderIds = AdditionalBooking::select('order_id')
+            ->where('user_id', $userId)
+            ->whereNotNull('order_id')
+            ->groupBy('order_id')
+            ->pluck('order_id')
+            ->toArray();
+
+        $combinedOrderIds = array_unique(array_merge($bookingOrderIds, $additionalBookingOrderIds));
+
+        $orderBookingObjectIds = [];
+
+        foreach ($combinedOrderIds as $orderId) {
+            $bookingsInOrder = Booking::select('id', 'user_id', 'object_id', 'booked_from', 'booked_to', 'payment_status', 'canceled', 'description', 'price', 'created_at', 'is_child')
+                ->where('order_id', $orderId)
+                ->get();
+            
+            $additionalBookingsInOrder = AdditionalBooking::select('id', 'user_id', 'additional_object_id', 'booked_from', 'booked_to', 'payment_status', 'description', 'price', 'is_child')
+                ->where('order_id', $orderId)
+                ->get();
+
+            $allBookingsInOrder = $bookingsInOrder->merge($additionalBookingsInOrder);
+
+            $transactionStatus = Transaction::select('transaction_status')->where('order_id', $orderId)->first();
+
+            foreach ($allBookingsInOrder as $booking) {
+                $booking->transaction_status = $transactionStatus->transaction_status ?? null;
+            }
+
+            $orderBookingObjectIds[$orderId] = $allBookingsInOrder;
+        };
+
+        return $orderBookingObjectIds;
+    }
+
     public function getProfile ()
     {
         $user = auth()->user();
@@ -201,33 +244,7 @@ class UserController extends Controller
     {
         $user = auth()->user();
 
-        $bookingsOrderIds = Booking::select('order_id')
-            ->where('user_id', $user->id)
-            ->whereNotNull('order_id')
-            ->groupBy('order_id')
-            ->get();
-
-        $orderBookingObjectIds = [];
-
-        foreach ($bookingsOrderIds as $orderId) {
-            $bookingsInOrder = Booking::select('id', 'user_id', 'object_id', 'booked_from', 'booked_to', 'payment_status', 'canceled', 'description', 'is_child', 'price')
-                ->where('order_id', $orderId->order_id)
-                ->get();
-
-            $additionalBookingsInOrder = AdditionalBooking::select('id', 'user_id', 'additional_object_id', 'booked_from', 'booked_to', 'payment_status', 'description', 'is_child', 'price')
-                ->where('order_id', $orderId->order_id)
-                ->get();
-
-            $allBookingsInOrder = $bookingsInOrder->merge($additionalBookingsInOrder);
-
-            $transactionStatus = Transaction::select('transaction_status')->where('order_id', $orderId->order_id)->first();
-
-            foreach ($allBookingsInOrder as $booking) {
-                $booking->transaction_status = $transactionStatus->transaction_status ?? null;
-            }
-
-            $orderBookingObjectIds[$orderId->order_id] = $allBookingsInOrder;
-        };
+        $orderBookingObjectIds = $this->getUserBookingsByUserId($user->id);
 
         if (!$orderBookingObjectIds) {
             return response()->json(['message' => __('no_bookings_found')], 404);
@@ -308,34 +325,8 @@ class UserController extends Controller
         if (!$targetUser) {
             return response()->json(['message' => __('user_not_found')], 404);
         }
-
-        $bookingsOrderIds = Booking::select('order_id')
-            ->where('user_id', $targetUser->id)
-            ->whereNotNull('order_id')
-            ->groupBy('order_id')
-            ->get();
-
-        $orderBookingObjectIds = [];
-
-        foreach ($bookingsOrderIds as $orderId) {
-            $bookingsInOrder = Booking::select('id', 'user_id', 'object_id', 'booked_from', 'booked_to', 'payment_status', 'canceled', 'description', 'price', 'created_at', 'is_child')
-                ->where('order_id', $orderId->order_id)
-                ->get();
-            
-            $additionalBookingsInOrder = AdditionalBooking::select('id', 'user_id', 'additional_object_id', 'booked_from', 'booked_to', 'payment_status', 'description', 'price', 'is_child')
-                ->where('order_id', $orderId->order_id)
-                ->get();
-
-            $allBookingsInOrder = $bookingsInOrder->merge($additionalBookingsInOrder);
-
-            $transactionStatus = Transaction::select('transaction_status')->where('order_id', $orderId->order_id)->first();
-
-            foreach ($allBookingsInOrder as $booking) {
-                $booking->transaction_status = $transactionStatus->transaction_status ?? null;
-            }
-
-            $orderBookingObjectIds[$orderId->order_id] = $allBookingsInOrder;
-        };
+        
+        $orderBookingObjectIds = $this->getUserBookingsByUserId($targetUser->id);
 
         if (!$orderBookingObjectIds) {
             return response()->json(['message' => __('no_bookings_found')], 404);

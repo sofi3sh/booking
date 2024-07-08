@@ -214,7 +214,7 @@ class BookingService
         while ($currentDay <= $bookingTo) {
             $dailyPrice = $regularPrice; // Default daily price
         
-            if ($currentDay->isWeekend()) {
+            if ($currentDay->isWeekend() || $currentDay->isFriday()) {
                 $dailyPrice = $weekendPrice;
             }
             

@@ -104,6 +104,7 @@ Route::prefix('booking')
         Route::prefix('admin')
             ->group(function () {
                 Route::post('/bookObjects', 'adminBookObjects');
+                Route::delete('/deleteOrderById', 'deleteOrderById');
             });
     });
 
