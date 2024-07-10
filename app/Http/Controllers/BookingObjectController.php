@@ -20,6 +20,7 @@ class BookingObjectController extends Controller
     private function getAwailableObjectIdsByDate ($date)
     {
         return Booking::whereDate('booked_to', '>=', $date)
+                    ->where('canceled', 0)
                     ->whereDate('booked_from', '<=', $date)
                     ->pluck('object_id')
                     ->unique();
