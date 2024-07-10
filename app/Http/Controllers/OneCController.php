@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\BookingObject;
 use App\Models\AdditionalObject;
 use App\Models\Booking;
+use App\Models\AdditionalBooking;
 use App\Models\Transaction;
 use App\Models\Debug;
 use Carbon\Carbon;
@@ -151,7 +152,29 @@ class OneCController extends Controller
 
         $timeInterval = Carbon::now()->subDays($request->days);
 
-        return Booking::where('created_at', '>', $timeInterval)->whereNotNull('booked_from')->get();
+        $bookingOrders = Booking::where('created_at', '>', $timeInterval)
+            ->whereNotNull('order_id')
+            ->get()
+            ->toArray();
+
+        $additionalBookingOrders = AdditionalBooking::where('created_at', '>', $timeInterval)
+            ->whereNotNull('order_id')
+            ->get()
+            ->toArray();
+
+        $combinedOrders = array_merge($bookingOrders, $additionalBookingOrders);
+
+        foreach ($combinedOrders as $key => $combinedOrder) {
+            $order_id = $combinedOrder['order_id'];
+    
+            $transactionStatus = Transaction::select('transaction_status')
+                ->where('order_id', $order_id)
+                ->first();
+    
+            $combinedOrders[$key]['transaction_status'] = $transactionStatus ? $transactionStatus->transaction_status : null;
+        }
+
+        return response()->json($combinedOrders);
     }
 
     public function getLastTransactionsByDays (Request $request)

@@ -131,12 +131,12 @@ class PaymentController extends Controller
 
         if ($request->transaction_status == 'Expired' || $request->transaction_status == 'Declined') {
             Booking::where('order_id', $orderId)->update([
-                'canceled' => true,
-                'payment_status' => false
+                'canceled' => 1,
+                'payment_status' => 0
             ]);
         } else {
             Booking::where('order_id', $orderId)->update([
-                'payment_status' => true
+                'payment_status' => 1
             ]);
         }
 
