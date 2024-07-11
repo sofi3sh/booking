@@ -190,7 +190,7 @@ class BookingService
     {
         $totalPrice = 0.0;
 
-        $bookingObject = BookingObject::select('price', 'weekend_price', 'childrens_price', 'childrens_weekend_price', 'discount', 'discount_start_date', 'discount_end_date')->where('id', $objectId)->first();
+        $bookingObject = BookingObject::select('price', 'weekend_price', 'childrens_price', 'childrens_weekend_price', 'discount', 'discount_start_date', 'discount_end_date', 'type')->where('id', $objectId)->first();
 
         if (!$bookingObject) {
             return $totalPrice;
@@ -214,8 +214,17 @@ class BookingService
         while ($currentDay <= $bookingTo) {
             $dailyPrice = $regularPrice; // Default daily price
         
-            if ($currentDay->isWeekend() || $currentDay->isFriday()) {
-                $dailyPrice = $weekendPrice;
+            if ($bookingObject->type == 'bungalow' 
+                || $bookingObject->type == 'little cottage' 
+                || $bookingObject->type == 'second bungalow'
+                || $bookingObject->type == 'big cottage') {
+                if ($currentDay->isWeekend() || $currentDay->isFriday()) {
+                    $dailyPrice = $weekendPrice;
+                }
+            } else {
+                if ($currentDay->isWeekend()) {
+                    $dailyPrice = $weekendPrice;
+                }
             }
             
             if (!empty($bookingObject->discount_start_date) && !empty($bookingObject->discount_end_date) && ($bookingObject->discount > 0 && $bookingObject->discount <= 100)) {
