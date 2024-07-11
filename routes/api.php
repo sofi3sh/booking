@@ -135,6 +135,12 @@ Route::prefix('payment')
     ->group(function () {
         Route::post('/preparePaymentData', 'preparePaymentData');
         Route::post('/createOrder', 'createOrder');
+        
+    });
+
+Route::prefix('payment')
+    ->controller(PaymentController::class)
+    ->group(function () {
         Route::post('/proccessPayment', 'proccessPayment');
     });
 
