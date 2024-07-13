@@ -139,6 +139,8 @@ class PaymentController extends Controller
     }
 
     public function proccessPayment (Request $request) {
+        Log::info($request->all());
+        Log::info('-------------------------------------');
         $transactionData = json_decode(array_key_first($request->all()), true);
         $orderId = $transactionData['orderReference'];
         $transactionStatus = $transactionData['transactionStatus'];
