@@ -151,7 +151,7 @@ class PaymentController extends Controller
             'amount' => $transactionData['amount'],
             'fee' => $transactionData['fee'],
             'issuer_bank_name' => $transactionData['issuerBankName'],
-            'card' => $transactionData['card'],
+            'card' => $transactionData['cardPan'],
             'transaction_status' => $transactionStatus,
             'phone' => $transactionData['phone']
         ]);
