@@ -169,12 +169,12 @@ class PaymentController extends Controller
         } else {
             Transaction::create([
                 'order_id' => $orderId,
-                'amount' => $transactionData['amount'],
+                'amount' => $transactionData['amount'] ?? 0,
                 'fee' => $transactionData['fee'] ?? 0,
                 'issuer_bank_name' => $transactionData['issuerBankName'] ?? '',
-                'card' => $transactionData['cardPan'],
+                'card' => $transactionData['cardPan'] ?? '',
                 'transaction_status' => $transactionStatus,
-                'phone' => $transactionData['phone']
+                'phone' => $transactionData['phone'] ?? 0
             ]);
         }
 
