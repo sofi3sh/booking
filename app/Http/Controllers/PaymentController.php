@@ -142,7 +142,9 @@ class PaymentController extends Controller
         $orderId = $request->orderReference;
         $transactionStatus = $request->transaction_status ?? $request->transactionStatus;
         $issuerBankName = $request->issuer_bank_name ?? $request->issuerBankName;
-
+        Log::info('----------');
+        Log::info($request);
+        Log::info('----------');
         $transaction = Transaction::create([
             'order_id' => $orderId,
             'amount' => $request->amount,
