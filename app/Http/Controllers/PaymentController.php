@@ -211,8 +211,30 @@ class PaymentController extends Controller
         return response()->json($transaction);
     }
 
-    public function redirectToCart()
+    public function redirectToCart(Request $request)
     {
-        return redirect()->away('http://localhost:3000/ua/cart');
+        Log::info($request->all());
+        Log::info('-------------------------------------');
+        $value = array_key_first($request->all());
+        $transactionData = json_decode($value, true);
+        if(!$transactionData) {
+            $json = file_get_contents('php://input');
+            $transactionData = json_decode($json, true);
+        }
+        if(!$transactionData) {
+            $data = preg_replace('/"fee":\s?[\d.]+,?/', '', $value);
+            $transactionData = json_decode($data, true);
+        }
+        if (!$transactionData) {
+            $json = file_get_contents('php://input');
+            $data = preg_replace('/"fee":\s?[\d.]+,?/', '', $json);
+            $transactionData = json_decode($data, true);
+        }
+        Log::info($value);
+        Log::info('-------------------------------------');
+
+        Log::info($transactionData);
+        Log::info('-------------------------------------');
+        return redirect()->away('http://localhost:3000/ua/cart&transaction_status='.$transactionData['transactionStatus']);
     }
 }
