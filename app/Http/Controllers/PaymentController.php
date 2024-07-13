@@ -166,9 +166,9 @@ class PaymentController extends Controller
         }
 
         $bookingsInOrder = Booking::where('order_id', $orderId)->get();
-
+        $status = $transactionStatus == 'Expired' || $transactionStatus == 'Declined' ? ObjectStatus::FREE->value  : ObjectStatus::BOOKED->value;
         foreach ($bookingsInOrder as $booking) {
-            $this->bookingService->updateBookingObjectStatus(BookingObject::find($booking->object_id), $booking->booked_from);
+            $this->bookingService->customUpdateBookingObjectStatus(BookingObject::find($booking->object_id),$status);
         }
     }
 }

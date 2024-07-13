@@ -103,6 +103,11 @@ class BookingService
         $bookingObject->update(['status' => $status]);
         event(new BookingObjectStatusUpdated($bookingObject->id, $status));
     }
+    public function customUpdateBookingObjectStatus($bookingObject, $status)
+    {
+        $bookingObject->update(['status' => $status]);
+        event(new BookingObjectStatusUpdated($bookingObject->id, $status));
+    }
 
     private function processBookingForExistingReserve($bookingData, $user, $orderId, $isAdmin)
     {
@@ -177,15 +182,15 @@ class BookingService
     public function bookExistingReserve($bookingsData, $user, $orderId, $isAdmin)
     {
         $bookings = [];
-    
+
         foreach ($bookingsData as $bookingData) {
             $response = $this->processBookingForExistingReserve($bookingData, $user, $orderId, $isAdmin);
             $bookings[] = $response;
         }
-    
+
         return $bookings;
     }
-    
+
     public function calculatePrice ($objectId, $bookedFrom, $bookedTo, $isChild = false) : Float
     {
         $totalPrice = 0.0;
@@ -195,7 +200,7 @@ class BookingService
         if (!$bookingObject) {
             return $totalPrice;
         }
-        
+
         $bookingFrom = Carbon::parse($bookedFrom);
         $bookingTo = Carbon::parse($bookedTo);
 
@@ -213,22 +218,22 @@ class BookingService
 
         while ($currentDay <= $bookingTo) {
             $dailyPrice = $regularPrice; // Default daily price
-        
+
             if ($currentDay->isWeekend() || $currentDay->isFriday()) {
                 $dailyPrice = $weekendPrice;
             }
-            
+
             if (!empty($bookingObject->discount_start_date) && !empty($bookingObject->discount_end_date) && ($bookingObject->discount > 0 && $bookingObject->discount <= 100)) {
                 if ($currentDay->between($bookingObject->discount_start_date, $bookingObject->discount_end_date)) {
                     $dailyPrice *= (1 - ($bookingObject->discount / 100)); // Apply discount
                 }
             }
-            
+
             $totalPrice += $dailyPrice;
-    
+
             $currentDay->addDay();
         }
-    
+
         return $totalPrice;
     }
 }
