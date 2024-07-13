@@ -168,7 +168,7 @@ class PaymentController extends Controller
         $orderId = $transactionData['orderReference'];
         $transactionStatus = $transactionData['transactionStatus'];
         if($transactionStatus === "Pending" || $transactionStatus === "InProcessing") return;
-
+        if(!isset($transactionData['issuerBankName'])) return;
          $transaction = Transaction::where('order_id', $orderId)->first();
         if($transaction) {
             $transaction->transaction_status = $transactionStatus;
@@ -203,5 +203,16 @@ class PaymentController extends Controller
         foreach ($bookingsInOrder as $booking) {
             $this->bookingService->customUpdateBookingObjectStatus(BookingObject::find($booking->object_id),$status);
         }
+    }
+
+    public function checkTransactionStatus(Request $request)
+    {
+        $transaction = Transaction::where('order_id', $request->order_id)->select('transaction_status')->first();
+        return response()->json($transaction);
+    }
+
+    public function redirectToCart()
+    {
+        return redirect()->away('http://localhost:3000/ua/cart');
     }
 }
