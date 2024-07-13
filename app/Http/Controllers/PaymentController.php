@@ -177,7 +177,7 @@ class PaymentController extends Controller
             Transaction::create([
                 'order_id' => $orderId,
                 'amount' => $transactionData['amount'],
-                'fee' => $transactionData['fee'],
+                'fee' => $transactionData['fee'] ?? 0,
                 'issuer_bank_name' => $transactionData['issuerBankName'],
                 'card' => $transactionData['cardPan'],
                 'transaction_status' => $transactionStatus,
