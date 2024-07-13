@@ -93,7 +93,7 @@ class PaymentController extends Controller
             'orderReference' => $orderReference,
             'orderDate' => $orderDate,
             'currency' => $currency,
-            'serveiceUrl' => '' . $baseUrl . '/api/payment/proccessPayment',
+            'serviceUrl' => '' . $baseUrl . '/api/payment/proccessPayment',
         ], 200);
     }
 
