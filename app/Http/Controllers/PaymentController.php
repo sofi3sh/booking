@@ -144,16 +144,16 @@ class PaymentController extends Controller
         Log::info(json_encode($transactionData));
         Log::info('----------');
         $orderId = $transactionData['orderReference'];
-        $transactionStatus = $request['transactionStatus'];
+        $transactionStatus = $transactionData['transactionStatus'];
 
         $transaction = Transaction::create([
             'order_id' => $orderId,
-            'amount' => $request['amount'],
-            'fee' => $request['fee'],
-            'issuer_bank_name' => $request['issuerBankName'],
-            'card' => $request['card'],
+            'amount' => $transactionData['amount'],
+            'fee' => $transactionData['fee'],
+            'issuer_bank_name' => $transactionData['issuerBankName'],
+            'card' => $transactionData['card'],
             'transaction_status' => $transactionStatus,
-            'phone' => $request['phone']
+            'phone' => $transactionData['phone']
         ]);
 
 
