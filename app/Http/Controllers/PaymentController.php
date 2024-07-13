@@ -139,7 +139,7 @@ class PaymentController extends Controller
     }
 
     public function proccessPayment (Request $request) {
-        $transactionData = json_decode(array_key_first($request), true);
+        $transactionData = json_decode(array_key_first($request->all()), true);
         Log::info('----------');
         Log::info(json_encode($transactionData));
         Log::info('----------');
