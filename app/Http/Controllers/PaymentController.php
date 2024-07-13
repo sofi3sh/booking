@@ -139,8 +139,6 @@ class PaymentController extends Controller
     }
 
     public function proccessPayment (Request $request) {
-        Log::info($request->all());
-        Log::info('-------------------------------------');
         $value = array_key_first($request->all());
         $transactionData = json_decode($value, true);
         if(!$transactionData) {
@@ -156,11 +154,7 @@ class PaymentController extends Controller
             $data = preg_replace('/"fee":\s?[\d.]+,?/', '', $json);
             $transactionData = json_decode($data, true);
         }
-        Log::info($value);
-        Log::info('-------------------------------------');
 
-        Log::info($transactionData);
-        Log::info('-------------------------------------');
 
 
 
@@ -214,7 +208,6 @@ class PaymentController extends Controller
     public function redirectToCart(Request $request)
     {
         $transactionData = $request->all();
-        Log::info($transactionData);
         return redirect()->away( $transactionData['url'] .'?transaction_status='.$transactionData['transactionStatus']);
     }
 }
