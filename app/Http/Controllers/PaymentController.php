@@ -215,6 +215,6 @@ class PaymentController extends Controller
     {
         $transactionData = $request->all();
         Log::info($transactionData);
-        return redirect()->away('http://localhost:3000/ua/cart&transaction_status='.$transactionData['transactionStatus']);
+        return redirect()->away('http://localhost:3000/ua/cart?transaction_status='.$transactionData['transactionStatus']);
     }
 }
