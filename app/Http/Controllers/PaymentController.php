@@ -139,20 +139,21 @@ class PaymentController extends Controller
     }
 
     public function proccessPayment (Request $request) {
-        $orderId = $request->orderReference;
-        $transactionStatus = $request->transaction_status ?? $request->transactionStatus;
-        $issuerBankName = $request->issuer_bank_name ?? $request->issuerBankName;
+        $transactionData = json_decode(array_key_first($request), true);
         Log::info('----------');
-        Log::info($request);
+        Log::info(json_encode($transactionData));
         Log::info('----------');
+        $orderId = $transactionData['orderReference'];
+        $transactionStatus = $request['transactionStatus'];
+
         $transaction = Transaction::create([
             'order_id' => $orderId,
-            'amount' => $request->amount,
-            'fee' => $request->fee,
-            'issuer_bank_name' => $issuerBankName,
-            'card' => $request->card,
+            'amount' => $request['amount'],
+            'fee' => $request['fee'],
+            'issuer_bank_name' => $request['issuerBankName'],
+            'card' => $request['card'],
             'transaction_status' => $transactionStatus,
-            'phone' => $request->phone
+            'phone' => $request['phone']
         ]);
 
 
