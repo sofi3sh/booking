@@ -140,11 +140,9 @@ class PaymentController extends Controller
 
     public function proccessPayment (Request $request) {
         $transactionData = json_decode(array_key_first($request->all()), true);
-        Log::info('----------');
-        Log::info(json_encode($transactionData));
-        Log::info('----------');
         $orderId = $transactionData['orderReference'];
         $transactionStatus = $transactionData['transactionStatus'];
+        if($transactionStatus === "Pending" || $transactionStatus === "InProcessing") return;
 
          $transaction = Transaction::where('order_id', $orderId)->first();
         if($transaction) {
