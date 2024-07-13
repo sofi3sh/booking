@@ -147,6 +147,11 @@ class PaymentController extends Controller
         $transactionData = json_decode($value, true);
         Log::info($transactionData);
         Log::info('-------------------------------------');
+
+        $json = file_get_contents('php://input');
+        $obj = json_decode($json, true);
+        Log::info($obj);
+        return;
         $orderId = $transactionData['orderReference'];
         $transactionStatus = $transactionData['transactionStatus'];
         if($transactionStatus === "Pending" || $transactionStatus === "InProcessing") return;
