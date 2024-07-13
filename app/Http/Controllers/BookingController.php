@@ -45,7 +45,7 @@ class BookingController extends Controller
             $activeReservationsCount = Booking::where('object_id', $objectId)
                 ->where('reserved_to', '>=', Carbon::now())
                 ->count();
-        
+
             return $activeReservationsCount === 0;
         });
 
@@ -73,7 +73,7 @@ class BookingController extends Controller
 
         BookingObject::whereIn('id', $expiredBookingObjectsIds)
             ->update(['status' => ObjectStatus::FREE->value]);
-        
+
         foreach ($expiredBookingObjectsIds as $objectId) {
             event(new BookingObjectStatusUpdated($objectId, ObjectStatus::FREE->value));
         }
@@ -103,6 +103,7 @@ class BookingController extends Controller
         }
     }
 
+
     /**
      * Automatically send notification for admin when 90% objects are booked.
      *
@@ -119,7 +120,7 @@ class BookingController extends Controller
         $password = 'STRe456892-=wr';
         $to = env('ADMIN_PHONE_NUMBER');
 
-        $message = "!ALERT!\n\n" . 
+        $message = "!ALERT!\n\n" .
             "90% of objects are booked today!";
 
         $client = new \GuzzleHttp\Client();
@@ -175,7 +176,7 @@ class BookingController extends Controller
                     'Content-Type' => 'application/json',
                 ],
             ]);
-            
+
         } catch (\GuzzleHttp\Exception\ClientException $e) {
             $response = $e->getResponse();
             $responseBodyAsString = $response->getBody()->getContents();
@@ -191,27 +192,27 @@ class BookingController extends Controller
     }
 
     public static function isBookingNotificationRequired ()
-    {    
+    {
         $totalObjects = BookingObject::count();
 
         if ($totalObjects == 0) {
             return false;
         }
-    
+
         $bookedObjectsCount = Booking::where('booked_from', '<=', Carbon::now())
             ->where('booked_to', '>=', Carbon::now())
             ->count();
-    
+
         $percentageBooked = ($bookedObjectsCount / $totalObjects) * 100;
-    
+
         return $percentageBooked >= 90;
     }
-    
+
     private function userIsAdmin ($user)
     {
         return $user->role_id == 1;
     }
-    
+
     private function userIsBookingAgent ($user)
     {
         return $user->role_id == 2;
@@ -258,7 +259,7 @@ class BookingController extends Controller
         event(new BookingObjectStatusUpdated($bookingObject->id, ObjectStatus::RESERVED->value));
 
         $newBooking->save();
-        
+
         return response()->json(['message' => __('object_reserved')], 200);
     }
 
@@ -276,18 +277,18 @@ class BookingController extends Controller
         ]);
 
         $isAdmin = true;
-    
+
         $user = auth()->user();
-    
+
         if (!$this->userIsAdmin($user) && !$this->userIsBookingAgent($user)) {
             return response()->json(['message' => __('permission_denied')], 403);
         }
-        
+
         $bookings = $this->bookingService->createNewBooking($request->all(), $isAdmin);
-    
+
         return response()->json(['message' => __('objects_have_been_booked'), 'bookings' => $bookings], 200);
     }
-    
+
     public function cancelOrder (Request $request)
     {
         $request->validate([
@@ -324,13 +325,13 @@ class BookingController extends Controller
         try {
             $price = $this->getPriceCalculationService($request->is_additional)
                 ->calculatePrice($request->object_id, $request->booked_from, $request->booked_to, $request->is_child);
-    
+
             return response()->json(['price' => $price], 200);
         } catch (\Exception $e) {
             return response()->json(['error' => 'Error calculating price'], 500);
         }
     }
-    
+
     public function getOrder (Request $request)
     {
         $request->validate([
@@ -357,7 +358,7 @@ class BookingController extends Controller
         return response()->json(['bookings' => $allBookingsInOrger, 'total_price' => $totalPrice, 'transaction_status' => $transactionStatus->transaction_status ?? null], 200);
     }
 
-    public function deleteOrderById(Request $request) 
+    public function deleteOrderById(Request $request)
     {
         $request->validate([
             'order_id' => 'required|string',
