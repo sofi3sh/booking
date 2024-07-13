@@ -28,6 +28,16 @@ class PaymentController extends Controller
             'products.*.name' => 'required|string',
             'products.*.count' => 'required|numeric',
             'products.*.price' => 'required|numeric',
+            'objects' => 'required|array|min:1',
+            'objects.*.object_id' => 'required|integer',
+            'objects.*.booked_from' => 'required|date',
+            'objects.*.booked_to' => 'required|date|after_or_equal:objects.*.booked_from',
+            'objects.*.user_id' => 'required|integer',
+            'objects.*.payment_status' => 'required|boolean',
+            'objects.*.description' => 'nullable|string',
+            'objects.*.is_child' => 'nullable|boolean',
+            'objects.*.is_additional' => 'required|boolean',
+            'objects.*.lang' => 'sometimes|required|string'
         ]);
 
 
@@ -61,7 +71,7 @@ class PaymentController extends Controller
         $data .= ';' . implode(';', $productPrices);
 
         //
-        
+
         // $key = env('MERCHANT_kEY');
 
         $key = 'c632cb72916700a3d83ac83794925ab09642bbe7';
@@ -69,6 +79,12 @@ class PaymentController extends Controller
         $merchantSignature = hash_hmac('md5', $data, $key);
 
         $baseUrl = env('APP_URL');
+
+
+
+        $isAdmin = false;
+
+        $this->bookingService->bookExistingReserve($request->objects, auth()->user(), $request->order_id, $isAdmin);
 
         return response()->json([
             'merchantSignature' => $merchantSignature,
@@ -124,12 +140,21 @@ class PaymentController extends Controller
 
     public function proccessPayment (Request $request) {
         $orderId = $request->orderReference;
+        $transactionStatus = $request->transaction_status ?? $request->transactionStatus;
+        $issuerBankName = $request->issuer_bank_name ?? $request->issuerBankName;
 
-        Transaction::where('order_id', $orderId)->update([
-            'transaction_status' => $request->transaction_status
+        $transaction = Transaction::create([
+            'order_id' => $orderId,
+            'amount' => $request->amount,
+            'fee' => $request->fee,
+            'issuer_bank_name' => $issuerBankName,
+            'card' => $request->card,
+            'transaction_status' => $transactionStatus,
+            'phone' => auth()->user()->phone
         ]);
 
-        if ($request->transaction_status == 'Expired' || $request->transaction_status == 'Declined') {
+
+        if ($transactionStatus == 'Expired' || $transactionStatus == 'Declined') {
             Booking::where('order_id', $orderId)->update([
                 'canceled' => 1,
                 'payment_status' => 0
