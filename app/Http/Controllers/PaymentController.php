@@ -162,7 +162,6 @@ class PaymentController extends Controller
         $orderId = $transactionData['orderReference'];
         $transactionStatus = $transactionData['transactionStatus'];
         if($transactionStatus === "Pending" || $transactionStatus === "InProcessing") return;
-        if(!isset($transactionData['issuerBankName'])) return;
          $transaction = Transaction::where('order_id', $orderId)->first();
         if($transaction) {
             $transaction->transaction_status = $transactionStatus;
@@ -172,7 +171,7 @@ class PaymentController extends Controller
                 'order_id' => $orderId,
                 'amount' => $transactionData['amount'],
                 'fee' => $transactionData['fee'] ?? 0,
-                'issuer_bank_name' => $transactionData['issuerBankName'],
+                'issuer_bank_name' => $transactionData['issuerBankName'] ?? '',
                 'card' => $transactionData['cardPan'],
                 'transaction_status' => $transactionStatus,
                 'phone' => $transactionData['phone']
