@@ -152,7 +152,7 @@ class PaymentController extends Controller
             'issuer_bank_name' => $issuerBankName,
             'card' => $request->card,
             'transaction_status' => $transactionStatus,
-            'phone' => auth()->user()->phone
+            'phone' => $request->phone
         ]);
 
 
