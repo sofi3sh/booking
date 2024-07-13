@@ -84,7 +84,7 @@ class PaymentController extends Controller
 
         $isAdmin = false;
 
-        $this->bookingService->bookExistingReserve($request->objects, auth()->user(), $request->order_id, $isAdmin);
+        $this->bookingService->bookExistingReserve($request->objects, auth()->user(), $orderReference, $isAdmin);
 
         return response()->json([
             'merchantSignature' => $merchantSignature,

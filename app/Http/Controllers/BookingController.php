@@ -251,7 +251,7 @@ class BookingController extends Controller
             'user_id' => $user->id,
             'object_id' => $request->object_id,
             'reserved_from' => Carbon::now(),
-            'reserved_to' => $existReservation->reserved_to ?? Carbon::now()->addMinutes(3), // 3 min for test, replace to 15 in prod
+            'reserved_to' => $existReservation->reserved_to ?? Carbon::now()->addMinutes(15), // 3 min for test, replace to 15 in prod
             'payment_status' => 0,
         ]);
 
