@@ -146,15 +146,22 @@ class PaymentController extends Controller
         $orderId = $transactionData['orderReference'];
         $transactionStatus = $transactionData['transactionStatus'];
 
-        $transaction = Transaction::create([
-            'order_id' => $orderId,
-            'amount' => $transactionData['amount'],
-            'fee' => $transactionData['fee'],
-            'issuer_bank_name' => $transactionData['issuerBankName'],
-            'card' => $transactionData['cardPan'],
-            'transaction_status' => $transactionStatus,
-            'phone' => $transactionData['phone']
-        ]);
+         $transaction = Transaction::where('order_id', $orderId)->first();
+        if($transaction) {
+            $transaction->transaction_status = $transactionStatus;
+            $transaction->save();
+        } else {
+            Transaction::create([
+                'order_id' => $orderId,
+                'amount' => $transactionData['amount'],
+                'fee' => $transactionData['fee'],
+                'issuer_bank_name' => $transactionData['issuerBankName'],
+                'card' => $transactionData['cardPan'],
+                'transaction_status' => $transactionStatus,
+                'phone' => $transactionData['phone']
+            ]);
+        }
+
 
 
         if ($transactionStatus == 'Expired' || $transactionStatus == 'Declined') {
