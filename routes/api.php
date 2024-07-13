@@ -136,7 +136,7 @@ Route::prefix('payment')
         Route::post('/preparePaymentData', 'preparePaymentData');
         Route::post('/createOrder', 'createOrder');
         Route::get('/checkTransactionStatus', 'checkTransactionStatus');
-        Route::get('/redirectToCart', 'redirectToCart');
+        Route::post('/redirectToCart', 'redirectToCart');
     });
 
 Route::prefix('payment')
