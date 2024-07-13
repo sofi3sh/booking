@@ -148,12 +148,13 @@ class PaymentController extends Controller
             $transactionData = json_decode($json, true);
         }
         if(!$transactionData) {
-            $transactionData = preg_replace('/"fee":\s?[\d.]+,?/', '', $value);
-            $transactionData = json_decode($transactionData, true);
+            $data = preg_replace('/"fee":\s?[\d.]+,?/', '', $value);
+            $transactionData = json_decode($data, true);
         }
         if (!$transactionData) {
             $json = file_get_contents('php://input');
-            $transactionData = json_decode($json, true);
+            $data = preg_replace('/"fee":\s?[\d.]+,?/', '', $json);
+            $transactionData = json_decode($data, true);
         }
         Log::info($value);
         Log::info('-------------------------------------');
